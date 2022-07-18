@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    tools:context=".Activity.ui.dashboard.DashboardFragment">
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/select_edit"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginHorizontal="5dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/edittext_select"
+            android:gravity="center"
+            android:hint="点这里查询特定时间的收支情况" />
+
+        <RadioGroup
+            android:id="@+id/radio_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="5dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1.5"
+                android:orientation="vertical"
+                android:paddingVertical="2.5dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="查询时间"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:id="@+id/now_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="2022-12-31"
+                    android:textColor="@color/black" />
+
+
+            </LinearLayout>
+
+            <RadioButton
+                android:id="@+id/day"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:buttonTint="#1296db"
+
+                android:text="当日" />
+
+            <RadioButton
+                android:id="@+id/month"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:buttonTint="#1296db"
+                android:checked="true"
+                android:text="当月" />
+
+            <RadioButton
+                android:id="@+id/year"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:buttonTint="#1296db"
+                android:text="当年" />
+
+
+        </RadioGroup>
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.org.moneykeep.AAChartCoreLib.AAChartCreator.AAChartView
+                android:id="@+id/AAChartViewPay"
+                android:layout_width="match_parent"
+                android:layout_height="350dp"
+                android:layout_gravity="center"
+                android:layout_marginVertical="5dp"></com.org.moneykeep.AAChartCoreLib.AAChartCreator.AAChartView>
+
+            <com.org.moneykeep.AAChartCoreLib.AAChartCreator.AAChartView
+                android:id="@+id/AAChartViewIncome"
+                android:layout_width="match_parent"
+                android:layout_height="350dp"
+                android:layout_gravity="center"
+                android:layout_marginVertical="5dp" />
+
+            <com.org.moneykeep.AAChartCoreLib.AAChartCreator.AAChartView
+                android:id="@+id/AAChartViewColumnPay"
+                android:layout_width="match_parent"
+                android:layout_height="500dp"
+                android:layout_gravity="center"
+                android:layout_marginVertical="5dp" />
+
+        </LinearLayout>
+    </ScrollView>
+
+
+</LinearLayout>
+
+

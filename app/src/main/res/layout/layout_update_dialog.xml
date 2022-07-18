@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/edittext_select"
+    android:backgroundTint="@color/white"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:paddingHorizontal="20dp">
+
+        <RadioButton
+            android:id="@+id/radio_pay"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/pay_button_background_selector"
+            android:button="@null"
+            android:gravity="center"
+            android:text="支出"
+            android:textColor="@color/pay_radiobutton" />
+
+        <RadioButton
+            android:id="@+id/radio_income"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="10dp"
+            android:background="@drawable/income_button_background_selector"
+            android:button="@null"
+            android:gravity="center"
+            android:text="收入"
+            android:textColor="@color/income_radiobutton" />
+    </RadioGroup>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/but_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/time_button_background_selector"
+            android:gravity="center"
+            android:outlineProvider="none"
+            android:text="2022-5-17"
+            android:textColor="#000000" />
+
+        <Button
+            android:id="@+id/but_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:background="@drawable/time_button_background_selector"
+            android:gravity="center"
+            android:outlineProvider="none"
+            android:text="22:55"
+            android:textColor="#000000" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/but_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/time_button_background_selector"
+            android:drawableStart="@mipmap/pay_type"
+            android:drawableTint="#000000"
+            android:gravity="center"
+            android:outlineProvider="none"
+            android:padding="5dp"
+            android:text="全部类型"
+            android:textColor="@color/black" />
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/et_cost"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="5dp"
+        android:drawableStart="@mipmap/money_rmb_64"
+        android:drawableTint="#000000"
+        android:inputType="numberDecimal"
+        android:text="18"
+        android:textColor="#000000"
+        android:textSize="35sp"
+        android:textStyle="bold"
+        android:theme="@style/MyEditText" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="备注："
+            android:textColor="#737373" />
+
+        <TextView
+            android:id="@+id/tv_remark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxEms="10"
+            android:singleLine="true"
+            android:text="微信财付通支付"
+            android:textColor="#737373" />
+
+        <TextView
+            android:id="@+id/tv_update"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="5dp"
+            android:gravity="center"
+            android:text="修改"
+            android:textColor="#5F698C" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/LY_1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingHorizontal="10dp">
+
+        <Button
+            android:id="@+id/but_cancel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="取消" />
+
+        <Button
+            android:id="@+id/but_summit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="确定" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,104 @@
+<resources>
+    <string name="app_name">MoneyKeep</string>
+    <string name="summit">summit</string>
+    <string name="carID_enter">License Number Enter</string>
+    <string name="location">location</string>
+    <string name="clear">clear</string>
+    <string name="add">add</string>
+    <string name="name">Name</string>
+    <string name="email">Email</string>
+    <string name="phoneNum">Phone Number</string>
+    <string name="delete">delete</string>
+    <string name="forgetPWD">Forget Password</string>
+    <string name="PwdSet">Password Setting</string>
+    <string name="pwd">Password</string>
+    <string name="confirm_pwd">Confirm Password</string>
+    <string name="account">Account</string>
+    <string name="user">USER</string>
+    <string name="intendant">INDENTANT</string>
+    <string name="sign_in">sign in</string>
+    <string name="sign_up">sign up</string>
+    <string name="forget_pwd">Forget Password</string>
+    <string name="private_key">Private key</string>
+    <string name="update">update</string>
+    <string name="intendant_function">Intendant Function</string>
+    <string name="add_user">Add User</string>
+    <string name="delete_user">Delete User</string>
+    <string name="user_info_update">Update User Information</string>
+    <string name="user_info_search">Search User Information</string>
+    <string name="fare">Fare</string>
+    <string name="park_log">Parking Log</string>
+    <string name="park_info">Car Parking Information</string>
+    <string name="rent_position">Monthly Rent Position</string>
+    <string name="log_out">Log Out</string>
+    <string name="today_fare">Fare:</string>
+    <string name="per_hour">CHN/H</string>
+    <string name="car_enter">Car Enter</string>
+    <string name="car_info">Car Information</string>
+    <string name="car_exit">Car Exit</string>
+    <string name="add_monthly_car">Add Rent Position Car</string>
+    <string name="car_position">Position:</string>
+    <string name="add_time">Add Time:</string>
+    <string name="expire_time">Expire Time:</string>
+    <string name="id">ID:</string>
+    <string name="cost">Cost:</string>
+    <string name="car_enterTime">Car Enter Time</string>
+    <string name="car_exitTime">Car Exit Time</string>
+    <string name="car_monthly">Rent Position Car:</string>
+    <string name="title_activity_user_main">UserMainActivity</string>
+    <string name="title_record">消费记录</string>
+    <string name="title_statistics">统计</string>
+    <string name="title_user_setting">个人</string>
+    <string name="title_activity_user_mian">UserMianActivity</string>
+    <string name="title_save">计划</string>
+    <string name="title_home">记录</string>
+    <string name="title_dashboard">统计</string>
+    <string name="title_notifications">个人</string>
+    <string name="save_plan">存钱计划</string>
+    <string name="all_plan">全部计划</string>
+    <string name="_12month">12月存钱</string>
+    <string name="_30day">30天存钱</string>
+    <string name="_4week">4周存钱</string>
+    <string name="_52week">52周存钱</string>
+    <string name="_365day">365天存钱</string>
+    <string name="isdoing">进行中</string>
+    <string name="new_plan">+ 新建</string>
+    <string name="custom">自定义</string>
+
+
+    <string-array name="pay">
+        <item>餐饮</item>
+        <item>交通</item>
+        <item>服饰</item>
+        <item>购物</item>
+        <item>服务</item>
+        <item>教育</item>
+        <item>娱乐</item>
+        <item>运动</item>
+        <item>生活缴费</item>
+        <item>旅行</item>
+        <item>宠物</item>
+        <item>医疗</item>
+        <item>保险</item>
+        <item>公益</item>
+        <item>发红包</item>
+        <item>转账</item>
+        <item>亲属卡</item>
+        <item>做人情</item>
+        <item>其它支出</item>
+    </string-array>
+
+    <string-array name="income">
+        <item>生意</item>
+        <item>工资</item>
+        <item>奖金</item>
+        <item>收红包</item>
+        <item>收转账</item>
+        <item>其它收入</item>
+    </string-array>
+
+    <string-array name="BankCard">
+        <item>农业银行</item>
+        <item>建设银行</item>
+    </string-array>
+</resources>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    tools:context=".Activity.AddPayEventView.GetLocationActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/but_finish"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="2"
+            android:src="@mipmap/left_finish_48" />
+
+        <AutoCompleteTextView
+            android:id="@+id/auto_ed_text"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_weight="8"
+            android:background="@drawable/edittext_select"
+            android:drawableStart="@mipmap/map_select_48"
+            android:gravity="center"
+            android:hint="输入地点"
+            android:paddingLeft="10dp"
+            android:textColor="#000000" />
+
+        <TextView
+            android:id="@+id/tx_location"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:drawableStart="@mipmap/location_map_48"
+            android:drawableEnd="@mipmap/down_32"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:text="佛山市"
+            android:textColor="#000000"
+            android:textSize="20sp" />
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:layout_margin="10dp"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/my_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="获取当前位置"
+            android:background="@drawable/location_button_background"
+            android:drawableStart="@mipmap/location_button_48"/>
+
+
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/result"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="9"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp" />
+
+
+</LinearLayout>

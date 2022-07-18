@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    tools:context=".Activity.AddPayEventView.AddPayEventActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="5dp"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:paddingLeft="10dp"
+        android:paddingEnd="5dp">
+
+        <ImageButton
+            android:id="@+id/but_finish"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="2"
+            android:src="@mipmap/finish_48" />
+
+        <TextView
+            android:id="@+id/text_view"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="8"
+            android:gravity="center_vertical"
+            android:text="新建存钱计划"
+            android:textColor="#000000"
+            android:textSize="25sp" />
+
+        <ImageButton
+            android:id="@+id/but_summit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="2"
+            android:src="@mipmap/summit_48_break" />
+
+
+    </LinearLayout>
+
+    <HorizontalScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:scrollbars="none">
+
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+
+            <RadioButton
+                android:id="@+id/radio_12month"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/but_ripple"
+                android:button="@null"
+                android:checked="true"
+                android:drawableTop="@mipmap/year_project"
+                android:drawableTint="@color/save_click"
+                android:gravity="center"
+                android:paddingHorizontal="5dp"
+                android:paddingVertical="10dp"
+                android:text="@string/_12month"
+                android:textColor="@color/save_click"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <RadioButton
+                android:id="@+id/radio_30day"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:background="@drawable/but_ripple"
+                android:button="@null"
+                android:drawableTop="@mipmap/month_project"
+                android:drawableTint="@color/save_click"
+                android:gravity="center"
+                android:paddingHorizontal="5dp"
+                android:paddingVertical="10dp"
+                android:text="@string/_30day"
+                android:textColor="@color/save_click"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <RadioButton
+                android:id="@+id/radio_4week"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:background="@drawable/but_ripple"
+                android:button="@null"
+                android:drawableTop="@mipmap/four_week"
+                android:drawableTint="@color/save_click"
+                android:gravity="center"
+                android:paddingHorizontal="5dp"
+                android:paddingVertical="10dp"
+                android:text="@string/_4week"
+                android:textColor="@color/save_click"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <RadioButton
+                android:id="@+id/radio_52week"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:background="@drawable/but_ripple"
+                android:button="@null"
+                android:drawableTop="@mipmap/fiftytwo_week"
+                android:drawableTint="@color/save_click"
+                android:gravity="center"
+                android:paddingHorizontal="5dp"
+                android:paddingVertical="10dp"
+                android:text="@string/_52week"
+                android:textColor="@color/save_click"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <RadioButton
+                android:id="@+id/radio_365day"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:background="@drawable/but_ripple"
+                android:button="@null"
+                android:drawableTop="@mipmap/is_365day"
+                android:drawableTint="@color/save_click"
+                android:gravity="center"
+                android:paddingHorizontal="5dp"
+                android:paddingVertical="10dp"
+                android:text="@string/_365day"
+                android:textColor="@color/save_click"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <RadioButton
+                android:id="@+id/radio_custom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="5dp"
+                android:background="@drawable/but_ripple"
+                android:button="@null"
+                android:drawableTop="@mipmap/custom_64"
+                android:drawableTint="@color/save_click"
+                android:gravity="center"
+                android:paddingHorizontal="5dp"
+                android:paddingVertical="10dp"
+                android:text="@string/custom"
+                android:textColor="@color/save_click"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+        </RadioGroup>
+    </HorizontalScrollView>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="15dp"
+        android:layout_weight="9"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@drawable/ly_background"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_margin="5dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="2"
+                        android:src="@mipmap/remarks_64"
+                        app:tint="@color/blue" />
+
+                    <EditText
+                        android:id="@+id/ed_title"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="10"
+                        android:hint="标题"
+                        android:textColor="@color/black"
+                        android:theme="@style/MyEditText" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_margin="5dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="2"
+                        android:src="@mipmap/time_64"
+                        app:tint="@color/blue" />
+
+                    <EditText
+                        android:id="@+id/ed_time"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="10"
+                        android:drawableEnd="@mipmap/in_48"
+                        android:hint="开始时间"
+                        android:textColor="@color/black"
+                        android:theme="@style/MyEditText" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_margin="5dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="2"
+                        android:src="@mipmap/money_64"
+                        app:tint="@color/blue" />
+
+                    <EditText
+                        android:id="@+id/ed_target_money"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="10"
+                        android:hint="目标金额"
+                        android:inputType="numberDecimal"
+                        android:textColor="@color/black"
+                        android:theme="@style/MyEditText" />
+                </LinearLayout>
+
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/ly_custom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:visibility="gone"
+                android:background="@drawable/ly_background"
+                android:orientation="vertical">
+
+                <RadioGroup
+                    android:id="@+id/radioGroup_custom"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="5dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.5"/>
+                    <RadioButton
+                        android:id="@+id/custom_year"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:checked="true"
+                        android:text="年"
+                        android:buttonTint="@color/blue"
+                        android:textColor="@color/blue"/>
+                    <RadioButton
+                        android:id="@+id/custom_month"
+
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="月"
+                        android:buttonTint="@color/blue"
+                        android:textColor="@color/blue"/>
+                    <RadioButton
+                        android:id="@+id/custom_week"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="周"
+                        android:buttonTint="@color/blue"
+                        android:textColor="@color/blue"/>
+                    <RadioButton
+                        android:id="@+id/custom_day"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="日"
+                        android:buttonTint="@color/blue"
+                        android:textColor="@color/blue"/>
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.5"/>
+
+                </RadioGroup>
+
+                <EditText
+                    android:id="@+id/ed_custom_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginHorizontal="20dp"
+                    android:gravity="center"
+                    android:hint="数量（几年、几个月、几周、几日）"
+                    android:inputType="number"
+                    android:textColor="@color/black"
+                    android:theme="@style/MyEditText" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
+
+</LinearLayout>

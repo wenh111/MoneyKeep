@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="background">#EFEFEF</color>
+    <color name="blue">#1296db</color>
+    <color name="income_color">#FFF1B723</color>
+
+
+
+    <color name="restaurant">#F3837B</color>
+    <color name="traffic">#0B9A06</color>
+    <color name="clothes">#DBEA09</color>
+    <color name="shopping">#28DC88</color>
+    <color name="service">#FF018786</color>
+    <color name="teach">#F6AFAF</color>
+    <color name="entertainment">#9C27B0</color>
+    <color name="motion">#D500F9</color>
+    <color name="living_payment">#EA002F</color>
+    <color name="travel">#0091EA</color>
+    <color name="pets">#F66898</color>
+    <color name="medical">#FFC107</color>
+    <color name="insurance">#4A148C</color>
+    <color name="welfare">#9C7104</color>
+    <color name="envelopes">#D50000</color>
+    <color name="transfer_accounts">#B1033E</color>
+    <color name="kinship_card">#FFFF8D</color>
+    <color name="human">#F42E2A</color>
+    <color name="other">#29B6F6</color>
+
+    <color name="Construction_Bank">#103095</color>
+    <color name="Agricultural_Bank">#0A9183</color>
+
+    <color name="business">#1DE9B6</color>
+    <color name="wages">#42A5F5</color>
+    <color name="bonus">#4527A0</color>
+    <color name="receive_red_envelopes">#C62828</color>
+    <color name="collection_and_transfer">#EA6811</color>
+    <color name="other_income">#0277BD</color>
+
+    <color name="gray">#848484</color>
+
+
+
+</resources>

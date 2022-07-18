@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    tools:context=".Activity.ui.SaveMoney.SaveMoneyFragment">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"
+        android:text="@string/save_plan"
+        android:textColor="#000000"
+        android:textSize="25sp"
+        android:textStyle="bold" />
+
+    <HorizontalScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:gravity="center"
+        android:scrollbars="none">
+
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginStart="2.5dp"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/radio_all"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/but_ripple"
+                android:button="@null"
+                android:checked="true"
+                android:drawableTop="@mipmap/all_project"
+                android:drawableTint="@color/save_click"
+                android:gravity="center"
+                android:paddingHorizontal="5dp"
+                android:paddingVertical="10dp"
+                android:text="@string/all_plan"
+                android:textColor="@color/save_click"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <RadioButton
+                android:id="@+id/radio_12month"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:background="@drawable/but_ripple"
+                android:button="@null"
+                android:drawableTop="@mipmap/year_project"
+                android:drawableTint="@color/save_click"
+                android:gravity="center"
+                android:paddingHorizontal="5dp"
+                android:paddingVertical="10dp"
+                android:text="@string/_12month"
+                android:textColor="@color/save_click"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <RadioButton
+                android:id="@+id/radio_30day"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:background="@drawable/but_ripple"
+                android:button="@null"
+                android:drawableTop="@mipmap/month_project"
+                android:drawableTint="@color/save_click"
+                android:gravity="center"
+                android:paddingHorizontal="5dp"
+                android:paddingVertical="10dp"
+                android:text="@string/_30day"
+                android:textColor="@color/save_click"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <RadioButton
+                android:id="@+id/radio_4week"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:background="@drawable/but_ripple"
+                android:button="@null"
+                android:drawableTop="@mipmap/four_week"
+                android:drawableTint="@color/save_click"
+                android:gravity="center"
+                android:paddingHorizontal="5dp"
+                android:paddingVertical="10dp"
+                android:text="@string/_4week"
+                android:textColor="@color/save_click"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <RadioButton
+                android:id="@+id/radio_52week"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:background="@drawable/but_ripple"
+                android:button="@null"
+                android:drawableTop="@mipmap/fiftytwo_week"
+                android:drawableTint="@color/save_click"
+                android:gravity="center"
+                android:paddingHorizontal="5dp"
+                android:paddingVertical="10dp"
+                android:text="@string/_52week"
+                android:textColor="@color/save_click"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <RadioButton
+                android:id="@+id/radio_365day"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:background="@drawable/but_ripple"
+                android:button="@null"
+                android:drawableTop="@mipmap/is_365day"
+                android:drawableTint="@color/save_click"
+                android:gravity="center"
+                android:paddingHorizontal="5dp"
+                android:paddingVertical="10dp"
+                android:text="@string/_365day"
+                android:textColor="@color/save_click"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+            <RadioButton
+                android:id="@+id/radio_custom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:paddingHorizontal="5dp"
+                android:paddingVertical="10dp"
+                android:background="@drawable/but_ripple"
+                android:button="@null"
+                android:drawableTop="@mipmap/custom_64"
+                android:drawableTint="@color/save_click"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="@string/custom"
+                android:textColor="@color/save_click"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+        </RadioGroup>
+    </HorizontalScrollView>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:layout_marginStart="5dp">
+
+        <TextView
+            android:id="@+id/doing"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+
+            android:text="@string/isdoing"
+            android:textColor="#000000"
+            android:textSize="25sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="5dp"
+            android:layout_toEndOf="@+id/doing"
+            android:background="@drawable/amount_background"
+            android:gravity="center"
+            android:paddingHorizontal="15dp"
+            android:text="2项"
+            android:textColor="#000000"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/add_event"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="15dp"
+            android:text="@string/new_plan"
+            android:textColor="@color/blue"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginTop="10dp" />
+
+
+</LinearLayout>

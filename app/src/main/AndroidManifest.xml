@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.org.moneykeep">
+    <!-- 允许联网 -->
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- 获取GSM（2g）、WCDMA（联通3g）等网络状态的信息 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 获取wifi网络状态的信息 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- 保持CPU 运转，屏幕和键盘灯有可能是关闭的,用于文件上传和下载 -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" /> <!-- 获取sd卡写的权限，用于文件上传和下载 -->
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" /> <!-- 允许读取手机状态 用于创建BmobInstallation -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- 这个权限用于进行网络定位 -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- 这个权限用于访问GPS定位 -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+
+    <application
+        android:name=".Until.DemoApplication"
+        android:allowBackup="true"
+        android:excludeFromRecents="true"
+        android:icon="@mipmap/app_icon_foreground"
+        android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.MoneyKeep"
+        android:usesCleartextTraffic="true">
+        <activity
+            android:name=".Activity.PunchCardView.PunchCardActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.AddSaveMoneyPlanView.AddSaveMoneyPlanActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.DetailsView.DetailsActivity"
+            android:exported="false" />
+
+        <receiver
+            android:name=".Recevier.MessageRecevier"
+            android:enabled="true"
+            android:exported="true"
+            android:foregroundServiceType="location">
+            <intent-filter android:priority="2147483647">
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+            </intent-filter>
+        </receiver>
+
+        <activity
+            android:name=".Activity.AddPayEventView.GetLocationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.AddPayEventView.AddPayEventActivity"
+            android:exported="false" />
+
+        <meta-data
+            android:name="com.baidu.lbsapi.API_KEY"
+            android:value="GIPvrwAWL1Pu1ycTzwUIvAwdPOr0Q7Zi" />
+
+        <service
+            android:name="com.baidu.location.f"
+            android:enabled="true"
+            android:foregroundServiceType="location"
+            android:process=":remote" />
+
+        <activity
+            android:name=".Activity.ForgetPasswordView.UpdatePasswordView.SettingPasswordActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.ForgetPasswordView.AuthenticationView.ForgetPasswordActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.UserMainActivity"
+            android:exported="false"
+            android:label="@string/title_activity_user_mian" />
+        <activity
+            android:name=".Activity.SignUpView.SignUpActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.SignInView.SignInActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.WelcomeActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".MainActivity"
+            android:exported="false" />
+
+        <provider
+            android:name="cn.bmob.v3.util.BmobContentProvider"
+            android:authorities="com.org.moneykeep.BmobContentProvider" />
+    </application>
+
+</manifest>
