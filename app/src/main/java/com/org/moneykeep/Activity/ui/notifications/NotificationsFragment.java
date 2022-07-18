@@ -58,6 +58,7 @@ import cn.bmob.v3.listener.UploadFileListener;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -67,7 +68,7 @@ import retrofit2.http.Multipart;
 public class NotificationsFragment extends Fragment {
 
     private FragmentNotificationsBinding binding;
-    private Button but_log_out,but_update_password;
+    private Button but_log_out, but_update_password;
     public String USER_EMAIL = "user_email";
     public String USER_PASSWORD = "user_password";
     public String USER_ISUSED = "user_isused";
@@ -95,24 +96,24 @@ public class NotificationsFragment extends Fragment {
                         uri_editor.putString("uripath", mpath);
                         uri_editor.commit();
                         Log.i("mpath ===>", mpath);
-                       /* File file = new File(mpath);
-                        RequestBody body = RequestBody.create(file,MediaType.parse("image/jpeg"));
-                        MultipartBody.Part part =  MultipartBody.Part.createFormData("file",file.getName(),body);
+                        File file = new File(mpath);
+                        RequestBody body = RequestBody.create(file, MediaType.parse("image/jpeg"));
+                        MultipartBody.Part part = MultipartBody.Part.createFormData("file", file.getName(), body);
                         UserPhotoAPI api = RetrofitUntil.getRetrofit().create(UserPhotoAPI.class);
-                        Call<String> stringCall = api.UploadPhoto(part, bundle_user_email);
-                        stringCall.enqueue(new Callback<String>() {
+                        Call<UploadSuccessfulMessage> stringCall = api.UploadPhoto(part, bundle_user_email);
+                        stringCall.enqueue(new Callback<UploadSuccessfulMessage>() {
                             @Override
-                            public void onResponse(Call<String> call, Response<String> response) {
-                                if(response.code() == HttpURLConnection.HTTP_OK){
-                                    Log.i("uploadSuccessful=======>", response.body());
+                            public void onResponse(Call<UploadSuccessfulMessage> call, Response<UploadSuccessfulMessage> response) {
+                                if (response.code() == HttpURLConnection.HTTP_OK) {
+                                    Log.i("uploadSuccessful", "============>" + response.body().getUrl());
                                 }
                             }
 
                             @Override
-                            public void onFailure(Call<String> call, Throwable t) {
-                                Log.i("uploadUnSuccessful=======>", t.getMessage());
+                            public void onFailure(Call<UploadSuccessfulMessage> call, Throwable t) {
+                                Log.i("uploadUnSuccessful", "============>" + t.getMessage());
                             }
-                        });*/
+                        });
 
                         ContentResolver cr = getActivity().getContentResolver();
                         /* 将Bitmap设定到ImageView */
