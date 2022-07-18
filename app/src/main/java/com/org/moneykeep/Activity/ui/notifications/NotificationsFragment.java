@@ -18,6 +18,7 @@ import android.os.Build;
 import android.os.Bundle;
 
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,10 +39,12 @@ import com.org.moneykeep.Activity.ForgetPasswordView.AuthenticationView.ForgetPa
 import com.org.moneykeep.Activity.SignInView.SignInActivity;
 import com.org.moneykeep.BmobTable.User;
 import com.org.moneykeep.R;
+import com.org.moneykeep.Until.RetrofitUntil;
 import com.org.moneykeep.databinding.FragmentNotificationsBinding;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.net.HttpURLConnection;
 import java.util.List;
 import java.util.Objects;
 
@@ -52,6 +55,13 @@ import cn.bmob.v3.listener.DownloadFileListener;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.UpdateListener;
 import cn.bmob.v3.listener.UploadFileListener;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.http.Multipart;
 
 
 public class NotificationsFragment extends Fragment {
@@ -80,47 +90,27 @@ public class NotificationsFragment extends Fragment {
                         uridata = getActivity().getSharedPreferences("uri", Context.MODE_PRIVATE);
                     }
                     try {
-
-                        Bundle receive = getActivity().getIntent().getExtras();
                         mpath = getImagePath(uri, null);
                         SharedPreferences.Editor uri_editor = uridata.edit();
                         uri_editor.putString("uripath", mpath);
-
                         uri_editor.commit();
-                        //Bundle_user_objectId = receive.getString("user_objectId");
-                        /*User user = new User();
-                        user.setIcon_string(mpath);
-                        user.update(Bundle_user_objectId, new UpdateListener() {
+                        Log.i("mpath ===>", mpath);
+                       /* File file = new File(mpath);
+                        RequestBody body = RequestBody.create(file,MediaType.parse("image/jpeg"));
+                        MultipartBody.Part part =  MultipartBody.Part.createFormData("file",file.getName(),body);
+                        UserPhotoAPI api = RetrofitUntil.getRetrofit().create(UserPhotoAPI.class);
+                        Call<String> stringCall = api.UploadPhoto(part, bundle_user_email);
+                        stringCall.enqueue(new Callback<String>() {
                             @Override
-                            public void done(BmobException e) {
-                                if (e == null) {
-                                    Toast.makeText(getActivity(), "更新成功", Toast.LENGTH_LONG).show();
-                                } else {
-                                    Toast.makeText(getActivity(), "更新失败" + e.getMessage(), Toast.LENGTH_LONG).show();
+                            public void onResponse(Call<String> call, Response<String> response) {
+                                if(response.code() == HttpURLConnection.HTTP_OK){
+                                    Log.i("uploadSuccessful=======>", response.body());
                                 }
                             }
-                        });*/
-                        //上传头像
-                        /*BmobFile file = new BmobFile(new File(mpath));
-                        file.upload(new UploadFileListener() {
+
                             @Override
-                            public void done(BmobException e) {
-                                if (e == null) {
-                                    User user = new User();
-                                    user.setIcon(file);
-                                    user.update(Bundle_user_objectId, new UpdateListener() {
-                                        @Override
-                                        public void done(BmobException e) {
-                                            if (e == null) {
-                                                Toast.makeText(getActivity(), "头像上传服务器成功", Toast.LENGTH_LONG).show();
-                                            } else {
-                                                Toast.makeText(getActivity(), "头像上传服务器失败" + e.getMessage(), Toast.LENGTH_LONG).show();
-                                            }
-                                        }
-                                    });
-                                } else {
-                                    Toast.makeText(getActivity(), "错误" + e.getMessage(), Toast.LENGTH_LONG).show();
-                                }
+                            public void onFailure(Call<String> call, Throwable t) {
+                                Log.i("uploadUnSuccessful=======>", t.getMessage());
                             }
                         });*/
 
