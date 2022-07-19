@@ -16,7 +16,9 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-
+import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,30 +33,24 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.org.moneykeep.Activity.ForgetPasswordView.AuthenticationView.ForgetPasswordActivity;
 import com.org.moneykeep.Activity.SignInView.SignInActivity;
-import com.org.moneykeep.BmobTable.User;
 import com.org.moneykeep.R;
 import com.org.moneykeep.Until.RetrofitUntil;
 import com.org.moneykeep.databinding.FragmentNotificationsBinding;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.util.List;
-import java.util.Objects;
 
-import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.datatype.BmobFile;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.DownloadFileListener;
-import cn.bmob.v3.listener.FindListener;
-import cn.bmob.v3.listener.UpdateListener;
-import cn.bmob.v3.listener.UploadFileListener;
+import okhttp3.Headers;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -62,7 +58,6 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.http.Multipart;
 
 
 public class NotificationsFragment extends Fragment {
@@ -79,6 +74,7 @@ public class NotificationsFragment extends Fragment {
     private ImageView user_icon;
     private String mpath = null;
     private Uri uri;
+    private UserPhotoAPI api;
 
 
     private ActivityResultLauncher<Intent> intentActivityResultLauncher =
@@ -93,19 +89,21 @@ public class NotificationsFragment extends Fragment {
                     try {
                         mpath = getImagePath(uri, null);
                         SharedPreferences.Editor uri_editor = uridata.edit();
-                        uri_editor.putString("uripath", mpath);
-                        uri_editor.commit();
+
                         Log.i("mpath ===>", mpath);
                         File file = new File(mpath);
                         RequestBody body = RequestBody.create(file, MediaType.parse("image/jpeg"));
                         MultipartBody.Part part = MultipartBody.Part.createFormData("file", file.getName(), body);
-                        UserPhotoAPI api = RetrofitUntil.getRetrofit().create(UserPhotoAPI.class);
+
                         Call<UploadSuccessfulMessage> stringCall = api.UploadPhoto(part, bundle_user_email);
                         stringCall.enqueue(new Callback<UploadSuccessfulMessage>() {
                             @Override
                             public void onResponse(Call<UploadSuccessfulMessage> call, Response<UploadSuccessfulMessage> response) {
                                 if (response.code() == HttpURLConnection.HTTP_OK) {
                                     Log.i("uploadSuccessful", "============>" + response.body().getUrl());
+                                    uri_editor.putString("uripath","");
+                                    uri_editor.putBoolean("needDownload",true);
+                                    uri_editor.commit();
                                 }
                             }
 
@@ -130,6 +128,7 @@ public class NotificationsFragment extends Fragment {
                 }
 
             });
+    private boolean needDownload = true;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -138,16 +137,12 @@ public class NotificationsFragment extends Fragment {
                 new ViewModelProvider(this).get(NotificationsViewModel.class);
 
         binding = FragmentNotificationsBinding.inflate(inflater, container, false);
+        api = RetrofitUntil.getRetrofit().create(UserPhotoAPI.class);
         View root = binding.getRoot();
         Bundle receive = getActivity().getIntent().getExtras();
         bundle_user_name = receive.getString("user_name");
         bundle_user_email = receive.getString("user_email");
         //Bundle_user_objectId = receive.getString("user_objectId");
-        SharedPreferences uridata = null;
-        if (uridata == null) {
-            uridata = getActivity().getSharedPreferences("uri", Context.MODE_PRIVATE);
-        }
-        uri_path = uridata.getString("uripath", "");
 
         return root;
     }
@@ -162,55 +157,126 @@ public class NotificationsFragment extends Fragment {
         user_name.setText(bundle_user_name);
         user_account_input.setText(bundle_user_email);
 
+        SharedPreferences uridata = null;
+        if (uridata == null) {
+            uridata = getActivity().getSharedPreferences("uri", Context.MODE_PRIVATE);
+        }
+
+        //uri_path = uridata.getString("uripath", "");
+        needDownload = uridata.getBoolean("needDownload",true);
         if (Build.VERSION.SDK_INT >= 23) {
             int REQUEST_CODE_CONTACT = 101;
             String[] permissions = {
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE};
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE};
             //验证是否许可权限
             for (String str : permissions) {
                 if (requireActivity().checkSelfPermission(str) != PackageManager.PERMISSION_GRANTED) {
                     //申请权限
                     getActivity().requestPermissions(permissions, REQUEST_CODE_CONTACT);
                     return;
-                } else {
+                } /*else {
                     //这里就是权限打开之后自己要操作的逻辑
                     Uri filepath = Uri.fromFile(new File(uri_path));
-                    /* 将Bitmap设定到ImageView */
+                    *//* 将Bitmap设定到ImageView *//*
                     if (!uri_path.equals("")) {
                         user_icon.setImageURI(filepath);
                     }
-                }
+                }*/
+            }
+        }
+        if(needDownload){
+            setUserPhoto();
+        }else{
+            uri_path = uridata.getString("uripath", "");
+            Uri filepath = Uri.fromFile(new File(uri_path));
+            if (!uri_path.equals("")) {
+                user_icon.setImageURI(filepath);
             }
         }
 
 
-       /* BmobQuery<User> query = new BmobQuery<>();
-        query.addWhereEqualTo("objectId", Bundle_user_objectId);
-        query.findObjects(new FindListener<User>() {
+
+
+    }
+    private String TAG = "PhotoMessage";
+
+    private void setUserPhoto() {
+        Call<ResponseBody> responseBodyCall = api.downPhoto(bundle_user_email);
+        responseBodyCall.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void done(List<User> list, BmobException e) {
-                if (e == null) {
-                    User user = list.get(0);
-                    BmobFile icon = user.getIcon();
-                    if (icon != null) {
-                        icon.download(new DownloadFileListener() {
-                            @Override
-                            public void done(String s, BmobException e) {
-                                user_icon.setImageBitmap(BitmapFactory.decodeFile(s));
-                            }
-
-                            @Override
-                            public void onProgress(Integer integer, long l) {
-
-                            }
-                        });
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if(response.code() == HttpURLConnection.HTTP_OK){
+                    String fileName = "未命名.png";
+                    Headers headers = response.headers();
+                    String fileNameHeader = headers.get("Content-Disposition");
+                    if(fileNameHeader != null){
+                        fileName = fileNameHeader.replace("attachment;filename=","");
+                        Log.i(TAG, fileName);
                     }
-
-                } else {
-                    Toast.makeText(getActivity(), "查询失败", Toast.LENGTH_LONG).show();
+                    /*for (int i = 0; i < headers.size(); i++) {
+                        String key = headers.name(i);
+                        String value = headers.value(i);
+                        Log.i(TAG, key + "=================>" + value);
+                    }*/
+                    writString2Disk(response,fileName);
                 }
             }
-        });*/
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private void writString2Disk(Response<ResponseBody> response, String fileName) {
+        new Thread(new Runnable(){
+            @Override
+            public void run() {
+                InputStream inputStream = response.body().byteStream();
+                //File externalStorageDirectory = Environment.getExternalStorageDirectory();
+                File externalFilesDir = getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+                Log.i(TAG, "externalFilesDir ================>" + externalFilesDir.toURI());
+                String uri = externalFilesDir +"/"+ fileName;
+                File outFile = new File(externalFilesDir,fileName);
+                Log.i(TAG, "externalFilesDir ================>" +uri);
+
+                SharedPreferences uridata = null;
+                if (uridata == null) {
+                    uridata = getActivity().getSharedPreferences("uri", Context.MODE_PRIVATE);
+                }
+                SharedPreferences.Editor uri_editor = uridata.edit();
+                FileOutputStream fileOutputStream = null;
+                try {
+                    fileOutputStream = new FileOutputStream(outFile);
+                    byte[] buffer = new byte[1024];
+                    int len;
+                    while((len = inputStream.read(buffer)) != -1){
+                        fileOutputStream.write(buffer,0,len);
+                    }
+                    //Uri filepath = Uri.fromFile(outFile);
+                    Uri filepath = Uri.fromFile(outFile);
+                    user_icon.post(() -> user_icon.setImageURI(filepath));
+
+                    uri_editor.putString("uripath", uri);
+                    uri_editor.putBoolean("needDownload",false);
+                    uri_editor.commit();
+
+                    Log.i(TAG, "externalFilesDir ================>" + filepath);
+                    Log.i(TAG, "successful");
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }finally {
+                    try {
+                        fileOutputStream.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
     }
 
     @Override
@@ -276,6 +342,14 @@ public class NotificationsFragment extends Fragment {
         controller_editor.putString(USER_PASSWORD, "");
         controller_editor.putBoolean(USER_ISUSED, false);
         controller_editor.commit();
+        SharedPreferences uridata = null;
+        if (uridata == null) {
+            uridata = getActivity().getSharedPreferences("uri", Context.MODE_PRIVATE);
+        }
+        SharedPreferences.Editor uri_editor = uridata.edit();
+        uri_editor.putString("uripath", "");
+        uri_editor.putBoolean("needDownload",true);
+        uri_editor.commit();
         Intent intent = new Intent(getActivity(), SignInActivity.class);
         startActivity(intent);
         getActivity().finish();
