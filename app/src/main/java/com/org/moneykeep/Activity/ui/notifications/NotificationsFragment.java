@@ -162,7 +162,6 @@ public class NotificationsFragment extends Fragment {
             uridata = getActivity().getSharedPreferences("uri", Context.MODE_PRIVATE);
         }
 
-        //uri_path = uridata.getString("uripath", "");
         needDownload = uridata.getBoolean("needDownload",true);
         if (Build.VERSION.SDK_INT >= 23) {
             int REQUEST_CODE_CONTACT = 101;
@@ -174,14 +173,7 @@ public class NotificationsFragment extends Fragment {
                     //申请权限
                     getActivity().requestPermissions(permissions, REQUEST_CODE_CONTACT);
                     return;
-                } /*else {
-                    //这里就是权限打开之后自己要操作的逻辑
-                    Uri filepath = Uri.fromFile(new File(uri_path));
-                    *//* 将Bitmap设定到ImageView *//*
-                    if (!uri_path.equals("")) {
-                        user_icon.setImageURI(filepath);
-                    }
-                }*/
+                }
             }
         }
         if(needDownload){
@@ -234,7 +226,7 @@ public class NotificationsFragment extends Fragment {
             @Override
             public void run() {
                 InputStream inputStream = response.body().byteStream();
-                //File externalStorageDirectory = Environment.getExternalStorageDirectory();
+
                 File externalFilesDir = getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
                 Log.i(TAG, "externalFilesDir ================>" + externalFilesDir.toURI());
                 String uri = externalFilesDir +"/"+ fileName;
