@@ -15,9 +15,61 @@
         android:layout_weight="1"
         android:background="#ffffff"
         android:orientation="horizontal"
+        android:gravity="center_vertical"
         tools:ignore="Suspicious0dp">
-
+        <ImageView
+            android:id="@+id/user_icon"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginLeft="5dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/head_path"
+            android:tooltipText="点击设置头像" />
         <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/user_name"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="top"
+                android:text="Wenh"
+                android:paddingLeft="10dp"
+                android:textColor="#000000"
+                android:textSize="25sp"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/user_account"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="bottom"
+                    android:paddingLeft="10dp"
+                    android:text="账号:"
+                    android:textColor="#000000"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/user_account_input"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="4"
+                    android:gravity="bottom"
+                    android:textColor="#000000"
+                    android:text="850838293@qq.com"
+                    android:textSize="15sp" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!--<LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -26,13 +78,12 @@
 
             <ImageView
                 android:id="@+id/user_icon"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="30dp"
-                android:layout_marginBottom="20dp"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+
                 android:gravity="center"
-                android:src="@drawable/head_pacth"
+                android:scaleType="fitXY"
+                android:src="@drawable/head_path"
                 android:tooltipText="点击设置头像" />
         </LinearLayout>
 
@@ -49,6 +100,7 @@
                 android:layout_weight="1.2"
                 android:gravity="bottom"
                 android:paddingLeft="10dp"
+                android:paddingBottom="5dp"
                 android:text="Wenh"
                 android:textColor="#000000"
                 android:textSize="30sp" />
@@ -80,7 +132,7 @@
                     android:textSize="15sp" />
             </LinearLayout>
 
-        </LinearLayout>
+        </LinearLayout>-->
     </LinearLayout>
 
     <LinearLayout
@@ -91,13 +143,28 @@
         android:layout_weight="4"
         android:orientation="vertical">
 
-        <LinearLayout
+        <!--<LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/user_fragment_setting_background"
             android:gravity="center"
             android:orientation="vertical">
 
+
+
+
+        </LinearLayout>-->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/user_fragment_setting_background"
+            android:gravity="center"
+            android:divider="@drawable/divider_background"
+            android:showDividers="middle"
+            android:dividerPadding="10dp"
+            android:orientation="vertical">
             <Button
                 android:id="@+id/but_update_password"
                 android:layout_width="match_parent"
@@ -106,17 +173,6 @@
                 android:gravity="center"
                 android:outlineProvider="none"
                 android:text="修改密码" />
-
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:background="@drawable/user_fragment_setting_background"
-            android:gravity="center"
-            android:orientation="vertical">
 
             <Button
                 android:id="@+id/but_log_out"
