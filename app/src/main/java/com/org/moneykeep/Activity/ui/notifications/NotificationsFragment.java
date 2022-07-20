@@ -10,6 +10,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -137,7 +139,7 @@ public class NotificationsFragment extends Fragment {
         Bundle receive = getActivity().getIntent().getExtras();
         bundle_user_name = receive.getString("user_name");
         bundle_user_email = receive.getString("user_email");
-        //Bundle_user_objectId = receive.getString("user_objectId");
+
 
         return root;
     }
@@ -152,11 +154,7 @@ public class NotificationsFragment extends Fragment {
         user_name.setText(bundle_user_name);
         user_account_input.setText(bundle_user_email);
 
-
-        SharedPreferences uridata = null;
-        if (uridata == null) {
-            uridata = getActivity().getSharedPreferences("uri", Context.MODE_PRIVATE);
-        }
+        SharedPreferences uridata = getActivity().getSharedPreferences("uri", Context.MODE_PRIVATE);
 
         needDownload = uridata.getBoolean("needDownload", true);
         int REQUEST_CODE_CONTACT = 101;
@@ -176,6 +174,7 @@ public class NotificationsFragment extends Fragment {
             String uri_path = uridata.getString("uripath", "");
             //Uri filepath = Uri.fromFile(new File(uri_path));
             if (!uri_path.equals("")) {
+                Log.i(TAG, "uri_path =================>" + uri_path);
                 RoundedBitmapDrawable roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), uri_path);
                 roundedBitmapDrawable.setCornerRadius(25);
                 user_icon.setImageDrawable(roundedBitmapDrawable);
@@ -221,7 +220,7 @@ public class NotificationsFragment extends Fragment {
             Log.i(TAG, "externalFilesDir ================>" + externalFilesDir.toURI());
             String uri = externalFilesDir + "/" + fileName;
             File outFile = new File(externalFilesDir, fileName);
-            Log.i(TAG, "externalFilesDir ================>" + uri);
+            Log.i(TAG, "uri ================>" + uri);
 
             SharedPreferences uridata = getActivity().getSharedPreferences("uri", Context.MODE_PRIVATE);
             SharedPreferences.Editor uri_editor = uridata.edit();
@@ -236,13 +235,14 @@ public class NotificationsFragment extends Fragment {
                 //Uri filepath = Uri.fromFile(outFile);
                 RoundedBitmapDrawable roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), uri);
                 roundedBitmapDrawable.setCornerRadius(25);
-                Uri filepath = Uri.fromFile(outFile);
+                //Uri filepath = Uri.fromFile(outFile);
                 //user_icon.post(() -> user_icon.setImageURI(filepath));
                 user_icon.post(() -> user_icon.setImageDrawable(roundedBitmapDrawable));
                 uri_editor.putString("uripath", uri);
                 uri_editor.putBoolean("needDownload", false);
                 uri_editor.apply();
-                Log.i(TAG, "filepath ================>" + filepath);
+                //Log.i(TAG, "filepath ================>" + filepath);
+                Log.i(TAG, "uripath ================>" + uri);
                 Log.i(TAG, "successful");
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
