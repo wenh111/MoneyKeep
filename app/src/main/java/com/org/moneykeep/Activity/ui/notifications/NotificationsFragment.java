@@ -110,6 +110,7 @@ public class NotificationsFragment extends Fragment {
                             @Override
                             public void onFailure(Call<UploadSuccessfulMessage> call, Throwable t) {
                                 Log.i("uploadUnSuccessful", "============>" + t.getMessage());
+                                Toast.makeText(getActivity(), "头像上传服务器失败:" + t.getMessage(), Toast.LENGTH_LONG).show();
                             }
                         });
 
@@ -124,7 +125,7 @@ public class NotificationsFragment extends Fragment {
                     }
 
                 } else {
-                    Toast.makeText(getActivity(), "错误", Toast.LENGTH_LONG).show();
+                    Log.i("photoViewCallBack", "没有切换头像");
                 }
 
             });
