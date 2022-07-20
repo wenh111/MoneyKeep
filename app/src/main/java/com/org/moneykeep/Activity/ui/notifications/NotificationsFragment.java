@@ -5,20 +5,15 @@ import static android.content.Context.MODE_PRIVATE;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.Message;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -33,6 +28,8 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.graphics.drawable.RoundedBitmapDrawable;
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -49,7 +46,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 
-import cn.bmob.v3.datatype.BmobFile;
 import okhttp3.Headers;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -67,10 +63,9 @@ public class NotificationsFragment extends Fragment {
     public String USER_EMAIL = "user_email";
     public String USER_PASSWORD = "user_password";
     public String USER_ISUSED = "user_isused";
-    private String USER_OBJECTID = "user_objectId";
     private TextView user_name, user_account_input;
-    private String bundle_user_name, bundle_user_email, Bundle_user_objectId, uri_path;
-    private BmobFile Bundle_user_icon;
+    private String bundle_user_name;
+    private String bundle_user_email;
     private ImageView user_icon;
     private String mpath = null;
     private Uri uri;
@@ -83,9 +78,7 @@ public class NotificationsFragment extends Fragment {
                     Intent resultData = result.getData();
                     uri = resultData.getData();
                     SharedPreferences uridata = null;
-                    if (uridata == null) {
-                        uridata = getActivity().getSharedPreferences("uri", Context.MODE_PRIVATE);
-                    }
+                    uridata = getActivity().getSharedPreferences("uri", Context.MODE_PRIVATE);
                     try {
                         mpath = getImagePath(uri, null);
                         SharedPreferences.Editor uri_editor = uridata.edit();
@@ -101,8 +94,8 @@ public class NotificationsFragment extends Fragment {
                             public void onResponse(Call<UploadSuccessfulMessage> call, Response<UploadSuccessfulMessage> response) {
                                 if (response.code() == HttpURLConnection.HTTP_OK) {
                                     Log.i("uploadSuccessful", "============>" + response.body().getUrl());
-                                    uri_editor.putString("uripath","");
-                                    uri_editor.putBoolean("needDownload",true);
+                                    uri_editor.putString("uripath", "");
+                                    uri_editor.putBoolean("needDownload", true);
                                     uri_editor.commit();
                                 }
                             }
@@ -114,12 +107,13 @@ public class NotificationsFragment extends Fragment {
                             }
                         });
 
-                        ContentResolver cr = getActivity().getContentResolver();
-                        /* 将Bitmap设定到ImageView */
+                        /*ContentResolver cr = getActivity().getContentResolver();
+                         *//* 将Bitmap设定到ImageView *//*
                         Bitmap bitmap = BitmapFactory.decodeStream(cr.openInputStream(uri));
-                        user_icon.setImageBitmap(bitmap);
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
+                        user_icon.setImageBitmap(bitmap);*/
+                        RoundedBitmapDrawable roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), mpath);
+                        roundedBitmapDrawable.setCornerRadius(25);
+                        user_icon.setImageDrawable(roundedBitmapDrawable);
                     } catch (IllegalStateException e) {
                         Toast.makeText(getActivity(), "错误" + e.getMessage(), Toast.LENGTH_LONG).show();
                     }
@@ -158,60 +152,56 @@ public class NotificationsFragment extends Fragment {
         user_name.setText(bundle_user_name);
         user_account_input.setText(bundle_user_email);
 
+
         SharedPreferences uridata = null;
         if (uridata == null) {
             uridata = getActivity().getSharedPreferences("uri", Context.MODE_PRIVATE);
         }
 
-        needDownload = uridata.getBoolean("needDownload",true);
-        if (Build.VERSION.SDK_INT >= 23) {
-            int REQUEST_CODE_CONTACT = 101;
-            String[] permissions = {
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE};
-            //验证是否许可权限
-            for (String str : permissions) {
-                if (requireActivity().checkSelfPermission(str) != PackageManager.PERMISSION_GRANTED) {
-                    //申请权限
-                    getActivity().requestPermissions(permissions, REQUEST_CODE_CONTACT);
-                    return;
-                }
+        needDownload = uridata.getBoolean("needDownload", true);
+        int REQUEST_CODE_CONTACT = 101;
+        String[] permissions = {
+                Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
+        //验证是否许可权限
+        for (String str : permissions) {
+            if (requireActivity().checkSelfPermission(str) != PackageManager.PERMISSION_GRANTED) {
+                //申请权限
+                getActivity().requestPermissions(permissions, REQUEST_CODE_CONTACT);
+                return;
             }
         }
-        if(needDownload){
+        if (needDownload) {
             setUserPhoto();
-        }else{
-            uri_path = uridata.getString("uripath", "");
-            Uri filepath = Uri.fromFile(new File(uri_path));
+        } else {
+            String uri_path = uridata.getString("uripath", "");
+            //Uri filepath = Uri.fromFile(new File(uri_path));
             if (!uri_path.equals("")) {
-                user_icon.setImageURI(filepath);
+                RoundedBitmapDrawable roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), uri_path);
+                roundedBitmapDrawable.setCornerRadius(25);
+                user_icon.setImageDrawable(roundedBitmapDrawable);
+                //user_icon.setImageURI(filepath);
             }
         }
-
-
 
 
     }
-    private String TAG = "PhotoMessage";
+
+    private final String TAG = "PhotoMessage";
 
     private void setUserPhoto() {
         Call<ResponseBody> responseBodyCall = api.downPhoto(bundle_user_email);
         responseBodyCall.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if(response.code() == HttpURLConnection.HTTP_OK){
+                if (response.code() == HttpURLConnection.HTTP_OK) {
                     String fileName = "未命名.png";
                     Headers headers = response.headers();
                     String fileNameHeader = headers.get("Content-Disposition");
-                    if(fileNameHeader != null){
-                        fileName = fileNameHeader.replace("attachment;filename=","");
+                    if (fileNameHeader != null) {
+                        fileName = fileNameHeader.replace("attachment;filename=", "");
                         Log.i(TAG, fileName);
                     }
-                    /*for (int i = 0; i < headers.size(); i++) {
-                        String key = headers.name(i);
-                        String value = headers.value(i);
-                        Log.i(TAG, key + "=================>" + value);
-                    }*/
-                    writString2Disk(response,fileName);
+                    writString2Disk(response, fileName);
                 }
             }
 
@@ -223,50 +213,46 @@ public class NotificationsFragment extends Fragment {
     }
 
     private void writString2Disk(Response<ResponseBody> response, String fileName) {
-        new Thread(new Runnable(){
-            @Override
-            public void run() {
-                InputStream inputStream = response.body().byteStream();
+        new Thread(() -> {
+            assert response.body() != null;
+            InputStream inputStream = response.body().byteStream();
 
-                File externalFilesDir = getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-                Log.i(TAG, "externalFilesDir ================>" + externalFilesDir.toURI());
-                String uri = externalFilesDir +"/"+ fileName;
-                File outFile = new File(externalFilesDir,fileName);
-                Log.i(TAG, "externalFilesDir ================>" +uri);
+            File externalFilesDir = getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+            Log.i(TAG, "externalFilesDir ================>" + externalFilesDir.toURI());
+            String uri = externalFilesDir + "/" + fileName;
+            File outFile = new File(externalFilesDir, fileName);
+            Log.i(TAG, "externalFilesDir ================>" + uri);
 
-                SharedPreferences uridata = null;
-                if (uridata == null) {
-                    uridata = getActivity().getSharedPreferences("uri", Context.MODE_PRIVATE);
+            SharedPreferences uridata = getActivity().getSharedPreferences("uri", Context.MODE_PRIVATE);
+            SharedPreferences.Editor uri_editor = uridata.edit();
+            FileOutputStream fileOutputStream = null;
+            try {
+                fileOutputStream = new FileOutputStream(outFile);
+                byte[] buffer = new byte[1024];
+                int len;
+                while ((len = inputStream.read(buffer)) != -1) {
+                    fileOutputStream.write(buffer, 0, len);
                 }
-                SharedPreferences.Editor uri_editor = uridata.edit();
-                FileOutputStream fileOutputStream = null;
+                //Uri filepath = Uri.fromFile(outFile);
+                RoundedBitmapDrawable roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), uri);
+                roundedBitmapDrawable.setCornerRadius(25);
+                Uri filepath = Uri.fromFile(outFile);
+                //user_icon.post(() -> user_icon.setImageURI(filepath));
+                user_icon.post(() -> user_icon.setImageDrawable(roundedBitmapDrawable));
+                uri_editor.putString("uripath", uri);
+                uri_editor.putBoolean("needDownload", false);
+                uri_editor.apply();
+                Log.i(TAG, "filepath ================>" + filepath);
+                Log.i(TAG, "successful");
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
                 try {
-                    fileOutputStream = new FileOutputStream(outFile);
-                    byte[] buffer = new byte[1024];
-                    int len;
-                    while((len = inputStream.read(buffer)) != -1){
-                        fileOutputStream.write(buffer,0,len);
-                    }
-                    //Uri filepath = Uri.fromFile(outFile);
-                    Uri filepath = Uri.fromFile(outFile);
-                    user_icon.post(() -> user_icon.setImageURI(filepath));
-
-                    uri_editor.putString("uripath", uri);
-                    uri_editor.putBoolean("needDownload",false);
-                    uri_editor.commit();
-
-                    Log.i(TAG, "externalFilesDir ================>" + filepath);
-                    Log.i(TAG, "successful");
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
+                    fileOutputStream.close();
                 } catch (IOException e) {
                     e.printStackTrace();
-                }finally {
-                    try {
-                        fileOutputStream.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
                 }
             }
         }).start();
@@ -299,6 +285,7 @@ public class NotificationsFragment extends Fragment {
     }
 
     private class Onclick implements View.OnClickListener {
+        @SuppressLint("NonConstantResourceId")
         @Override
         public void onClick(View view) {
             switch (view.getId()) {
@@ -326,23 +313,17 @@ public class NotificationsFragment extends Fragment {
     }
 
     private void Logout() {
-        SharedPreferences controllerdata = null;
-        if (controllerdata == null) {
-            controllerdata = getActivity().getSharedPreferences("user", MODE_PRIVATE);
-        }
+        SharedPreferences controllerdata = getActivity().getSharedPreferences("user", MODE_PRIVATE);
         SharedPreferences.Editor controller_editor = controllerdata.edit();
         controller_editor.putString(USER_EMAIL, "");
         controller_editor.putString(USER_PASSWORD, "");
         controller_editor.putBoolean(USER_ISUSED, false);
-        controller_editor.commit();
-        SharedPreferences uridata = null;
-        if (uridata == null) {
-            uridata = getActivity().getSharedPreferences("uri", Context.MODE_PRIVATE);
-        }
+        controller_editor.apply();
+        SharedPreferences uridata = getActivity().getSharedPreferences("uri", Context.MODE_PRIVATE);
         SharedPreferences.Editor uri_editor = uridata.edit();
         uri_editor.putString("uripath", "");
-        uri_editor.putBoolean("needDownload",true);
-        uri_editor.commit();
+        uri_editor.putBoolean("needDownload", true);
+        uri_editor.apply();
         Intent intent = new Intent(getActivity(), SignInActivity.class);
         startActivity(intent);
         getActivity().finish();
