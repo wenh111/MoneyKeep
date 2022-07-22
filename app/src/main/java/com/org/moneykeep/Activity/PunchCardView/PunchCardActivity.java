@@ -1,12 +1,8 @@
 package com.org.moneykeep.Activity.PunchCardView;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -15,16 +11,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.org.moneykeep.BmobTable.SaveMoney;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.org.moneykeep.Dialog.DeleteDialog;
 import com.org.moneykeep.Dialog.PunchCardDialog;
 import com.org.moneykeep.R;
 import com.org.moneykeep.Until.ChangeDouble;
-
-import java.util.Calendar;
-
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.UpdateListener;
 
 public class PunchCardActivity extends AppCompatActivity implements PunchCardViewInterface.IView {
 

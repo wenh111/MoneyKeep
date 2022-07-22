@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 
@@ -63,12 +64,10 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
     private RecyclerView recyclerView;
     private String user_account;
     private DayRecyclerViewAdapter dayRecyclerViewAdapter;
-    private double CountIncome = 0, CountPay = 0;
     private List<DayPayOrIncomeList> dayPayOrIncomeDate = new ArrayList<>();
     private MonthRecyclerViewAdapter monthRecyclerViewAdapter;
     private List<MonthPayOrIncomeList> monthPayOrIncomeDate = new ArrayList<>();
     private HomeFragmentInterface.IPresenter iPresenter;
-
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -85,12 +84,8 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        SharedPreferences userdata = getActivity().getSharedPreferences("user", MODE_PRIVATE);
 
-
-        SharedPreferences userdata = null;
-        if (userdata == null) {
-            userdata = getActivity().getSharedPreferences("user", MODE_PRIVATE);
-        }
         user_account = userdata.getString("user_email", "");
 
         Findid();
@@ -148,6 +143,7 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setAdapter(new DayRecyclerViewAdapter(getContext(),new ArrayList<>()));
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -274,7 +270,7 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
     @Override
     public void getMonthAndYearMessageSuccessful(String s, List<MonthPayOrIncomeList> newMonthPayOrIncomeDate, Map<String, List<PayEventListBean.AllPayListDTO>> map,
                                                  List<PayEventListBean.AllPayListDTO> allSelect, double countIncome, double countPay) {
-        if(map != null){
+        if (map != null) {
             monthRecyclerViewAdapter = new MonthRecyclerViewAdapter(getContext(), monthPayOrIncomeDate, map);
             monthPayOrIncomeDate = newMonthPayOrIncomeDate;
             monthRecyclerViewAdapter.setMonthData(monthPayOrIncomeDate);
@@ -300,7 +296,7 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
                 count_pay.setText(String.valueOf(-countPay));
             }
 
-        }else{
+        } else {
             Toast.makeText(getContext(), s, Toast.LENGTH_SHORT).show();
         }
 
@@ -414,7 +410,7 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
         String select_year = select_dates[0];
         List<MonthPayOrIncomeList> newMonthPayOrIncomeDate = new ArrayList<>();
         String select_type = but_select_type.getText().toString();
-        iPresenter.getYearMessage(user_account,select_type,select_year);
+        iPresenter.getYearMessage(user_account, select_type, select_year);
     }
 
     private void getDayMessage() {
@@ -436,7 +432,7 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
 
         String select_type = but_select_type.getText().toString();
 
-        iPresenter.getMonthMessage(user_account,select_type,select_month,select_year);
+        iPresenter.getMonthMessage(user_account, select_type, select_month, select_year);
 
     }
 

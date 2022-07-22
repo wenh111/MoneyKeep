@@ -66,9 +66,10 @@ public class SaveMoneyFragment extends Fragment implements SaveMoneyFragmentInte
         user_account = userdata.getString("user_email", "");
         FindId();
         SetListen();
+        saveMoneyAdapter = new SaveMoneyAdapter(getContext(),saveData);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(linearLayoutManager);
-
+        recyclerView.setAdapter(saveMoneyAdapter);
         if (radio_all.isChecked()) {
             getAllProject();
         }
@@ -106,7 +107,7 @@ public class SaveMoneyFragment extends Fragment implements SaveMoneyFragmentInte
     public void showAllSaveMoneyPlanEventSuccessful(String successfulMessage, int doingThing, List<SaveMoneyAdapterList> newSaveData) {
         if (newSaveData != null) {
             count.setText(doingThing + "项");
-            saveMoneyAdapter = new SaveMoneyAdapter(getContext(), saveData);
+            //saveMoneyAdapter = new SaveMoneyAdapter(getContext(), saveData);
             newSaveData.sort(Comparator.comparing(SaveMoneyAdapterList::getWeight).
                     thenComparing(SaveMoneyAdapterList::getLongDDL));
 
@@ -114,28 +115,25 @@ public class SaveMoneyFragment extends Fragment implements SaveMoneyFragmentInte
             saveMoneyAdapter.setData(saveData);
             saveMoneyAdapter.notifyDataSetChanged();
             recyclerView.setAdapter(saveMoneyAdapter);
-            saveMoneyAdapter.setOnRecyclerItemClickListener(new SaveMoneyAdapter.OnRecyclerItemClickListener() {
-                @Override
-                public void OnRecyclerOnItemClickListenerData(SaveMoneyAdapterList data, String speed, String nowState) {
-                    ComponentName componentName = new ComponentName(getActivity(), PunchCardActivity.class);
-                    Intent intent = new Intent();
-                    intent.setComponent(componentName);
-                    Bundle bundle = new Bundle();
-                    bundle.putString("objectId", data.getObjectId());
-                    bundle.putString("deadlineDate", data.getDeadlineDate());
-                    bundle.putDouble("targetMoney", data.getTargetMoney());
-                    bundle.putDouble("savedMoney", data.getSavedMoney());
-                    bundle.putString("speed", speed);
-                    bundle.putString("nowState", nowState);
-                    bundle.putString("title", data.getTitle());
-                    bundle.putString("type", data.getType());
-                    bundle.putString("date", data.getDate());
-                    bundle.putInt("amount", data.getAmount());
-                    bundle.putInt("remainingTimes",data.getRemainingTimes());
-                    bundle.putInt("everydaySave", data.getEveryday_save());
-                    intent.putExtras(bundle);
-                    startActivity(intent);
-                }
+            saveMoneyAdapter.setOnRecyclerItemClickListener((data, speed, nowState) -> {
+                ComponentName componentName = new ComponentName(getActivity(), PunchCardActivity.class);
+                Intent intent = new Intent();
+                intent.setComponent(componentName);
+                Bundle bundle = new Bundle();
+                bundle.putString("objectId", data.getObjectId());
+                bundle.putString("deadlineDate", data.getDeadlineDate());
+                bundle.putDouble("targetMoney", data.getTargetMoney());
+                bundle.putDouble("savedMoney", data.getSavedMoney());
+                bundle.putString("speed", speed);
+                bundle.putString("nowState", nowState);
+                bundle.putString("title", data.getTitle());
+                bundle.putString("type", data.getType());
+                bundle.putString("date", data.getDate());
+                bundle.putInt("amount", data.getAmount());
+                bundle.putInt("remainingTimes",data.getRemainingTimes());
+                bundle.putInt("everydaySave", data.getEveryday_save());
+                intent.putExtras(bundle);
+                startActivity(intent);
             });
             Log.i("LoadTest", "数据处理完成...");
         }else{

@@ -250,29 +250,7 @@ public class MessageRecevier extends BroadcastReceiver {
                 });
                 //阻止广播继续传递，如果该receiver比系统的级别高，
                 abortBroadcast();
-                /*allPay.save(new SaveListener<String>() {
-                    @Override
-                    public void done(String s, BmobException e) {
-                        if (e == null) {
-                            SharedPreferences keep = null;
-                            if (keep == null) {
-                                keep = getApplicationContext().getSharedPreferences("DeleteOrUpdate", Context.MODE_PRIVATE);
-                            }
-                            SharedPreferences.Editor user_editor = keep.edit();
-                            user_editor.putBoolean("isdelete", true);
-                            user_editor.commit();
-                            Toast.makeText(getApplicationContext(), "收支数据上传成功", Toast.LENGTH_LONG).show();
 
-                            Log.i("dimos", "创建成功");
-
-                        } else {
-                            Toast.makeText(getApplicationContext(), "收支数据上传失败：" + e.getMessage(), Toast.LENGTH_LONG).show();
-                            Log.i("dimos", "创建失败");
-                        }
-                        //阻止广播继续传递，如果该receiver比系统的级别高，
-                        abortBroadcast();
-                    }
-                });*/
                 // 退出时销毁定位
                 if (mLocClient != null) {
                     mLocClient.stop();

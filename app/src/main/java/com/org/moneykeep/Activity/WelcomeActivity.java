@@ -6,7 +6,6 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
@@ -36,12 +35,8 @@ public class WelcomeActivity extends AppCompatActivity {
 
         requestPermission();
 
-
-        if (userdata == null) {
-            userdata = getSharedPreferences("user", MODE_PRIVATE);
-        }
-
-        Boolean user_islogin = userdata.getBoolean("user_isused", false);
+        userdata = getSharedPreferences("user", MODE_PRIVATE);
+        boolean user_islogin = userdata.getBoolean("user_isused", false);
         String user_account = userdata.getString("user_email", "");
         String user_name = userdata.getString("user_name", "");
         String user_objectId = userdata.getString("user_objectId", "");
@@ -65,7 +60,7 @@ public class WelcomeActivity extends AppCompatActivity {
      * Android6.0之后需要动态申请权限
      */
     private void requestPermission() {
-        if (Build.VERSION.SDK_INT >= 23 && !isPermissionRequested) {
+        if (!isPermissionRequested) {
 
             isPermissionRequested = true;
 
