@@ -1,7 +1,5 @@
 package com.org.moneykeep.Activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,8 +8,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.org.moneykeep.Activity.SignInView.SignInActivity;
 import com.org.moneykeep.R;
+import com.org.moneykeep.Until.JobSchedulerUntil;
 
 import java.util.ArrayList;
 
@@ -40,6 +41,10 @@ public class WelcomeActivity extends AppCompatActivity {
         String user_account = userdata.getString("user_email", "");
         String user_name = userdata.getString("user_name", "");
         String user_objectId = userdata.getString("user_objectId", "");
+
+        JobSchedulerUntil.scheduleJob(getApplicationContext(),1000);
+        /*Intent service = new Intent(getApplicationContext(), MessageService.class);
+        getApplicationContext().startForegroundService(service);*/
 
         Intent intent;
         if (user_islogin) {

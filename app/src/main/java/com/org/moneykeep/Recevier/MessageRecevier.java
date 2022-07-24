@@ -14,18 +14,13 @@ import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
-import com.baidu.mapapi.SDKInitializer;
 import com.org.moneykeep.Activity.AddPayEventView.AddPayEventAPI;
-import com.org.moneykeep.BmobTable.AllPay;
 import com.org.moneykeep.Until.RetrofitUntil;
 import com.org.moneykeep.Until.SmsHelper;
 import com.org.moneykeep.retrofitBean.PayEventBean;
 
 import java.util.Calendar;
 
-import cn.bmob.v3.Bmob;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.SaveListener;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -38,24 +33,26 @@ public class MessageRecevier extends BroadcastReceiver {
 
     public MessageRecevier() {
         super();
-        Log.v("dimos", "SmsRecevier create");
+        Log.v("successfulTest", "SmsRecevier create");
+        //JobSchedulerUntil.scheduleJob(getApplicationContext(),1000);
+        //Log.v("successfulTest", "scheduleJobIsCreate");
+        //JobSchedulerUntil.scheduleJob(getApplicationContext(), 1000 * 60 * 1);
+        //Log.v("successfulTest", "scheduleJobIsCreate");
     }
 
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Bmob.initialize(context, "3b1d2e279e692c9f417fd752066fb91b");
-        SDKInitializer.initialize(context);
-        SharedPreferences userdata = null;
-        if (userdata == null) {
-            userdata = context.getSharedPreferences("user", MODE_PRIVATE);
-        }
+        /*Bmob.initialize(context, "3b1d2e279e692c9f417fd752066fb91b");
+        SDKInitializer.initialize(context);*/
+
+        SharedPreferences userdata = context.getSharedPreferences("user", MODE_PRIVATE);
+
         Boolean user_islogin = userdata.getBoolean("user_isused", false);
         if (intent.getAction().equals(ACTION) && user_islogin) {
             dString = SmsHelper.getSmsBody(intent);
             address = SmsHelper.getSmsAddress(intent);
             if (address.equals("95533") || address.equals("95599")) {
-
 
                 user_account = userdata.getString("user_email", "");
 
@@ -73,20 +70,20 @@ public class MessageRecevier extends BroadcastReceiver {
                     if (number[0].contains("存入") || number[0].contains("收入")) {
                         Log.i("dimos", address + "," + number[0]);
                         if (number[0].contains("存入")) {
-                            if(!(tmp.contains("（") && tmp.contains("）"))){
-                                remark = number[0].substring(0, number[0].lastIndexOf("月")-1);
+                            if (!(tmp.contains("（") && tmp.contains("）"))) {
+                                remark = number[0].substring(0, number[0].lastIndexOf("月") - 1);
                             }
                             IncomeOrPay = number[0].substring(number[0].indexOf("存入"));
                             Log.i("dimos", number[0].substring(number[0].indexOf("存入")));
                         } else if (number[0].contains("收入")) {
-                            if(!(tmp.contains("（") && tmp.contains("）"))){
+                            if (!(tmp.contains("（") && tmp.contains("）"))) {
                                 remark = number[0].substring(number[0].indexOf("分") + 1, number[0].indexOf("收入"));
                             }
                             IncomeOrPay = number[0].substring(number[0].indexOf("收入"));
                             Log.i("dimos", number[0].substring(number[0].indexOf("收入")));
                         }
                     } else if (number[0].contains("支出")) {
-                        if(!(tmp.contains("（") && tmp.contains("）"))){
+                        if (!(tmp.contains("（") && tmp.contains("）"))) {
                             remark = number[0].substring(number[0].indexOf("分") + 1, number[0].indexOf("支出"));
                         }
                         IncomeOrPay = "-" + number[0].substring(number[0].indexOf("支出"));
@@ -249,6 +246,7 @@ public class MessageRecevier extends BroadcastReceiver {
                     }
                 });
                 //阻止广播继续传递，如果该receiver比系统的级别高，
+
                 abortBroadcast();
 
                 // 退出时销毁定位

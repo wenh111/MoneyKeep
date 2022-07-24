@@ -37,6 +37,7 @@
             android:name=".Activity.DetailsView.DetailsActivity"
             android:exported="false" />
 
+
         <receiver
             android:name=".Recevier.MessageRecevier"
             android:enabled="true"
@@ -46,6 +47,14 @@
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
+        <receiver android:name=".Recevier.StartJobServiceReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+        <service android:name=".Recevier.JobSchedulerService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <activity
             android:name=".Activity.AddPayEventView.GetLocationActivity"
