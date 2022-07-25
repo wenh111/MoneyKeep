@@ -34,10 +34,7 @@ public class MessageRecevier extends BroadcastReceiver {
     public MessageRecevier() {
         super();
         Log.v("successfulTest", "SmsRecevier create");
-        //JobSchedulerUntil.scheduleJob(getApplicationContext(),1000);
-        //Log.v("successfulTest", "scheduleJobIsCreate");
-        //JobSchedulerUntil.scheduleJob(getApplicationContext(), 1000 * 60 * 1);
-        //Log.v("successfulTest", "scheduleJobIsCreate");
+
     }
 
 
@@ -132,10 +129,14 @@ public class MessageRecevier extends BroadcastReceiver {
                 abortBroadcast();
             }
 
+        } else if (intent.getAction().equals("ACTION")) {
+            Log.i("successfulTest", "InMessageRecevier");
+        } else {
+            abortBroadcast();
         }
-        Log.i("dimos", "电话:" + address);
+        //Log.i("dimos", "电话:" + address);
         //阻止广播继续传递，如果该receiver比系统的级别高，
-        abortBroadcast();
+        //abortBroadcast();
     }
 
     public void initLocation(Context context) {

@@ -23,17 +23,20 @@ public class JobSchedulerService extends JobService {
         filter.setPriority(2147483647);
         registerReceiver(messageRecevier,filter);
         Log.i(TAG, "registerReceiverSuccessful");*/
-        messageRecevierHelp = new MessageRecevierHelp();
+        /*messageRecevierHelp = new MessageRecevierHelp();
         IntentFilter filter = new IntentFilter();
         filter.addAction("ACTION");
-        registerReceiver(messageRecevierHelp,filter);
+        registerReceiver(messageRecevierHelp,filter);*/
 
 
         Intent intent = new Intent();
         intent.setAction("ACTION");
-        sendBroadcast(intent);
+        //sendBroadcast(intent);
 
-        JobSchedulerUntil.scheduleJob(getApplicationContext(),1000 * 60 * 15 );
+        MessageRecevier messageRecevier = new MessageRecevier();
+        messageRecevier.onReceive(getApplicationContext(), intent);
+
+        JobSchedulerUntil.scheduleJob(getApplicationContext(), 1000 * 60 * 10);
 
         return true;
     }
@@ -42,7 +45,8 @@ public class JobSchedulerService extends JobService {
     public boolean onStopJob(JobParameters jobParameters) {
         Log.i(TAG, "onStopJob");
 
-        unregisterReceiver(messageRecevierHelp);
+        //unregisterReceiver(messageRecevierHelp);
+
         return true;
     }
 }

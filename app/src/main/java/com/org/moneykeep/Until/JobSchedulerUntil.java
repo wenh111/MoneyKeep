@@ -19,7 +19,7 @@ public class JobSchedulerUntil {
 
         builder.setMinimumLatency(time)//延迟time毫秒执行
                 .setOverrideDeadline(time + 2000);// 最晚time毫秒后执行
-
+        builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY);
         JobScheduler mJobScheduler = (JobScheduler) context.getSystemService(Context.JOB_SCHEDULER_SERVICE);
         mJobScheduler.schedule(builder.build());
 
