@@ -68,14 +68,26 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
     private MonthRecyclerViewAdapter monthRecyclerViewAdapter;
     private List<MonthPayOrIncomeList> monthPayOrIncomeDate = new ArrayList<>();
     private HomeFragmentInterface.IPresenter iPresenter;
-
+    private HomeViewModel homeViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        HomeViewModel homeViewModel =
+        homeViewModel =
                 new ViewModelProvider(this).get(HomeViewModel.class);
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
+        if(savedInstanceState == null){
+            Calendar calendar = Calendar.getInstance();
+            int now_year = calendar.get(Calendar.YEAR);
+            int now_month = calendar.get(Calendar.MONTH) + 1;
+            int now_day = calendar.get(Calendar.DAY_OF_MONTH);
+            String now_date = now_year + "-" + now_month + "-" + now_day;
+            /*binding.nowTime.setText(now_date);
+            binding.butSelectType.setText("全部类型");*/
+            homeViewModel.changDate(now_date);
+            homeViewModel.changType("全部类型");
+        }
 
         Log.i("lifecycle", "onCreateView()");
         return root;
@@ -93,12 +105,9 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
 
         iPresenter = new HomeFragmentPresenterImplements(this, getContext());
 
-        Calendar calendar = Calendar.getInstance();
-        int now_year = calendar.get(Calendar.YEAR);
-        int now_month = calendar.get(Calendar.MONTH) + 1;
-        int now_day = calendar.get(Calendar.DAY_OF_MONTH);
-        String now_date = now_year + "-" + now_month + "-" + now_day;
-        now_time.setText(now_date);
+        binding.nowTime.setText(homeViewModel.getDate().getValue());
+        binding.butSelectType.setText(homeViewModel.getType().getValue());
+
 
         select_edit.setInputType(InputType.TYPE_NULL);
         select_edit.setOnFocusChangeListener((view12, b) -> {
@@ -110,6 +119,7 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
                         String select_time = String.format("%s-%s-%s", i, i1 + 1, i2);
                         select_edit.setText(select_time);
                         now_time.setText(select_time);
+                        homeViewModel.changDate(select_time);
                         if (day.isChecked()) {
                             getDayMessage();
                         } else if (month.isChecked()) {
@@ -117,7 +127,7 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
                         } else if (year.isChecked()) {
                             getYearMessage();
                         }
-
+                        select_edit.clearFocus();
                     }
                 }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
             }
@@ -130,6 +140,7 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
                     String select_time = String.format("%s-%s-%s", i, i1 + 1, i2);
                     select_edit.setText(select_time);
                     now_time.setText(select_time);
+                    homeViewModel.changDate(select_time);
                     if (day.isChecked()) {
                         getDayMessage();
                     } else if (month.isChecked()) {
@@ -348,18 +359,23 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
                     AllTypePickerDialog allTypePickerDialog = new AllTypePickerDialog(getContext());
                     allTypePickerDialog.but_summit((dialog, firstValue, secondValue) -> {
                         String[] stringArray;
+                        String type = null;
                         if (firstValue == 0) {
                             stringArray = getContext().getResources().getStringArray(R.array.pay);
-                            but_select_type.setText(stringArray[secondValue]);
+                            type = stringArray[secondValue];
+                            //but_select_type.setText();
                         } else if (firstValue == 1) {
                             stringArray = getContext().getResources().getStringArray(R.array.income);
-                            but_select_type.setText(stringArray[secondValue]);
+                            type = stringArray[secondValue];
                         } else if (firstValue == 2) {
-                            but_select_type.setText("全部类型");
+                            type = "全部类型";
+                            //but_select_type.setText("全部类型");
                         } else if (firstValue == 3) {
                             stringArray = getContext().getResources().getStringArray(R.array.BankCard);
-                            but_select_type.setText(stringArray[secondValue]);
+                            type = stringArray[secondValue];
                         }
+                        binding.butSelectType.setText(type);
+                        homeViewModel.changType(type);
                         if (day.isChecked()) {
                             getDayMessage();
                         } else if (month.isChecked()) {
