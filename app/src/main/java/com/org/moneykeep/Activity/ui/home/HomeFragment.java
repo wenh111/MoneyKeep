@@ -5,22 +5,17 @@ import static android.content.Context.MODE_PRIVATE;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.Button;
 import android.widget.DatePicker;
-
-import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -35,14 +30,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.org.moneykeep.Activity.AddPayEventView.AddPayEventActivity;
 import com.org.moneykeep.Activity.DetailsView.DetailsActivity;
+import com.org.moneykeep.Dialog.AllTypePickerDialog;
+import com.org.moneykeep.Dialog.DeleteDialog;
 import com.org.moneykeep.R;
 import com.org.moneykeep.RecyclerViewAdapter.DayRecyclerViewAdapter;
 import com.org.moneykeep.RecyclerViewAdapter.MonthRecyclerViewAdapter;
 import com.org.moneykeep.RecyclerViewAdapter.RecyclerViewList.DayPayOrIncomeList;
 import com.org.moneykeep.RecyclerViewAdapter.RecyclerViewList.MonthPayOrIncomeList;
-import com.org.moneykeep.Dialog.AllTypePickerDialog;
 import com.org.moneykeep.Until.ChangeDouble;
-import com.org.moneykeep.Dialog.DeleteDialog;
 import com.org.moneykeep.databinding.FragmentHomeBinding;
 import com.org.moneykeep.retrofitBean.PayEventListBean;
 
@@ -54,10 +49,10 @@ import java.util.Map;
 
 public class HomeFragment extends Fragment implements HomeFragmentInterface.IView {
 
-    private Button but_select_type;
+    //private Button but_select_type;
     private FragmentHomeBinding binding;
-    private TextView now_time, count_income, count_pay;
-    private EditText select_edit;
+    private TextView  count_income, count_pay;
+    //private EditText select_edit;
     private Button but_add;
     private RadioGroup radio_group;
     private RadioButton day, month, year;
@@ -83,8 +78,7 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
             int now_month = calendar.get(Calendar.MONTH) + 1;
             int now_day = calendar.get(Calendar.DAY_OF_MONTH);
             String now_date = now_year + "-" + now_month + "-" + now_day;
-            /*binding.nowTime.setText(now_date);
-            binding.butSelectType.setText("全部类型");*/
+
             homeViewModel.changDate(now_date);
             homeViewModel.changType("全部类型");
         }
@@ -109,16 +103,16 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
         binding.butSelectType.setText(homeViewModel.getType().getValue());
 
 
-        select_edit.setInputType(InputType.TYPE_NULL);
-        select_edit.setOnFocusChangeListener((view12, b) -> {
+        binding.selectEdit.setInputType(InputType.TYPE_NULL);
+        binding.selectEdit.setOnFocusChangeListener((view12, b) -> {
             if (b) {
                 Calendar c = Calendar.getInstance();
                 new DatePickerDialog(getActivity(), AlertDialog.THEME_HOLO_LIGHT, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
                         String select_time = String.format("%s-%s-%s", i, i1 + 1, i2);
-                        select_edit.setText(select_time);
-                        now_time.setText(select_time);
+                        binding.selectEdit.setText(select_time);
+                        binding.nowTime.setText(select_time);
                         homeViewModel.changDate(select_time);
                         if (day.isChecked()) {
                             getDayMessage();
@@ -127,19 +121,19 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
                         } else if (year.isChecked()) {
                             getYearMessage();
                         }
-                        select_edit.clearFocus();
+                        binding.selectEdit.clearFocus();
                     }
                 }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
-        select_edit.setOnClickListener(view1 -> {
+        binding.selectEdit.setOnClickListener(view1 -> {
             Calendar c = Calendar.getInstance();
             new DatePickerDialog(getActivity(), AlertDialog.THEME_HOLO_LIGHT, new DatePickerDialog.OnDateSetListener() {
                 @Override
                 public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
                     String select_time = String.format("%s-%s-%s", i, i1 + 1, i2);
-                    select_edit.setText(select_time);
-                    now_time.setText(select_time);
+                    binding.selectEdit.setText(select_time);
+                    binding.nowTime.setText(select_time);
                     homeViewModel.changDate(select_time);
                     if (day.isChecked()) {
                         getDayMessage();
@@ -187,13 +181,7 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
         Log.i("lifecycle", "onViewStateRestored()");
     }
 
-    /*@Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putInt("lastOffset",lastOffset);
-        outState.putInt("lastPosition",lastPosition);
-        Log.i("lifecycle", "onSaveInstanceState()" );
-    }*/
+
 
     private boolean isdelete;
 
@@ -290,9 +278,9 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
                 @Override
                 public void OnRecyclerItemCostChangeListener(double cost, int position) {
                     if (cost > 0) {
-                        count_income.setText(String.valueOf(ChangeDouble.subDouble(Double.valueOf(count_income.getText().toString()), cost)));
+                        count_income.setText(String.valueOf(ChangeDouble.subDouble(Double.parseDouble(count_income.getText().toString()), cost)));
                     } else if (cost < 0) {
-                        count_pay.setText(String.valueOf(ChangeDouble.addDouble(Double.valueOf(count_pay.getText().toString()), cost)));
+                        count_pay.setText(String.valueOf(ChangeDouble.addDouble(Double.parseDouble(count_pay.getText().toString()), cost)));
                     }
 
                 }
@@ -348,6 +336,7 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
     }
 
     private class Onclick implements View.OnClickListener {
+        @SuppressLint("NonConstantResourceId")
         @Override
         public void onClick(View view) {
             switch (view.getId()) {
@@ -392,15 +381,16 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
     private void SetListen() {
         Onclick onclick = new Onclick();
         CheckOnclick checkOnclick = new CheckOnclick();
-        select_edit.setOnClickListener(onclick);
+        binding.selectEdit.setOnClickListener(onclick);
         but_add.setOnClickListener(onclick);
         radio_group.setOnCheckedChangeListener(checkOnclick);
-        but_select_type.setOnClickListener(onclick);
+        binding.butSelectType.setOnClickListener(onclick);
 
     }
 
     private class CheckOnclick implements RadioGroup.OnCheckedChangeListener {
 
+        @SuppressLint("NonConstantResourceId")
         @Override
         public void onCheckedChanged(RadioGroup radioGroup, int ButtonId) {
             switch (ButtonId) {
@@ -421,32 +411,32 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
     }
 
     private void getYearMessage() {
-        String select_date = now_time.getText().toString();
+        String select_date = homeViewModel.getDate().getValue();
         String[] select_dates = select_date.split("-");
         String select_year = select_dates[0];
-        List<MonthPayOrIncomeList> newMonthPayOrIncomeDate = new ArrayList<>();
-        String select_type = but_select_type.getText().toString();
+
+        String select_type = homeViewModel.getType().getValue();
         iPresenter.getYearMessage(user_account, select_type, select_year);
     }
 
     private void getDayMessage() {
 
-        String select_type = but_select_type.getText().toString();
-        String select_date = now_time.getText().toString();
+        String select_type = homeViewModel.getType().getValue();
+        String select_date = homeViewModel.getDate().getValue();
         iPresenter.getDayMessage(user_account, select_type, select_date);
 
 
     }
 
     private void getMonthMessage() {
-        String select_date = now_time.getText().toString();
+        String select_date = homeViewModel.getDate().getValue();
         String[] select_dates = select_date.split("-");
 
         String select_month = select_dates[1];
         String select_year = select_dates[0];
-        List<MonthPayOrIncomeList> newMonthPayOrIncomeDate = new ArrayList<>();
 
-        String select_type = but_select_type.getText().toString();
+
+        String select_type = homeViewModel.getType().getValue();
 
         iPresenter.getMonthMessage(user_account, select_type, select_month, select_year);
 
@@ -454,15 +444,15 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
 
 
     private void Findid() {
-        now_time = getView().findViewById(R.id.now_time);
-        select_edit = getView().findViewById(R.id.select_edit);
+        //now_time = getView().findViewById(R.id.now_time);
+        //select_edit = getView().findViewById(R.id.select_edit);
         but_add = getView().findViewById(R.id.but_add);
         radio_group = getView().findViewById(R.id.radio_group);
         day = getView().findViewById(R.id.day);
         month = getView().findViewById(R.id.month);
         year = getView().findViewById(R.id.year);
         recyclerView = getView().findViewById(R.id.recyclerView);
-        but_select_type = getView().findViewById(R.id.but_select_type);
+        //but_select_type = getView().findViewById(R.id.but_select_type);
         count_income = getView().findViewById(R.id.count_income);
         count_pay = getView().findViewById(R.id.count_pay);
 
