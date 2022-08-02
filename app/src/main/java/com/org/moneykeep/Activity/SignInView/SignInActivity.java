@@ -12,7 +12,6 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,13 +32,6 @@ public class SignInActivity extends AppCompatActivity implements SignInInterface
     private Button sign_up, sign_in;
     private EditText editText_email, editText_password;
     private TextView fp_tv;
-    private ProgressBar pb;
-    private String password, account;
-    private final String USER_EMAIL = "user_email";
-    private final String USER_PASSWORD = "user_password";
-    private final String USER_NAME = "user_name";
-    private final String USER_OBJECTID = "user_objectId";
-    private final String USER_ISUSED = "user_isused";
     private SignInInterface.IPresenter signInPresenterImplements;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -52,7 +44,7 @@ public class SignInActivity extends AppCompatActivity implements SignInInterface
         WindowManager.LayoutParams localLayoutParams = getWindow().getAttributes();
         this.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         localLayoutParams.flags = (WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS | localLayoutParams.flags);
-        signInPresenterImplements = new SignInPresenterImplements(this,this);
+        signInPresenterImplements = new SignInPresenterImplements(this,getApplicationContext());
 
 
         FindId();
@@ -107,10 +99,10 @@ public class SignInActivity extends AppCompatActivity implements SignInInterface
                     break;
                 case R.id.sign_in:
                     //UserSignIn();
-                    account = editText_email.getText().toString();
-                    password = editText_password.getText().toString();
+                    String account = editText_email.getText().toString();
+                    String password = editText_password.getText().toString();
                     String sql = "select * from User where account = ? and password = ?";
-                    signInPresenterImplements.UserSignIn(account,password,sql);
+                    signInPresenterImplements.UserSignIn(account, password,sql);
                     break;
                 case R.id.sign_up:
                     intent = new Intent(SignInActivity.this, SignUpActivity.class);
@@ -191,6 +183,5 @@ public class SignInActivity extends AppCompatActivity implements SignInInterface
         editText_email = findViewById(R.id.sign_in_account);
         editText_password = findViewById(R.id.sign_in_passward);
         fp_tv = findViewById(R.id.fp_tv);
-        pb = findViewById(R.id.pb);
     }
 }
