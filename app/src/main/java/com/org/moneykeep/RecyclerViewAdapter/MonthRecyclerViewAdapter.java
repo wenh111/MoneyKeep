@@ -79,6 +79,7 @@ public class MonthRecyclerViewAdapter extends RecyclerView.Adapter<MonthRecycler
         return new MonthRecyclerViewAdapter.LinearViewHolder(LayoutInflater.from(context).inflate(R.layout.recycler_view_item_month_payorincome, parent, false));
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void onBindViewHolder(@NonNull LinearViewHolder holder, @SuppressLint("RecyclerView") int position) {
 
@@ -194,7 +195,7 @@ public class MonthRecyclerViewAdapter extends RecyclerView.Adapter<MonthRecycler
 
             dayRecyclerViewAdapter.setSetOnRecyclerItemLongClickListener((thisAdapter, position1, Data) -> {
                 int delete_ObjectId = Data.get(position1).getId();
-                double ItemCost = Double.valueOf(Data.get(position1).getCost());
+                double ItemCost = Double.parseDouble(Data.get(position1).getCost());
 
                 DeleteDialog dialog = new DeleteDialog(getContext());
                 dialog.setiOconfirmListener(new DeleteDialog.IOconfirmListener() {
@@ -203,8 +204,8 @@ public class MonthRecyclerViewAdapter extends RecyclerView.Adapter<MonthRecycler
                         thisAdapter.setOnInnerRecyclerItemCostChangeListener(new DayRecyclerViewAdapter.OnInnerRecyclerItemCostChangeListener() {
                             @Override
                             public void OnInnerRecyclerItemCostChangeListener(double cost) {
-                                double Income = Double.valueOf(income_money.getText().toString());
-                                double Pay = Double.valueOf(pay_money.getText().toString());
+                                double Income = Double.parseDouble(income_money.getText().toString());
+                                double Pay = Double.parseDouble(pay_money.getText().toString());
                                 if (cost > 0) {
                                     monthData.get(getAdapterPosition()).setAllIncome(ChangeDouble.subDouble(Income, cost));
                                     income_money.setText(String.valueOf(monthData.get(getAdapterPosition()).getAllIncome()));
@@ -237,11 +238,9 @@ public class MonthRecyclerViewAdapter extends RecyclerView.Adapter<MonthRecycler
                                     }
 
                                     map.getOrDefault(Data.get(0).getDate(), null).remove(position1);
-
                                     Log.i("removeItem",
                                             "key:" + thisAdapter.getData().get(0).getDate() + "\n");
                                     thisAdapter.removeData(position1);
-
 
                                     Log.i("removeItem",
                                             "AdapterPosition:" + getAdapterPosition() + "\n" +
@@ -262,18 +261,6 @@ public class MonthRecyclerViewAdapter extends RecyclerView.Adapter<MonthRecycler
                                 Toast.makeText(getContext(), "删除失败..." + t.getMessage(), Toast.LENGTH_LONG).show();
                             }
                         });
-                        /*AllPay allPay = new AllPay();
-                        allPay.delete(delete_ObjectId, new UpdateListener() {
-                            @Override
-                            public void done(BmobException e) {
-                                if (e == null) {
-
-
-                                } else {
-
-                                }
-                            }
-                        });*/
 
                     }
                 }).show();
