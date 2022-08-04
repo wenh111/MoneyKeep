@@ -2,6 +2,8 @@ package com.org.moneykeep.Activity.ui.home;
 
 import static android.content.Context.MODE_PRIVATE;
 
+import static cn.bmob.v3.Bmob.getApplicationContext;
+
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -158,6 +160,11 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
                     //recycleView正在滑动
                     but_add.getBackground().setAlpha(100); //0~255 之间任意调整
                 } else {
+
+                    if(!recyclerView.canScrollVertically(1)){
+                        Toast.makeText(getApplicationContext(),"到底了",Toast.LENGTH_SHORT).show();
+                        Log.i("ScrollStateChanged", "------------------->" + "到底了");
+                    }
                     but_add.getBackground().setAlpha(255);
                 }
             }

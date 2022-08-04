@@ -199,8 +199,7 @@ public class MessageRecevier extends BroadcastReceiver {
                 String s_year = String.valueOf(year);
                 String s_month = String.valueOf(monthOfYear);
                 String s_day = String.valueOf(dayOfMonth);
-                String s_date = s_year + s_month + s_day;
-                int int_date = Integer.valueOf(s_date);
+
                 String payTime = date + " " + time;
 
                 PayEventBean allPay = new PayEventBean();
@@ -213,6 +212,16 @@ public class MessageRecevier extends BroadcastReceiver {
                 allPay.setTime(time);
                 allPay.setMonth(s_month);
                 allPay.setYear(s_year);
+                if (monthOfYear < 10 || dayOfMonth < 10) {
+                    if (monthOfYear < 10) {
+                        s_month = "0" + monthOfYear;
+                    }
+                    if (dayOfMonth < 10) {
+                        s_day = "0" + dayOfMonth;
+                    }
+                }
+                String s_date = s_year + s_month + s_day;
+                int int_date = Integer.parseInt(s_date);
                 allPay.setInt_date(int_date);
                 if (remark != null) {
                     allPay.setRemark(remark);
