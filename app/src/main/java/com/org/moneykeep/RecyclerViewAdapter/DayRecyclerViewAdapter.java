@@ -48,7 +48,7 @@ public class DayRecyclerViewAdapter extends RecyclerView.Adapter<DayRecyclerView
     }
 
     public void removeData(int position) {
-        double cost = Double.valueOf(Data.get(position).getCost());
+        double cost = Double.parseDouble(Data.get(position).getCost());
 
         getData().remove(position);
         notifyItemRemoved(position);

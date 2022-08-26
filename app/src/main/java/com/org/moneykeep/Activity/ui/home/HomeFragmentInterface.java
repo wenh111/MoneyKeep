@@ -17,6 +17,8 @@ public interface HomeFragmentInterface {
 
         void SelectYearMessage(PayEventBean payEventBean);
 
+        void SelectAMonthMessage(PayEventBean payEventBean, int since, int perPage);
+
         void deletePayEvent(int id);
     }
 
@@ -37,9 +39,11 @@ public interface HomeFragmentInterface {
 
         void SelectMonthAndYearMessageUnSuccessfulCallBack(String s);
 
-        void SelectYearMessageSuccessfulCallBack();
+        void SelectAMonthMessageSuccessfulCallBack(PayEventListBean listBean);
 
-        void SelectYearMessageUnSuccessfulCallBack();
+        void SelectAMonthMessageUnSuccessfulCallBack(String errorMessage);
+
+        void getAMonthMessage(String user_account, String select_type, String select_month, String select_year, int since, int perPage);
 
         void deletePayEventSuccessfulCallBack(String s);
 
@@ -55,12 +59,15 @@ public interface HomeFragmentInterface {
 
         void getMonthAndYearMessageUnSuccessful(String s);
 
-        void getYearMessageSuccessful();
+        void getAMonthMessageSuccessful(String s, PayEventListBean body, double countIncome, double countPay);
 
-        void getYearMessageUnSuccessful();
+        void getAMonthMessageUnSuccessful();
 
         void deletePayEventSuccessful(String s);
 
         void deletePayEventUnSuccessful(String s);
+    }
+     interface LoadInterface {
+        void OnLoadLister(Integer since, Integer perPage);
     }
 }

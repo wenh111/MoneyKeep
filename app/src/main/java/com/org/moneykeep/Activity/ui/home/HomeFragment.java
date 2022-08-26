@@ -35,6 +35,7 @@ import com.org.moneykeep.Activity.DetailsView.DetailsActivity;
 import com.org.moneykeep.Dialog.AllTypePickerDialog;
 import com.org.moneykeep.Dialog.DeleteDialog;
 import com.org.moneykeep.R;
+import com.org.moneykeep.RecyclerViewAdapter.AMonthRecyclerViewAdapter;
 import com.org.moneykeep.RecyclerViewAdapter.DayRecyclerViewAdapter;
 import com.org.moneykeep.RecyclerViewAdapter.MonthRecyclerViewAdapter;
 import com.org.moneykeep.RecyclerViewAdapter.RecyclerViewList.DayPayOrIncomeList;
@@ -53,7 +54,7 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
 
     //private Button but_select_type;
     private FragmentHomeBinding binding;
-    private TextView  count_income, count_pay;
+    private TextView count_income, count_pay;
     //private EditText select_edit;
     private Button but_add;
     private RadioGroup radio_group;
@@ -66,6 +67,13 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
     private List<MonthPayOrIncomeList> monthPayOrIncomeDate = new ArrayList<>();
     private HomeFragmentInterface.IPresenter iPresenter;
     private HomeViewModel homeViewModel;
+    private AMonthRecyclerViewAdapter amonthRecyclerViewAdapter;
+    public HomeFragmentInterface.LoadInterface loadInterface;
+    private boolean needRefresh ;
+
+    public void setLoadInterface(HomeFragmentInterface.LoadInterface loadInterface) {
+        this.loadInterface = loadInterface;
+    }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -74,13 +82,14 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        if(savedInstanceState == null){
+        if (savedInstanceState == null) {
             Calendar calendar = Calendar.getInstance();
             int now_year = calendar.get(Calendar.YEAR);
             int now_month = calendar.get(Calendar.MONTH) + 1;
             int now_day = calendar.get(Calendar.DAY_OF_MONTH);
             String now_date = now_year + "-" + now_month + "-" + now_day;
-
+            homeViewModel.dataChange(-1, -1);
+            homeViewModel.dataLoadOver(false);
             homeViewModel.changDate(now_date);
             homeViewModel.changType("全部类型");
         }
@@ -150,7 +159,7 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setAdapter(new DayRecyclerViewAdapter(getContext(),new ArrayList<>()));
+        recyclerView.setAdapter(new DayRecyclerViewAdapter(getContext(), new ArrayList<>()));
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -160,13 +169,32 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
                     //recycleView正在滑动
                     but_add.getBackground().setAlpha(100); //0~255 之间任意调整
                 } else {
-
-                    if(!recyclerView.canScrollVertically(1)){
-                        Toast.makeText(getApplicationContext(),"到底了",Toast.LENGTH_SHORT).show();
-                        Log.i("ScrollStateChanged", "------------------->" + "到底了");
-                    }
                     but_add.getBackground().setAlpha(255);
                 }
+
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    if (!recyclerView.canScrollVertically(1)) {
+                        int since = homeViewModel.getSince().getValue() == null ? -1 : homeViewModel.getSince().getValue();
+                        int perPage = homeViewModel.getPerPage().getValue() == null ? -1 : homeViewModel.getPerPage().getValue();
+
+                        if (loadInterface != null) {
+                            loadInterface.OnLoadLister(since, perPage);
+                        }
+                        Log.i("ScrollStateChanged", "------------------->" + "到底了");
+                    }
+                }
+            }
+        });
+        setLoadInterface(new HomeFragmentInterface.LoadInterface() {
+            @Override
+            public void OnLoadLister(Integer since, Integer perPage) {
+                if (!homeViewModel.getIsOver().getValue()) {
+                    if (month.isChecked()) {
+                        getNextDayMessage();
+                        //getMonthMessage();
+                    }
+                }
+
             }
         });
 
@@ -181,13 +209,28 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
         Log.i("lifecycle", "onViewCreated()");
     }
 
+    private void getNextDayMessage() {
+        needRefresh = false;
+        String select_date = homeViewModel.getDate().getValue();
+        String[] select_dates = select_date.split("-");
+
+        String select_month = select_dates[1];
+        String select_year = select_dates[0];
+
+        String select_type = homeViewModel.getType().getValue();
+        int since = homeViewModel.getSince().getValue() == null ? -1 : homeViewModel.getSince().getValue();
+        int perPage = homeViewModel.getPerPage().getValue() == null ? -1 : homeViewModel.getPerPage().getValue();
+
+        //iPresenter.getMonthMessage(user_account, select_type, select_month, select_year);
+        iPresenter.getAMonthMessage(user_account, select_type, select_month, select_year, since, perPage);
+    }
+
 
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
         Log.i("lifecycle", "onViewStateRestored()");
     }
-
 
 
     private boolean isdelete;
@@ -201,7 +244,7 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
             getBoolean = getActivity().getSharedPreferences("DeleteOrUpdate", MODE_PRIVATE);
         }
         isdelete = getBoolean.getBoolean("isdelete", false);
-        if (isdelete == true) {
+        if (isdelete) {
             if (day.isChecked()) {
                 getDayMessage();
             } else if (month.isChecked()) {
@@ -313,24 +356,69 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
         Toast.makeText(getContext(), s, Toast.LENGTH_SHORT).show();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
-    public void getYearMessageSuccessful() {
+    public void getAMonthMessageSuccessful(String s, PayEventListBean body, double countIncome, double countPay) {
+        Log.i("getAMonthMessageSuccessful", "到达这个位置");
+        if (body != null) {
+            Log.i("getAMonthMessageSuccessful", "到(body != null)位置");
+            if (needRefresh) {
+                Log.i("getAMonthMessageSuccessful", "到(isFirst)位置");
+                amonthRecyclerViewAdapter = new AMonthRecyclerViewAdapter(getContext(), new ArrayList<>());
+                List<PayEventListBean> payEventListBeans = new ArrayList<>();
+                payEventListBeans.add(body);
+                amonthRecyclerViewAdapter.setMonthData(payEventListBeans);
+                amonthRecyclerViewAdapter.notifyDataSetChanged();
+                amonthRecyclerViewAdapter.setSetOnRecyclerItemCostChangeListener(new AMonthRecyclerViewAdapter.SetOnRecyclerItemCostChangeListener() {
+                    @Override
+                    public void OnRecyclerItemCostChangeListener(double cost, int position) {
+                        if (cost > 0) {
+                            count_income.setText(String.valueOf(ChangeDouble.subDouble(Double.parseDouble(count_income.getText().toString()), cost)));
+                        } else if (cost < 0) {
+                            count_pay.setText(String.valueOf(ChangeDouble.addDouble(Double.parseDouble(count_pay.getText().toString()), cost)));
+                        }
 
+                    }
+                });
+
+                recyclerView.setAdapter(amonthRecyclerViewAdapter);
+
+                count_income.setText(String.valueOf(countIncome));
+                if (countPay == 0) {
+                    count_pay.setText(String.valueOf(0.0));
+                } else {
+                    count_pay.setText(String.valueOf(-countPay));
+                }
+
+            } else {
+                Log.i("getAMonthMessageSuccessful", "到(else)位置");
+                amonthRecyclerViewAdapter.addData(body);
+                count_income.setText(String.valueOf(ChangeDouble.addDouble(Double.parseDouble(count_income.getText().toString()),body.getPayOrIncomeList().getAllIncome())));
+                count_pay.setText(String.valueOf(ChangeDouble.addDouble(Double.parseDouble(count_pay.getText().toString()),body.getPayOrIncomeList().getAllPay())));
+            }
+            if(body.getPerPage() == 0 ){
+                homeViewModel.dataLoadOver(true);
+            }
+            homeViewModel.dataChange(body.getSince(),body.getPerPage());
+        } else {
+            Toast.makeText(getContext(), s, Toast.LENGTH_SHORT).show();
+        }
     }
 
+
     @Override
-    public void getYearMessageUnSuccessful() {
+    public void getAMonthMessageUnSuccessful() {
 
     }
 
     @Override
     public void deletePayEventSuccessful(String s) {
-        double DouDataCost = Double.valueOf(deleteCost);
+        double DouDataCost = Double.parseDouble(deleteCost);
         if (DouDataCost > 0) {
-            double getCost = Double.valueOf(count_income.getText().toString());
+            double getCost = Double.parseDouble(count_income.getText().toString());
             count_income.setText(String.valueOf(ChangeDouble.subDouble(getCost, DouDataCost)));
         } else {
-            double getCost = Double.valueOf(count_pay.getText().toString());
+            double getCost = Double.parseDouble(count_pay.getText().toString());
             count_pay.setText(String.valueOf(ChangeDouble.addDouble(getCost, DouDataCost)));
         }
         dayRecyclerViewAdapter.removeData(ItemPosition);
@@ -400,6 +488,9 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
         @SuppressLint("NonConstantResourceId")
         @Override
         public void onCheckedChanged(RadioGroup radioGroup, int ButtonId) {
+            amonthRecyclerViewAdapter = null;
+            homeViewModel.dataLoadOver(false);
+            homeViewModel.dataChange(-1,-1);
             switch (ButtonId) {
                 case R.id.day:
                     getDayMessage();
@@ -436,17 +527,20 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
     }
 
     private void getMonthMessage() {
+        needRefresh = true;
         String select_date = homeViewModel.getDate().getValue();
         String[] select_dates = select_date.split("-");
 
         String select_month = select_dates[1];
         String select_year = select_dates[0];
 
-
         String select_type = homeViewModel.getType().getValue();
 
-        iPresenter.getMonthMessage(user_account, select_type, select_month, select_year);
+       /* int since = homeViewModel.getSince().getValue() == null ? -1 : homeViewModel.getSince().getValue();
+        int perPage = homeViewModel.getPerPage().getValue() == null ? -1 : homeViewModel.getPerPage().getValue();*/
 
+        //iPresenter.getMonthMessage(user_account, select_type, select_month, select_year);
+        iPresenter.getAMonthMessage(user_account, select_type, select_month, select_year, -1, -1);
     }
 
 

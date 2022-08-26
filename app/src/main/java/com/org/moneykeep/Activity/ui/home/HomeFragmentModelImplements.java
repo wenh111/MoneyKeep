@@ -92,6 +92,29 @@ public class HomeFragmentModelImplements implements HomeFragmentInterface.IModel
     }
 
     @Override
+    public void SelectAMonthMessage(PayEventBean payEventBean, int since, int perPage) {
+        Call<PayEventListBean> payEventListBeanCall = api.getPayEvent(payEventBean.getAccount(),
+                payEventBean.getCategory(), payEventBean.getMonth(), payEventBean.getYear(),since,perPage);
+        payEventListBeanCall.enqueue(new Callback<PayEventListBean>() {
+            @Override
+            public void onResponse(Call<PayEventListBean> call, Response<PayEventListBean> response) {
+                if(response.code() == HttpURLConnection.HTTP_OK){
+                    PayEventListBean listBean = response.body();
+                    iPresenter.SelectAMonthMessageSuccessfulCallBack(listBean);
+                    Log.i("payListDTOS", "count ------------------>" + listBean.getCount());
+                    Log.i("payListDTOS", "since ------------------>" + listBean.getSince());
+                    Log.i("payListDTOS", "pages ------------------>" + listBean.getPerPage());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PayEventListBean> call, Throwable t) {
+                iPresenter.SelectAMonthMessageUnSuccessfulCallBack("查询错误:" + t.getMessage());
+            }
+        });
+    }
+
+    @Override
     public void deletePayEvent(int id) {
         Call<Integer> payEventListBeanCall = api.DeleteDayPayMessage(id);
         payEventListBeanCall.enqueue(new Callback<Integer>() {

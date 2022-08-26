@@ -1,12 +1,52 @@
 package com.org.moneykeep.retrofitBean;
 
+import com.org.moneykeep.RecyclerViewAdapter.RecyclerViewList.MonthPayOrIncomeList;
+
 import java.util.List;
 
 public class PayEventListBean {
 
 
     private Integer count;
+    public Integer since;
+    public Integer perPage;
     private List<AllPayListDTO> allPayList;
+    MonthPayOrIncomeList payOrIncomeList;
+
+    public PayEventListBean(Integer count, Integer since, Integer perPage, List<AllPayListDTO> allPayList) {
+        this.count = count;
+        this.since = since;
+        this.perPage = perPage;
+        this.allPayList = allPayList;
+    }
+
+
+    public PayEventListBean() {
+    }
+
+    public MonthPayOrIncomeList getPayOrIncomeList() {
+        return payOrIncomeList;
+    }
+
+    public void setPayOrIncomeList(MonthPayOrIncomeList payOrIncomeList) {
+        this.payOrIncomeList = payOrIncomeList;
+    }
+
+    public Integer getSince() {
+        return since;
+    }
+
+    public void setSince(Integer since) {
+        this.since = since;
+    }
+
+    public Integer getPerPage() {
+        return perPage;
+    }
+
+    public void setPerPage(Integer perPage) {
+        this.perPage = perPage;
+    }
 
     public Integer getCount() {
         return count;
@@ -15,6 +55,7 @@ public class PayEventListBean {
     public void setCount(Integer count) {
         this.count = count;
     }
+
 
     public List<AllPayListDTO> getAllPayList() {
         return allPayList;

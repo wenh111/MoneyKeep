@@ -18,4 +18,12 @@ public interface HomeFragmentAPI {
 
     @POST("/AllPay/deletePayEvent")
     Call<Integer> DeleteDayPayMessage(@Query("id") int id);
+
+    @GET("AllPay/monthPayEvent")
+    Call<PayEventListBean> getPayEvent(@Query("account") String account,
+                                       @Query("category") String category,
+                                       @Query("month") String month,
+                                       @Query("year") String year,
+                                       @Query("since") int since,
+                                       @Query("perPages") int perPages);
 }
