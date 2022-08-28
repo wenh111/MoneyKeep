@@ -2,8 +2,6 @@ package com.org.moneykeep.Activity.ui.home;
 
 import static android.content.Context.MODE_PRIVATE;
 
-import static cn.bmob.v3.Bmob.getApplicationContext;
-
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -69,7 +67,7 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
     private HomeViewModel homeViewModel;
     private AMonthRecyclerViewAdapter amonthRecyclerViewAdapter;
     public HomeFragmentInterface.LoadInterface loadInterface;
-    private boolean needRefresh ;
+    private boolean needRefresh;
 
     public void setLoadInterface(HomeFragmentInterface.LoadInterface loadInterface) {
         this.loadInterface = loadInterface;
@@ -337,7 +335,12 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
             });
 
             recyclerView.setAdapter(monthRecyclerViewAdapter);
-
+            RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
+            if (layoutManager instanceof LinearLayoutManager) {
+                LinearLayoutManager linearManager = (LinearLayoutManager) layoutManager;
+                int mFirstVisiblePosition = linearManager.findLastVisibleItemPosition();
+                Log.i("mFirstVisiblePosition", "yFirstVisiblePosition == " + mFirstVisiblePosition);
+            }
             count_income.setText(String.valueOf(countIncome));
             if (countPay == 0) {
                 count_pay.setText(String.valueOf(0.0));
@@ -361,6 +364,10 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
     public void getAMonthMessageSuccessful(String s, PayEventListBean body, double countIncome, double countPay) {
         Log.i("getAMonthMessageSuccessful", "到达这个位置");
         if (body != null) {
+            if (body.getPerPage() == 0) {
+                homeViewModel.dataLoadOver(true);
+            }
+            homeViewModel.dataChange(body.getSince(), body.getPerPage());
             Log.i("getAMonthMessageSuccessful", "到(body != null)位置");
             if (needRefresh) {
                 Log.i("getAMonthMessageSuccessful", "到(isFirst)位置");
@@ -380,9 +387,7 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
 
                     }
                 });
-
                 recyclerView.setAdapter(amonthRecyclerViewAdapter);
-
                 count_income.setText(String.valueOf(countIncome));
                 if (countPay == 0) {
                     count_pay.setText(String.valueOf(0.0));
@@ -390,22 +395,35 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
                     count_pay.setText(String.valueOf(-countPay));
                 }
 
+                /*if (loadInterface != null) {
+                    int since = homeViewModel.getSince().getValue() == null ? -1 : homeViewModel.getSince().getValue();
+                    int perPage = homeViewModel.getPerPage().getValue() == null ? -1 : homeViewModel.getPerPage().getValue();
+                    loadInterface.OnLoadLister(since, perPage);
+                }*/
             } else {
                 Log.i("getAMonthMessageSuccessful", "到(else)位置");
                 amonthRecyclerViewAdapter.addData(body);
-                count_income.setText(String.valueOf(ChangeDouble.addDouble(Double.parseDouble(count_income.getText().toString()),body.getPayOrIncomeList().getAllIncome())));
-                count_pay.setText(String.valueOf(ChangeDouble.addDouble(Double.parseDouble(count_pay.getText().toString()),body.getPayOrIncomeList().getAllPay())));
+                count_income.setText(String.valueOf(ChangeDouble.addDouble(Double.parseDouble(count_income.getText().toString()), body.getPayOrIncomeList().getAllIncome())));
+                count_pay.setText(String.valueOf(ChangeDouble.addDouble(Double.parseDouble(count_pay.getText().toString()), body.getPayOrIncomeList().getAllPay())));
             }
-            if(body.getPerPage() == 0 ){
-                homeViewModel.dataLoadOver(true);
+
+            boolean state = isRecyclerScrollable(recyclerView);
+            Log.i("linearManager", "state = " + state);
+            if(!state){
+                if (loadInterface != null) {
+                    int since = homeViewModel.getSince().getValue() == null ? -1 : homeViewModel.getSince().getValue();
+                    int perPage = homeViewModel.getPerPage().getValue() == null ? -1 : homeViewModel.getPerPage().getValue();
+                    loadInterface.OnLoadLister(since, perPage);
+                }
             }
-            homeViewModel.dataChange(body.getSince(),body.getPerPage());
         } else {
             Toast.makeText(getContext(), s, Toast.LENGTH_SHORT).show();
         }
     }
 
-
+    public boolean isRecyclerScrollable(RecyclerView recyclerView) {
+        return recyclerView.computeHorizontalScrollRange() > recyclerView.getWidth() || recyclerView.computeVerticalScrollRange() > recyclerView.getHeight();
+    }
     @Override
     public void getAMonthMessageUnSuccessful() {
 
@@ -490,7 +508,7 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
         public void onCheckedChanged(RadioGroup radioGroup, int ButtonId) {
             amonthRecyclerViewAdapter = null;
             homeViewModel.dataLoadOver(false);
-            homeViewModel.dataChange(-1,-1);
+            homeViewModel.dataChange(-1, -1);
             switch (ButtonId) {
                 case R.id.day:
                     getDayMessage();
