@@ -12,7 +12,6 @@ import com.org.moneykeep.retrofitBean.PayEventListBean;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -49,7 +48,7 @@ public class HomeFragmentPresenterImplements implements HomeFragmentInterface.IP
 
     }
 
-    @Override
+   /* @Override
     public void getMonthMessage(String user_account, String select_type, String select_month, String select_year) {
         PayEventBean payEventBean = new PayEventBean();
         payEventBean.setAccount(user_account);
@@ -74,7 +73,7 @@ public class HomeFragmentPresenterImplements implements HomeFragmentInterface.IP
             payEventBean.setCategory("");
         }
         iModel.SelectYearMessage(payEventBean);
-    }
+    }*/
 
     @Override
     public void SelectDayMessageSuccessfulCallBack(PayEventListBean body) {
@@ -131,7 +130,7 @@ public class HomeFragmentPresenterImplements implements HomeFragmentInterface.IP
         iView.getDayMessageUnSuccessful("查询失败:" + message);
     }
 
-    @Override
+/*    @Override
     public void SelectMonthAndYearMessageSuccessfulCallBack(PayEventListBean body) {
         double CountIncome = 0;
         double CountPay = 0;
@@ -201,14 +200,14 @@ public class HomeFragmentPresenterImplements implements HomeFragmentInterface.IP
     @Override
     public void SelectMonthAndYearMessageUnSuccessfulCallBack(String s) {
         iView.getMonthAndYearMessageUnSuccessful(s);
-    }
+    }*/
 
     @Override
-    public void SelectAMonthMessageSuccessfulCallBack(PayEventListBean body) {
+    public void SelectAMonthOrYearMessageSuccessfulCallBack(PayEventListBean body) {
         double CountIncome = 0;
         double CountPay = 0;
         if (body.getCount() == 0) {
-            iView.getMonthAndYearMessageSuccessful("查询成功但当前时间没数据...", null, null, null, CountIncome, CountPay);
+            iView.getAMonthOrYearMessageSuccessful("查询成功但当前时间没数据...", null,CountIncome,CountPay);
         } else {
             List<PayEventListBean.AllPayListDTO> allSelect = body.getAllPayList();
             //Map<String, List<PayEventListBean.AllPayListDTO>> map = ListGroupUntil.groupRetrofitMonthList(allSelect);
@@ -281,19 +280,19 @@ public class HomeFragmentPresenterImplements implements HomeFragmentInterface.IP
             }
 
 
-            iView.getAMonthMessageSuccessful("展示成功...", body, CountIncome, CountPay);
+            iView.getAMonthOrYearMessageSuccessful("展示成功...", body, CountIncome, CountPay);
             //iView.getMonthAndYearMessageSuccessful("展示成功...", newMonthPayOrIncomeDate, map, allSelect, CountIncome, CountPay);
         }
     }
 
 
     @Override
-    public void SelectAMonthMessageUnSuccessfulCallBack(String errorMessage) {
-        iView.getMonthAndYearMessageUnSuccessful(errorMessage);
+    public void SelectAMonthOrYearMessageUnSuccessfulCallBack(String errorMessage) {
+        iView.getAMonthOrYearMessageUnSuccessful(errorMessage);
     }
 
     @Override
-    public void getAMonthMessage(String user_account, String select_type, String select_month, String select_year, int since, int perPage) {
+    public void getAMonthOrYearMessage(String user_account, String select_type, String select_month, String select_year, int since, int perPage, int selectType) {
         PayEventBean payEventBean = new PayEventBean();
         payEventBean.setAccount(user_account);
         payEventBean.setMonth(select_month);
@@ -303,7 +302,7 @@ public class HomeFragmentPresenterImplements implements HomeFragmentInterface.IP
         } else {
             payEventBean.setCategory("");
         }
-        iModel.SelectAMonthMessage(payEventBean, since, perPage);
+        iModel.SelectAMonthMessage(payEventBean, since, perPage,selectType);
     }
 
     @Override

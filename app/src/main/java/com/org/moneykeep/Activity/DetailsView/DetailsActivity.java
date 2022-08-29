@@ -76,7 +76,6 @@ public class DetailsActivity extends AppCompatActivity implements DetailsInterfa
         //setListen();
 
         if (id != -1) {
-
             getDetailsMessage();
         } else {
             Toast.makeText(this, "Id获取失败", Toast.LENGTH_LONG).show();

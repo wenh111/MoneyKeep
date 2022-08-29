@@ -49,7 +49,7 @@ public class HomeFragmentModelImplements implements HomeFragmentInterface.IModel
         });
     }
 
-    @Override
+/*    @Override
     public void SelectMonthMessage(PayEventBean payEventBean) {
         Call<PayEventListBean> payEventListBeanCall = api.SelectDayPayMessage(payEventBean.getAccount(),
                 payEventBean.getCategory(), "", payEventBean.getMonth(), payEventBean.getYear());
@@ -89,18 +89,18 @@ public class HomeFragmentModelImplements implements HomeFragmentInterface.IModel
                 iPresenter.SelectMonthAndYearMessageUnSuccessfulCallBack("查询错误:" + t.getMessage());
             }
         });
-    }
+    }*/
 
     @Override
-    public void SelectAMonthMessage(PayEventBean payEventBean, int since, int perPage) {
+    public void SelectAMonthMessage(PayEventBean payEventBean, int since, int perPage,int selectType) {
         Call<PayEventListBean> payEventListBeanCall = api.getPayEvent(payEventBean.getAccount(),
-                payEventBean.getCategory(), payEventBean.getMonth(), payEventBean.getYear(),since,perPage);
+                payEventBean.getCategory(), payEventBean.getMonth(), payEventBean.getYear(),since,perPage, selectType);
         payEventListBeanCall.enqueue(new Callback<PayEventListBean>() {
             @Override
             public void onResponse(Call<PayEventListBean> call, Response<PayEventListBean> response) {
                 if(response.code() == HttpURLConnection.HTTP_OK){
                     PayEventListBean listBean = response.body();
-                    iPresenter.SelectAMonthMessageSuccessfulCallBack(listBean);
+                    iPresenter.SelectAMonthOrYearMessageSuccessfulCallBack(listBean);
                     Log.i("payListDTOS", "count ------------------>" + listBean.getCount());
                     Log.i("payListDTOS", "since ------------------>" + listBean.getSince());
                     Log.i("payListDTOS", "pages ------------------>" + listBean.getPerPage());
@@ -109,7 +109,7 @@ public class HomeFragmentModelImplements implements HomeFragmentInterface.IModel
 
             @Override
             public void onFailure(Call<PayEventListBean> call, Throwable t) {
-                iPresenter.SelectAMonthMessageUnSuccessfulCallBack("查询错误:" + t.getMessage());
+                iPresenter.SelectAMonthOrYearMessageUnSuccessfulCallBack("查询错误:" + t.getMessage());
             }
         });
     }

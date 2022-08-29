@@ -35,9 +35,7 @@ import com.org.moneykeep.Dialog.DeleteDialog;
 import com.org.moneykeep.R;
 import com.org.moneykeep.RecyclerViewAdapter.AMonthRecyclerViewAdapter;
 import com.org.moneykeep.RecyclerViewAdapter.DayRecyclerViewAdapter;
-import com.org.moneykeep.RecyclerViewAdapter.MonthRecyclerViewAdapter;
 import com.org.moneykeep.RecyclerViewAdapter.RecyclerViewList.DayPayOrIncomeList;
-import com.org.moneykeep.RecyclerViewAdapter.RecyclerViewList.MonthPayOrIncomeList;
 import com.org.moneykeep.Until.ChangeDouble;
 import com.org.moneykeep.databinding.FragmentHomeBinding;
 import com.org.moneykeep.retrofitBean.PayEventListBean;
@@ -45,7 +43,6 @@ import com.org.moneykeep.retrofitBean.PayEventListBean;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Map;
 
 
 public class HomeFragment extends Fragment implements HomeFragmentInterface.IView {
@@ -61,8 +58,8 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
     private String user_account;
     private DayRecyclerViewAdapter dayRecyclerViewAdapter;
     private List<DayPayOrIncomeList> dayPayOrIncomeDate = new ArrayList<>();
-    private MonthRecyclerViewAdapter monthRecyclerViewAdapter;
-    private List<MonthPayOrIncomeList> monthPayOrIncomeDate = new ArrayList<>();
+    //private MonthRecyclerViewAdapter monthRecyclerViewAdapter;
+    //private List<MonthPayOrIncomeList> monthPayOrIncomeDate = new ArrayList<>();
     private HomeFragmentInterface.IPresenter iPresenter;
     private HomeViewModel homeViewModel;
     private AMonthRecyclerViewAdapter amonthRecyclerViewAdapter;
@@ -99,7 +96,7 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        SharedPreferences userdata = getActivity().getSharedPreferences("user", MODE_PRIVATE);
+        SharedPreferences userdata = requireActivity().getSharedPreferences("user", MODE_PRIVATE);
 
         user_account = userdata.getString("user_email", "");
 
@@ -186,10 +183,12 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
         setLoadInterface(new HomeFragmentInterface.LoadInterface() {
             @Override
             public void OnLoadLister(Integer since, Integer perPage) {
-                if (!homeViewModel.getIsOver().getValue()) {
+                if (Boolean.FALSE.equals(homeViewModel.getIsOver().getValue())) {
                     if (month.isChecked()) {
-                        getNextDayMessage();
+                        getNextDayMessage(0);
                         //getMonthMessage();
+                    }else if(year.isChecked()){
+                        getNextDayMessage(1);
                     }
                 }
 
@@ -207,7 +206,7 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
         Log.i("lifecycle", "onViewCreated()");
     }
 
-    private void getNextDayMessage() {
+    private void getNextDayMessage(int selectType) {
         needRefresh = false;
         String select_date = homeViewModel.getDate().getValue();
         String[] select_dates = select_date.split("-");
@@ -215,12 +214,15 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
         String select_month = select_dates[1];
         String select_year = select_dates[0];
 
+        if(selectType == 1){
+            select_month = "";
+        }
         String select_type = homeViewModel.getType().getValue();
         int since = homeViewModel.getSince().getValue() == null ? -1 : homeViewModel.getSince().getValue();
         int perPage = homeViewModel.getPerPage().getValue() == null ? -1 : homeViewModel.getPerPage().getValue();
 
         //iPresenter.getMonthMessage(user_account, select_type, select_month, select_year);
-        iPresenter.getAMonthMessage(user_account, select_type, select_month, select_year, since, perPage);
+        iPresenter.getAMonthOrYearMessage(user_account, select_type, select_month, select_year, since, perPage,selectType);
     }
 
 
@@ -238,9 +240,7 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
         super.onStart();
         Log.i("lifecycle", "onStart()");
         SharedPreferences getBoolean = null;
-        if (getBoolean == null) {
-            getBoolean = getActivity().getSharedPreferences("DeleteOrUpdate", MODE_PRIVATE);
-        }
+        getBoolean = getActivity().getSharedPreferences("DeleteOrUpdate", MODE_PRIVATE);
         isdelete = getBoolean.getBoolean("isdelete", false);
         if (isdelete) {
             if (day.isChecked()) {
@@ -252,7 +252,7 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
             }
             SharedPreferences.Editor editor = getBoolean.edit();
             editor.putBoolean("isdelete", false);
-            editor.commit();
+            editor.apply();
 
         }
 
@@ -313,7 +313,7 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
     }
 
-    @SuppressLint("NotifyDataSetChanged")
+    /*@SuppressLint("NotifyDataSetChanged")
     @Override
     public void getMonthAndYearMessageSuccessful(String s, List<MonthPayOrIncomeList> newMonthPayOrIncomeDate, Map<String, List<PayEventListBean.AllPayListDTO>> map,
                                                  List<PayEventListBean.AllPayListDTO> allSelect, double countIncome, double countPay) {
@@ -357,17 +357,13 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
     @Override
     public void getMonthAndYearMessageUnSuccessful(String s) {
         Toast.makeText(getContext(), s, Toast.LENGTH_SHORT).show();
-    }
+    }*/
 
     @SuppressLint("NotifyDataSetChanged")
     @Override
-    public void getAMonthMessageSuccessful(String s, PayEventListBean body, double countIncome, double countPay) {
+    public void getAMonthOrYearMessageSuccessful(String s, PayEventListBean body, double countIncome, double countPay) {
         Log.i("getAMonthMessageSuccessful", "到达这个位置");
         if (body != null) {
-            if (body.getPerPage() == 0) {
-                homeViewModel.dataLoadOver(true);
-            }
-            homeViewModel.dataChange(body.getSince(), body.getPerPage());
             Log.i("getAMonthMessageSuccessful", "到(body != null)位置");
             if (needRefresh) {
                 Log.i("getAMonthMessageSuccessful", "到(isFirst)位置");
@@ -395,25 +391,23 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
                     count_pay.setText(String.valueOf(-countPay));
                 }
 
-                /*if (loadInterface != null) {
-                    int since = homeViewModel.getSince().getValue() == null ? -1 : homeViewModel.getSince().getValue();
-                    int perPage = homeViewModel.getPerPage().getValue() == null ? -1 : homeViewModel.getPerPage().getValue();
-                    loadInterface.OnLoadLister(since, perPage);
-                }*/
             } else {
                 Log.i("getAMonthMessageSuccessful", "到(else)位置");
                 amonthRecyclerViewAdapter.addData(body);
                 count_income.setText(String.valueOf(ChangeDouble.addDouble(Double.parseDouble(count_income.getText().toString()), body.getPayOrIncomeList().getAllIncome())));
                 count_pay.setText(String.valueOf(ChangeDouble.addDouble(Double.parseDouble(count_pay.getText().toString()), body.getPayOrIncomeList().getAllPay())));
             }
-
+            if (body.getPerPage() == 0) {
+                homeViewModel.dataLoadOver(true);
+            }
+            homeViewModel.dataChange(body.getSince(), body.getPerPage());
             boolean state = isRecyclerScrollable(recyclerView);
             Log.i("linearManager", "state = " + state);
-            if(!state){
+            if (!state) {
                 if (loadInterface != null) {
-                    int since = homeViewModel.getSince().getValue() == null ? -1 : homeViewModel.getSince().getValue();
-                    int perPage = homeViewModel.getPerPage().getValue() == null ? -1 : homeViewModel.getPerPage().getValue();
-                    loadInterface.OnLoadLister(since, perPage);
+                    /*int since = homeViewModel.getSince().getValue() == null ? -1 : homeViewModel.getSince().getValue();
+                    int perPage = homeViewModel.getPerPage().getValue() == null ? -1 : homeViewModel.getPerPage().getValue();*/
+                    loadInterface.OnLoadLister(body.getSince(), body.getPerPage());
                 }
             }
         } else {
@@ -424,9 +418,10 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
     public boolean isRecyclerScrollable(RecyclerView recyclerView) {
         return recyclerView.computeHorizontalScrollRange() > recyclerView.getWidth() || recyclerView.computeVerticalScrollRange() > recyclerView.getHeight();
     }
-    @Override
-    public void getAMonthMessageUnSuccessful() {
 
+    @Override
+    public void getAMonthOrYearMessageUnSuccessful(String errorMessage) {
+        Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -527,12 +522,14 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
     }
 
     private void getYearMessage() {
+        needRefresh = true;
         String select_date = homeViewModel.getDate().getValue();
         String[] select_dates = select_date.split("-");
         String select_year = select_dates[0];
 
         String select_type = homeViewModel.getType().getValue();
-        iPresenter.getYearMessage(user_account, select_type, select_year);
+        //iPresenter.getYearMessage(user_account, select_type, select_year);
+        iPresenter.getAMonthOrYearMessage(user_account, select_type, "", select_year, -1, -1,1);
     }
 
     private void getDayMessage() {
@@ -558,7 +555,7 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
         int perPage = homeViewModel.getPerPage().getValue() == null ? -1 : homeViewModel.getPerPage().getValue();*/
 
         //iPresenter.getMonthMessage(user_account, select_type, select_month, select_year);
-        iPresenter.getAMonthMessage(user_account, select_type, select_month, select_year, -1, -1);
+        iPresenter.getAMonthOrYearMessage(user_account, select_type, select_month, select_year, -1, -1,0);
     }
 
 
