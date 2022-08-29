@@ -100,7 +100,7 @@ public class HomeFragmentModelImplements implements HomeFragmentInterface.IModel
             public void onResponse(Call<PayEventListBean> call, Response<PayEventListBean> response) {
                 if(response.code() == HttpURLConnection.HTTP_OK){
                     PayEventListBean listBean = response.body();
-                    iPresenter.SelectAMonthOrYearMessageSuccessfulCallBack(listBean);
+                    iPresenter.SelectAMonthOrYearMessageSuccessfulCallBack(listBean,selectType);
                     Log.i("payListDTOS", "count ------------------>" + listBean.getCount());
                     Log.i("payListDTOS", "since ------------------>" + listBean.getSince());
                     Log.i("payListDTOS", "pages ------------------>" + listBean.getPerPage());

@@ -203,11 +203,11 @@ public class HomeFragmentPresenterImplements implements HomeFragmentInterface.IP
     }*/
 
     @Override
-    public void SelectAMonthOrYearMessageSuccessfulCallBack(PayEventListBean body) {
+    public void SelectAMonthOrYearMessageSuccessfulCallBack(PayEventListBean body,int selectType) {
         double CountIncome = 0;
         double CountPay = 0;
         if (body.getCount() == 0) {
-            iView.getAMonthOrYearMessageSuccessful("查询成功但当前时间没数据...", null,CountIncome,CountPay);
+            iView.getAMonthOrYearMessageSuccessful("查询成功但当前时间没数据...", null,CountIncome,CountPay,selectType);
         } else {
             List<PayEventListBean.AllPayListDTO> allSelect = body.getAllPayList();
             //Map<String, List<PayEventListBean.AllPayListDTO>> map = ListGroupUntil.groupRetrofitMonthList(allSelect);
@@ -280,7 +280,7 @@ public class HomeFragmentPresenterImplements implements HomeFragmentInterface.IP
             }
 
 
-            iView.getAMonthOrYearMessageSuccessful("展示成功...", body, CountIncome, CountPay);
+            iView.getAMonthOrYearMessageSuccessful("展示成功...", body, CountIncome, CountPay,selectType);
             //iView.getMonthAndYearMessageSuccessful("展示成功...", newMonthPayOrIncomeDate, map, allSelect, CountIncome, CountPay);
         }
     }

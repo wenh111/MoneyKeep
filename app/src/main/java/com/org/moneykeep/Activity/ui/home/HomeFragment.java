@@ -361,7 +361,7 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
 
     @SuppressLint("NotifyDataSetChanged")
     @Override
-    public void getAMonthOrYearMessageSuccessful(String s, PayEventListBean body, double countIncome, double countPay) {
+    public void getAMonthOrYearMessageSuccessful(String s, PayEventListBean body, double countIncome, double countPay,int selectType) {
         Log.i("getAMonthMessageSuccessful", "到达这个位置");
         if (body != null) {
             Log.i("getAMonthMessageSuccessful", "到(body != null)位置");
@@ -404,11 +404,12 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
             boolean state = isRecyclerScrollable(recyclerView);
             Log.i("linearManager", "state = " + state);
             if (!state) {
-                if (loadInterface != null) {
-                    /*int since = homeViewModel.getSince().getValue() == null ? -1 : homeViewModel.getSince().getValue();
-                    int perPage = homeViewModel.getPerPage().getValue() == null ? -1 : homeViewModel.getPerPage().getValue();*/
+                /*if (loadInterface != null) {
+                    int since = homeViewModel.getSince().getValue() == null ? -1 : homeViewModel.getSince().getValue();
+                    int perPage = homeViewModel.getPerPage().getValue() == null ? -1 : homeViewModel.getPerPage().getValue();
                     loadInterface.OnLoadLister(body.getSince(), body.getPerPage());
-                }
+                }*/
+                getNextDayMessage(selectType);
             }
         } else {
             Toast.makeText(getContext(), s, Toast.LENGTH_SHORT).show();

@@ -39,7 +39,7 @@ public interface HomeFragmentInterface {
 
         void SelectMonthAndYearMessageUnSuccessfulCallBack(String s);*/
 
-        void SelectAMonthOrYearMessageSuccessfulCallBack(PayEventListBean listBean);
+        void SelectAMonthOrYearMessageSuccessfulCallBack(PayEventListBean listBean,int selectType);
 
         void SelectAMonthOrYearMessageUnSuccessfulCallBack(String errorMessage);
 
@@ -59,7 +59,7 @@ public interface HomeFragmentInterface {
 
         void getMonthAndYearMessageUnSuccessful(String s);*/
 
-        void getAMonthOrYearMessageSuccessful(String s, PayEventListBean body, double countIncome, double countPay);
+        void getAMonthOrYearMessageSuccessful(String s, PayEventListBean body, double countIncome, double countPay,int selectType);
 
         void getAMonthOrYearMessageUnSuccessful(String errorMessage);
 
