@@ -2,7 +2,6 @@ package com.org.moneykeep.RecyclerViewAdapter;
 
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
-import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +9,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -55,7 +53,7 @@ public class DayRecyclerViewAdapter extends RecyclerView.Adapter<DayRecyclerView
         //notifyItemRangeRemoved(position,getData().size()-position);
 
         if (onInnerRecyclerItemCostChangeListener != null) {
-            onInnerRecyclerItemCostChangeListener.OnInnerRecyclerItemCostChangeListener(cost);
+            onInnerRecyclerItemCostChangeListener.InnerRecyclerItemCostChangeListener(cost);
         }
 
         //notifyDataSetChanged();
@@ -64,8 +62,9 @@ public class DayRecyclerViewAdapter extends RecyclerView.Adapter<DayRecyclerView
 
     }
 
+    @NonNull
     @Override
-    public LinearViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public LinearViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         IntegerColor = new HashMap<>();
         {
             IntegerColor.put("餐饮", ContextCompat.getColor(getContext(), R.color.restaurant));/*getContext().getResources().getColor()*/
@@ -101,7 +100,6 @@ public class DayRecyclerViewAdapter extends RecyclerView.Adapter<DayRecyclerView
 
 
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onBindViewHolder(@NonNull LinearViewHolder holder, int position) {
         GradientDrawable gradientDrawable = new GradientDrawable();
@@ -113,13 +111,13 @@ public class DayRecyclerViewAdapter extends RecyclerView.Adapter<DayRecyclerView
         GradientDrawable gradientDrawable_parent = new GradientDrawable();
         gradientDrawable_parent.setShape(GradientDrawable.RECTANGLE);//形状
         gradientDrawable_parent.setCornerRadius(5f);//设置圆角Radius
-        gradientDrawable_parent.setColor(ContextCompat.getColor(getContext(), R.color.background));
+        gradientDrawable_parent.setColor(ContextCompat.getColor(getContext(), R.color.newbackgound));
 
 
-        if (Double.valueOf(Data.get(position).getCost()) > 0) {
-            holder.tx_money.setTextColor(getContext().getResources().getColor(R.color.income_color));
+        if (Double.parseDouble(Data.get(position).getCost()) > 0) {
+            holder.tx_money.setTextColor(ContextCompat.getColor(getContext(),R.color.income_color));
         } else {
-            holder.tx_money.setTextColor(getContext().getResources().getColor(R.color.envelopes));
+            holder.tx_money.setTextColor(ContextCompat.getColor(getContext(),R.color.envelopes));
         }
 
         holder.parent_ly.setBackground(gradientDrawable_parent);
@@ -154,24 +152,18 @@ public class DayRecyclerViewAdapter extends RecyclerView.Adapter<DayRecyclerView
             tx_remark = itemView.findViewById(R.id.tx_remark);
 
 
-            itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    if (view == itemView) {
-                        if (setOnRecyclerItemLongClickListener != null) {
-                            setOnRecyclerItemLongClickListener.OnRecyclerOnItemClickListener(DayRecyclerViewAdapter.this, getAdapterPosition(), getData());
-                        }
+            itemView.setOnLongClickListener(view -> {
+                if (view == itemView) {
+                    if (setOnRecyclerItemLongClickListener != null) {
+                        setOnRecyclerItemLongClickListener.OnRecyclerOnItemClickListener(DayRecyclerViewAdapter.this, getAdapterPosition(), getData());
                     }
-                    return true;
                 }
+                return true;
             });
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (view == itemView) {
-                        if (onRecyclerItemClickListener != null) {
-                            onRecyclerItemClickListener.OnRecyclerOnItemClickListener(getData().get(getAdapterPosition()).getId());
-                        }
+            itemView.setOnClickListener(view -> {
+                if (view == itemView) {
+                    if (onRecyclerItemClickListener != null) {
+                        onRecyclerItemClickListener.OnRecyclerOnItemClickListener(getData().get(getAdapterPosition()).getId());
                     }
                 }
             });
@@ -207,6 +199,6 @@ public class DayRecyclerViewAdapter extends RecyclerView.Adapter<DayRecyclerView
     }
 
     public interface OnInnerRecyclerItemCostChangeListener {
-        void OnInnerRecyclerItemCostChangeListener(double cost);
+        void InnerRecyclerItemCostChangeListener(double cost);
     }
 }

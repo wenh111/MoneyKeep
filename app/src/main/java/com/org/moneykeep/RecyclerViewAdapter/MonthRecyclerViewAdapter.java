@@ -203,7 +203,7 @@ public class MonthRecyclerViewAdapter extends RecyclerView.Adapter<MonthRecycler
                     public void oncofirm(DeleteDialog dialog) {
                         thisAdapter.setOnInnerRecyclerItemCostChangeListener(new DayRecyclerViewAdapter.OnInnerRecyclerItemCostChangeListener() {
                             @Override
-                            public void OnInnerRecyclerItemCostChangeListener(double cost) {
+                            public void InnerRecyclerItemCostChangeListener(double cost) {
                                 double Income = Double.parseDouble(income_money.getText().toString());
                                 double Pay = Double.parseDouble(pay_money.getText().toString());
                                 if (cost > 0) {
