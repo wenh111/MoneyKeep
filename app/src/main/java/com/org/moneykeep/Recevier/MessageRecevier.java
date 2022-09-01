@@ -40,8 +40,7 @@ public class MessageRecevier extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        /*Bmob.initialize(context, "3b1d2e279e692c9f417fd752066fb91b");
-        SDKInitializer.initialize(context);*/
+
 
         SharedPreferences userdata = context.getSharedPreferences("user", MODE_PRIVATE);
 

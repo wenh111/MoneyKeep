@@ -1,16 +1,9 @@
 package com.org.moneykeep.Activity.AddPayEventView;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.InputType;
@@ -22,37 +15,43 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.org.moneykeep.Dialog.GetBankMessageDialog;
-import com.org.moneykeep.Excention.ErrorAddPayEvent;
-import com.org.moneykeep.R;
 import com.org.moneykeep.Dialog.ThisTimePickerDialog;
 import com.org.moneykeep.Dialog.TypePickerDialog;
+import com.org.moneykeep.Excention.ErrorAddPayEvent;
+import com.org.moneykeep.R;
 import com.org.moneykeep.Until.InputFilterMinMax;
 
 import java.util.Calendar;
 
-public class AddPayEventActivity extends AppCompatActivity implements AddPayEventInterface.IView{
-    private TextView text_view;
+public class AddPayEventActivity extends AppCompatActivity implements AddPayEventInterface.IView {
     private LocationClient mLocClient;
     private String addr, easy_Location, city, province, street, district;
-    private String time,location,type,remark,summit_data,summit_time,summit_month,summit_year,summit_day;
+    private String time, location, type, remark, summit_data, summit_time, summit_month, summit_year, summit_day;
     private double money;
     private ImageButton but_finish, but_summit;
     private boolean isFirstLoc = true;
     private CheckBox RadBut_pay, RadBut_income;
-    private EditText ed_time, ed_location, ed_type, ed_money,ed_remark;
+    private EditText ed_time, ed_location, ed_type, ed_money, ed_remark;
     private Button but_add;
     private AddPayEventInterface.IPresenter iPresenter;
 
     private ActivityResultLauncher<Intent> intentActivityResultLauncher =
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), this::onActivityResult);
+
+    public AddPayEventActivity() {
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +62,7 @@ public class AddPayEventActivity extends AppCompatActivity implements AddPayEven
         this.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         localLayoutParams.flags = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS | localLayoutParams.flags;
 
-        iPresenter = new AddPayEventPresenterImplements(this,this);
+        iPresenter = new AddPayEventPresenterImplements(this, this);
         FindId();
 
         initLocation();
@@ -184,7 +183,7 @@ public class AddPayEventActivity extends AppCompatActivity implements AddPayEven
         ed_time.setOnFocusChangeListener(onFocusChange);
         ed_location.setOnFocusChangeListener(onFocusChange);
         ed_type.setOnFocusChangeListener(onFocusChange);
-        ed_money.setFilters(new InputFilter[]{new InputFilterMinMax(0,1000000)});
+        ed_money.setFilters(new InputFilter[]{new InputFilterMinMax(0, 1000000)});
 
 
         but_add.setOnClickListener(onclick);
@@ -228,7 +227,7 @@ public class AddPayEventActivity extends AppCompatActivity implements AddPayEven
                 String IncomeOrPay = null;
                 String AmountOfMoney = null;
                 String message_type = null;
-                if(message.contains("[建设银行]")){
+                if (message.contains("[建设银行]")) {
                     String[] number = message.split(",");
                     String tmp = number[0];
 
@@ -239,20 +238,20 @@ public class AddPayEventActivity extends AppCompatActivity implements AddPayEven
                     }
                     if (number[0].contains("存入") || number[0].contains("收入")) {
                         if (number[0].contains("存入")) {
-                            if(!(tmp.contains("（") && tmp.contains("）"))){
-                                message_remark = number[0].substring(0, number[0].lastIndexOf("月")-1);
+                            if (!(tmp.contains("（") && tmp.contains("）"))) {
+                                message_remark = number[0].substring(0, number[0].lastIndexOf("月") - 1);
                             }
                             IncomeOrPay = number[0].substring(number[0].indexOf("存入"));
                             Log.i("dimos", number[0].substring(number[0].indexOf("存入")));
                         } else if (number[0].contains("收入")) {
-                            if(!(tmp.contains("（") && tmp.contains("）"))){
+                            if (!(tmp.contains("（") && tmp.contains("）"))) {
                                 message_remark = number[0].substring(number[0].indexOf("分") + 1, number[0].indexOf("收入"));
                             }
                             IncomeOrPay = number[0].substring(number[0].indexOf("收入"));
                             Log.i("dimos", number[0].substring(number[0].indexOf("收入")));
                         }
                     } else if (number[0].contains("支出")) {
-                        if(!(tmp.contains("（") && tmp.contains("）"))){
+                        if (!(tmp.contains("（") && tmp.contains("）"))) {
                             message_remark = number[0].substring(number[0].indexOf("分") + 1, number[0].indexOf("支出"));
                         }
                         IncomeOrPay = "-" + number[0].substring(number[0].indexOf("支出"));
@@ -265,10 +264,10 @@ public class AddPayEventActivity extends AppCompatActivity implements AddPayEven
                         }
                     }
                     AmountOfMoney = money.toString();
-                    if(Double.parseDouble(AmountOfMoney) < 0){
+                    if (Double.parseDouble(AmountOfMoney) < 0) {
                         AmountOfMoney = String.valueOf(-Double.parseDouble(AmountOfMoney));
                         RadBut_pay.setChecked(true);
-                    }else{
+                    } else {
                         RadBut_income.setChecked(true);
                     }
                     Log.i("dimos", AmountOfMoney);
@@ -288,28 +287,28 @@ public class AddPayEventActivity extends AppCompatActivity implements AddPayEven
         but_summit.setEnabled(false);
         //String[] text  = {ed_time.getText().toString(),ed_location.getText().toString(),ed_type.getText().toString(),ed_money.getText().toString()};
         try {
-            EditText[] editTexts = {ed_time,ed_location,ed_type,ed_money};
-            if(ed_time.getText().toString().equals("")
+            EditText[] editTexts = {ed_time, ed_location, ed_type, ed_money};
+            if (ed_time.getText().toString().equals("")
                     || ed_location.getText().toString().equals("")
                     || ed_type.getText().toString().equals("")
-                    || ed_money.getText().toString().equals("")){
-                for(EditText editText : editTexts){
-                    if(editText.getText().toString().equals("")){
+                    || ed_money.getText().toString().equals("")) {
+                for (EditText editText : editTexts) {
+                    if (editText.getText().toString().equals("")) {
                         editText.requestFocus();
                         throw new ErrorAddPayEvent("信息不完善");
                     }
                 }
-            }else{
+            } else {
                 but_summit.setEnabled(false);
                 time = ed_time.getText().toString();
                 location = ed_location.getText().toString();
                 type = ed_type.getText().toString();
                 remark = ed_remark.getText().toString();
                 money = Double.valueOf(ed_money.getText().toString());
-                if(RadBut_pay.isChecked()){
+                if (RadBut_pay.isChecked()) {
                     money = -money;
                 }
-                iPresenter.AddPayEvent(time,location,type,remark,money);
+                iPresenter.AddPayEvent(time, location, type, remark, money);
 
                 /*allPay.save(new SaveListener<String>() {
                     @Override
@@ -343,9 +342,9 @@ public class AddPayEventActivity extends AppCompatActivity implements AddPayEven
 
     private void getType() {
         //RadBut_pay, RadBut_income;
-        if(RadBut_pay.isChecked()){
+        if (RadBut_pay.isChecked()) {
             String pay = RadBut_pay.getText().toString();
-            TypePickerDialog typePickerDialog = new TypePickerDialog(AddPayEventActivity.this,pay);
+            TypePickerDialog typePickerDialog = new TypePickerDialog(AddPayEventActivity.this, pay);
             typePickerDialog.but_summit(new TypePickerDialog.IOconfirmListener() {
                 @Override
                 public void oncofirm(TypePickerDialog dialog, int value) {
@@ -353,16 +352,17 @@ public class AddPayEventActivity extends AppCompatActivity implements AddPayEven
                     ed_type.setText(payTypes[value]);
                 }
             }).show();
-        }else if(RadBut_income.isChecked()){
+        } else if (RadBut_income.isChecked()) {
             String income = RadBut_income.getText().toString();
-            TypePickerDialog typePickerDialog = new TypePickerDialog(AddPayEventActivity.this,income);
+            TypePickerDialog typePickerDialog = new TypePickerDialog(AddPayEventActivity.this, income);
             typePickerDialog.but_summit(new TypePickerDialog.IOconfirmListener() {
                 @Override
                 public void oncofirm(TypePickerDialog dialog, int value) {
                     String[] incomeTypes = getResources().getStringArray(R.array.income);
                     ed_type.setText(incomeTypes[value]);
                 }
-            }).show();;
+            }).show();
+            ;
         }
     }
 
@@ -373,8 +373,8 @@ public class AddPayEventActivity extends AppCompatActivity implements AddPayEven
         Bundle bundle = new Bundle();
         bundle.putString("city", city);
         bundle.putString("street", street);
-        bundle.putString("province",province);
-        bundle.putString("district",district);
+        bundle.putString("province", province);
+        bundle.putString("district", district);
         intent.putExtras(bundle);
         intentActivityResultLauncher.launch(intent);
     }
@@ -406,7 +406,7 @@ public class AddPayEventActivity extends AppCompatActivity implements AddPayEven
                     }
                     break;
                 case R.id.ed_type:
-                    if (b){
+                    if (b) {
                         getType();
                     }
                     break;

@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.org.moneykeep.Dialog.DeleteDialog;
 import com.org.moneykeep.Dialog.UpdateDialog;
 import com.org.moneykeep.R;
@@ -102,8 +103,10 @@ public class DetailsActivity extends AppCompatActivity implements DetailsInterfa
         detail_time.setText(body.getPayTime());
         detail_location.setText(body.getLocation());
         detail_remark.setText(body.getRemark());
-        detail_imageView.setImageResource(img.getOrDefault(body.getCategory(),
-                R.drawable.others_64));
+        /*detail_imageView.setImageResource(img.getOrDefault(body.getCategory(),
+                R.drawable.others_64));*/
+        Glide.with(this).load(img.getOrDefault(body.getCategory(),
+                R.drawable.others_64)).into(detail_imageView);
         setListen();
     }
 
@@ -122,7 +125,8 @@ public class DetailsActivity extends AppCompatActivity implements DetailsInterfa
         detail_cost.setText(cost);
         detail_time.setText(updateList.getDate());
         detail_remark.setText(remark);
-        detail_imageView.setImageResource(img.getOrDefault(category, R.drawable.others_64));
+        Glide.with(this).load(img.getOrDefault(category,
+                R.drawable.others_64)).into(detail_imageView);
         Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
     }
 

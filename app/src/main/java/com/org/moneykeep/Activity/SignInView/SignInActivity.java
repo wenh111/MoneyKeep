@@ -2,7 +2,6 @@ package com.org.moneykeep.Activity.SignInView;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
@@ -15,15 +14,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.org.moneykeep.Activity.ForgetPasswordView.AuthenticationView.ForgetPasswordActivity;
 import com.org.moneykeep.Activity.SignUpView.SignUpActivity;
 import com.org.moneykeep.Activity.UserMainActivity;
 import com.org.moneykeep.R;
-
-import cn.bmob.v3.Bmob;
 
 public class SignInActivity extends AppCompatActivity implements SignInInterface.IView{
 
@@ -33,13 +29,11 @@ public class SignInActivity extends AppCompatActivity implements SignInInterface
     private EditText editText_email, editText_password;
     private TextView fp_tv;
     private SignInInterface.IPresenter signInPresenterImplements;
-
-    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
-        Bmob.initialize(this, "3b1d2e279e692c9f417fd752066fb91b");
+
 
         WindowManager.LayoutParams localLayoutParams = getWindow().getAttributes();
         this.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
@@ -116,65 +110,7 @@ public class SignInActivity extends AppCompatActivity implements SignInInterface
         }
     }
 
-    /*private void UserSignIn() {
-        pb.setVisibility(findViewById(R.id.pb).VISIBLE);
-        account = editText_email.getText().toString();
-        password = editText_password.getText().toString();
-        String sql = "select * from User where account = ? and password = ?";
-        new BmobQuery<User>().doSQLQuery(sql, new SQLQueryListener<User>() {
-            @Override
-            public void done(BmobQueryResult<User> bmobQueryResult, BmobException e) {
-                List<User> user = bmobQueryResult.getResults();
-                if(e == null && user.size()==1){
-                    String username = "";
-                    String objectId = "";
-                    String icon_string = "";
-                    pb.setVisibility(findViewById(R.id.pb).INVISIBLE);
 
-                    SharedPreferences userdata = null;
-                    if (userdata == null) {
-                        userdata = getSharedPreferences("user", Context.MODE_PRIVATE);
-                    }
-                    SharedPreferences.Editor user_editor = userdata.edit();
-                    Bundle bundle = new Bundle();
-                    for(User name : user){
-                        username = name.getName();
-                        objectId = name.getObjectId();
-
-
-                        user_editor.putString(USER_NAME,username);
-                        user_editor.putString(USER_OBJECTID,objectId);
-
-                        bundle.putString("user_name",username);
-                        bundle.putString("user_objectId",objectId);
-
-                    }
-
-                    user_editor.putString(USER_EMAIL,account);
-                    user_editor.putString(USER_PASSWORD,password);
-
-                    user_editor.putBoolean(USER_ISUSED,true);
-                    user_editor.commit();
-
-                    bundle.putString("user_email",account);
-
-                    Toast.makeText(SignInActivity.this, "登录成功 ", Toast.LENGTH_SHORT).show();
-
-                    Intent intent = new Intent(SignInActivity.this, UserMainActivity.class);
-                    intent.putExtras(bundle);
-                    startActivity(intent);
-                    finish();
-                }else if(e == null && user.size() == 0){
-                    pb.setVisibility(findViewById(R.id.pb).INVISIBLE);
-                    Toast.makeText(SignInActivity.this, "请输入正确的账号密码", Toast.LENGTH_SHORT).show();
-                }else{
-                    pb.setVisibility(findViewById(R.id.pb).INVISIBLE);
-                    Toast.makeText(SignInActivity.this, "请输入正确的账号密码"+e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            }
-        },account,password);
-
-    }*/
 
     private void FindId() {
         iv = findViewById(R.id.sign_in_eye_photo);
