@@ -66,7 +66,7 @@ public class NotificationsFragment extends Fragment {
 
     private final ActivityResultLauncher<Intent> intentActivityResultLauncher =
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), this::onActivityResult);
-    /*private boolean needDownload = true;*/
+    private boolean needDownload = true;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
