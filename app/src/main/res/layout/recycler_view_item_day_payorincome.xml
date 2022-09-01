@@ -21,85 +21,89 @@
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="20"
         android:layout_marginLeft="1.5dp"
-        android:orientation="horizontal"
-        android:baselineAligned="false">
+        android:layout_weight="20"
+        android:baselineAligned="false"
+        android:orientation="horizontal">
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_marginVertical="2dp"
             android:layout_weight="3"
             android:gravity="center"
-            android:layout_marginVertical="2dp"
             android:orientation="vertical">
+
             <TextView
                 android:id="@+id/tx_type"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="2"
                 android:gravity="center"
-                android:textSize="15sp"
+                android:text="中国农业银行"
                 android:textColor="@color/black"
-                android:text="中国农业银行"/>
+                android:textSize="15sp" />
+
             <TextView
                 android:id="@+id/tx_time"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1.5"
                 android:gravity="center"
-                android:text="22:55"/>
+                android:text="22:55" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_weight="0.2"
             android:layout_height="match_parent"
+            android:layout_weight="0.2"
             android:orientation="vertical">
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="2"
-                android:gravity="center"
-                />
+                android:gravity="center" />
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1.5"
                 android:gravity="center"
-                android:text="|"/>
+                android:text="|" />
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_weight="6"
             android:layout_height="match_parent"
             android:layout_marginVertical="2dp"
+            android:layout_weight="6"
             android:orientation="vertical">
+
             <TextView
                 android:id="@+id/tx_remark"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="2"
-                android:gravity="center"
                 android:layout_gravity="center"
-                android:textColor="@color/black"
+                android:layout_weight="2"
+                android:ellipsize="end"
+                android:gravity="center"
                 android:maxLines="1"
-                android:ellipsize = "end"
-                android:text="麦当劳麦乐送珠海吉林大学店"/>
+                android:text="麦当劳麦乐送珠海吉林大学店"
+                android:textColor="@color/black" />
+
             <TextView
                 android:id="@+id/tx_location"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1.5"
+                android:ellipsize="end"
                 android:gravity="center"
                 android:maxLines="1"
-                android:ellipsize = "end"
-                android:text="在珠海科技学院附近"/>
+                android:text="在珠海科技学院附近" />
 
         </LinearLayout>
-
 
 
     </LinearLayout>

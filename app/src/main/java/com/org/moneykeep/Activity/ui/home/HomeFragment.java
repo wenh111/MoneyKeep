@@ -173,8 +173,10 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
                         int perPage = homeViewModel.getPerPage().getValue() == null ? -1 : homeViewModel.getPerPage().getValue();
 
                         if (loadInterface != null) {
+                            Log.i("ScrollStateChanged", "------------------->" + "loadInterface != null");
                             loadInterface.OnLoadLister(since, perPage);
                         }
+
                         Log.i("ScrollStateChanged", "------------------->" + "到底了");
                     }
                 }
@@ -183,7 +185,9 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
         setLoadInterface(new HomeFragmentInterface.LoadInterface() {
             @Override
             public void OnLoadLister(Integer since, Integer perPage) {
+                Log.i("ScrollStateChanged", "------------------->" + "OnLoadLister");
                 if (Boolean.FALSE.equals(homeViewModel.getIsOver().getValue())) {
+                    Log.i("ScrollStateChanged", "------------------->" + "homeViewModel.getIsOver().getValue()) == false");
                     if (month.isChecked()) {
                         getNextDayMessage(0);
                         //getMonthMessage();
@@ -360,6 +364,10 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
             }
             if (body.getPerPage() == 0) {
                 homeViewModel.dataLoadOver(true);
+                amonthRecyclerViewAdapter.setHasMore(false);
+            }else{
+                homeViewModel.dataLoadOver(false);
+                amonthRecyclerViewAdapter.setHasMore(true);
             }
             homeViewModel.dataChange(body.getSince(), body.getPerPage());
             boolean state = isRecyclerScrollable(recyclerView);

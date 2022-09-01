@@ -48,8 +48,8 @@ public class AMonthRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
     private List<DayPayOrIncomeList> dayPayOrIncomeDate = new ArrayList<>();
     private LinearLayoutManager linearLayoutManager;
     //private Map<String, List<PayEventListBean.AllPayListDTO>> map;
-    private final int TYPE_ITEM = 0;//正常的Item
-    private final int TYPE_FOOT = 1;//尾部刷新
+    /*private final int TYPE_ITEM = 0;//正常的Item
+    private final int TYPE_FOOT = 1;//尾部刷新*/
     private boolean hasMore = true;
 
     public boolean isHasMore() {
@@ -86,9 +86,8 @@ public class AMonthRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        if (viewType == TYPE_FOOT ) {
+        if (viewType == getItemCount() -1 ) {
             return new PayEventFootHolder(LayoutInflater.from(context).inflate(R.layout.item_foot, parent, false));
-
         } else {
             return new LinearViewHolder(LayoutInflater.from(context).inflate(R.layout.recycler_view_item_month_payorincome, parent, false));
         }
@@ -164,7 +163,9 @@ public class AMonthRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             dayRecyclerViewAdapter.setData(newDayPayOrIncomeDate);
             dayRecyclerViewAdapter.notifyDataSetChanged();
         } else {
-            if (position > 0) {
+            if (position == 0) {
+                ((PayEventFootHolder) holder).linearLayout.setVisibility(View.INVISIBLE);
+            } else {
                 ((PayEventFootHolder) holder).linearLayout.setVisibility(View.VISIBLE);
             }
             if (isHasMore()) {
@@ -191,10 +192,10 @@ public class AMonthRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
     @Override
     public int getItemViewType(int position) {
         Log.i("ItemCount", "getItemCount() - 1 ====================> " + (getItemCount() - 1));
-        if (position == getItemCount() - 1) {
+        /*if (position == getItemCount() - 1) {
             Log.i("ItemCount", "position ====================> " + position);
             return TYPE_FOOT;
-        }
+        }*/
         return position;
     }
 
