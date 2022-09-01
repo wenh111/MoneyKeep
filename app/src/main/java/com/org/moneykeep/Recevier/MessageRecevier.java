@@ -28,7 +28,7 @@ import retrofit2.Response;
 public class MessageRecevier extends BroadcastReceiver {
     public static final String ACTION = "android.provider.Telephony.SMS_RECEIVED";
     private boolean isFirstLoc = true;
-    public String easy_Location, AmountOfMoney, type, IncomeOrPay, dString, address, user_account, remark;
+    public String city,district,easy_Location, AmountOfMoney, type, IncomeOrPay, dString, address, user_account, remark;
     public LocationClient mLocClient;
 
     public MessageRecevier() {
@@ -157,8 +157,9 @@ public class MessageRecevier extends BroadcastReceiver {
             option.setOpenGps(true);
             // 设置坐标类型
             option.setIsNeedLocationDescribe(true);
-            option.setLocationMode(LocationClientOption.LocationMode.Device_Sensors);
+            option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
             option.setCoorType("bd09ll");
+            option.setIsNeedAddress(true);
             //option.setFirstLocType(LocationClientOption.FirstLocType.ACCURACY_IN_FIRST_LOC);
             mLocClient.setLocOption(option);
             mLocClient.start();
@@ -177,8 +178,10 @@ public class MessageRecevier extends BroadcastReceiver {
                 isFirstLoc = false;
 
                 //获取详细地址信息
+                city = bdLocation.getCity();
+                district = bdLocation.getDistrict();
                 easy_Location = bdLocation.getLocationDescribe();
-
+                String location = city + " " + district + " " + easy_Location;
                 Calendar calendar = Calendar.getInstance();
                 int year = calendar.get(Calendar.YEAR);
                 int monthOfYear = calendar.get(Calendar.MONTH) + 1;
@@ -205,7 +208,7 @@ public class MessageRecevier extends BroadcastReceiver {
                 allPay.setDate(date);
                 allPay.setAccount(user_account);
                 allPay.setPayTime(payTime);
-                allPay.setLocation(easy_Location);
+                allPay.setLocation(location);
                 allPay.setCost(Double.valueOf(AmountOfMoney));
                 allPay.setCategory(type);
                 allPay.setTime(time);
@@ -255,7 +258,6 @@ public class MessageRecevier extends BroadcastReceiver {
                     }
                 });
                 //阻止广播继续传递，如果该receiver比系统的级别高，
-
                 abortBroadcast();
 
                 // 退出时销毁定位
