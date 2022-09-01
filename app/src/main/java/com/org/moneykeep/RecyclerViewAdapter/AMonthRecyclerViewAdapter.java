@@ -80,16 +80,17 @@ public class AMonthRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
 
     public void addData(PayEventListBean addData) {
         monthData.add(addData);
-        notifyItemRangeChanged(getItemCount() - 1,1);
+        notifyItemRangeInserted(getItemCount() - 2,1);
     }
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        if (viewType == TYPE_ITEM) {
-            return new LinearViewHolder(LayoutInflater.from(context).inflate(R.layout.recycler_view_item_month_payorincome, parent, false));
-        } else {
+        if (viewType == TYPE_FOOT ) {
             return new PayEventFootHolder(LayoutInflater.from(context).inflate(R.layout.item_foot, parent, false));
+
+        } else {
+            return new LinearViewHolder(LayoutInflater.from(context).inflate(R.layout.recycler_view_item_month_payorincome, parent, false));
         }
         //return new AMonthRecyclerViewAdapter.LinearViewHolder(LayoutInflater.from(context).inflate(R.layout.recycler_view_item_month_payorincome, parent, false));
     }
@@ -160,14 +161,10 @@ public class AMonthRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
                 }
             });
 
-
-            dayPayOrIncomeDate = newDayPayOrIncomeDate;
-            dayRecyclerViewAdapter.setData(dayPayOrIncomeDate);
+            dayRecyclerViewAdapter.setData(newDayPayOrIncomeDate);
             dayRecyclerViewAdapter.notifyDataSetChanged();
         } else {
-            if (position == 0) {
-                ((PayEventFootHolder) holder).linearLayout.setVisibility(View.INVISIBLE);
-            } else {
+            if (position > 0) {
                 ((PayEventFootHolder) holder).linearLayout.setVisibility(View.VISIBLE);
             }
             if (isHasMore()) {
@@ -193,12 +190,12 @@ public class AMonthRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
 
     @Override
     public int getItemViewType(int position) {
-        Log.i("ItemCount", "position ====================> " + position);
         Log.i("ItemCount", "getItemCount() - 1 ====================> " + (getItemCount() - 1));
         if (position == getItemCount() - 1) {
+            Log.i("ItemCount", "position ====================> " + position);
             return TYPE_FOOT;
         }
-        return TYPE_ITEM;
+        return position;
     }
 
 
@@ -221,7 +218,7 @@ public class AMonthRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             amount = itemView.findViewById(R.id.amount);
             linearLayoutManager = new LinearLayoutManager(getContext());
             month_recyclerView.setLayoutManager(linearLayoutManager);
-            dayRecyclerViewAdapter = new DayRecyclerViewAdapter(getContext(), dayPayOrIncomeDate);
+            dayRecyclerViewAdapter = new DayRecyclerViewAdapter(getContext(), new ArrayList<>());
             dayRecyclerViewAdapter.setSetOnRecyclerItemLongClickListener((thisAdapter, position1, Data) -> {
                 int delete_ObjectId = Data.get(position1).getId();
                 double ItemCost = Double.parseDouble(Data.get(position1).getCost());
@@ -266,7 +263,6 @@ public class AMonthRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
                                     if (setOnRecyclerItemCostChangeListener != null) {
                                         setOnRecyclerItemCostChangeListener.OnRecyclerItemCostChangeListener(ItemCost, getAdapterPosition());
                                     }
-
 
 
                                     Log.i("removeItem",
