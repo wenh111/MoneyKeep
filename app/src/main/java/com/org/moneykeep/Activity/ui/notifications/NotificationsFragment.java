@@ -12,7 +12,6 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,11 +27,11 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.graphics.drawable.RoundedBitmapDrawable;
-import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.org.moneykeep.Activity.ForgetPasswordView.AuthenticationView.ForgetPasswordActivity;
 import com.org.moneykeep.Activity.SignInView.SignInActivity;
 import com.org.moneykeep.R;
@@ -40,17 +39,12 @@ import com.org.moneykeep.Until.RetrofitUntil;
 import com.org.moneykeep.databinding.FragmentNotificationsBinding;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.util.Objects;
 
-import okhttp3.Headers;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -72,19 +66,19 @@ public class NotificationsFragment extends Fragment {
 
     private final ActivityResultLauncher<Intent> intentActivityResultLauncher =
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), this::onActivityResult);
-    private boolean needDownload = true;
+    /*private boolean needDownload = true;*/
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        NotificationsViewModel notificationsViewModel =
-                new ViewModelProvider(this).get(NotificationsViewModel.class);
+        /*NotificationsViewModel notificationsViewModel =
+                new ViewModelProvider(this).get(NotificationsViewModel.class);*/
 
         binding = FragmentNotificationsBinding.inflate(inflater, container, false);
         api = RetrofitUntil.getRetrofit().create(UserPhotoAPI.class);
         View root = binding.getRoot();
 
-        Bundle receive = getActivity().getIntent().getExtras();
+        Bundle receive = Objects.requireNonNull(getActivity()).getIntent().getExtras();
         bundle_user_name = receive.getString("user_name");
         bundle_user_email = receive.getString("user_email");
 
@@ -102,9 +96,9 @@ public class NotificationsFragment extends Fragment {
         user_name.setText(bundle_user_name);
         user_account_input.setText(bundle_user_email);
 
-        SharedPreferences uridata = requireActivity().getSharedPreferences("uri", Context.MODE_PRIVATE);
+       /* SharedPreferences uridata = requireActivity().getSharedPreferences("uri", Context.MODE_PRIVATE);
 
-        needDownload = uridata.getBoolean("needDownload", true);
+        needDownload = uridata.getBoolean("needDownload", true);*/
         int REQUEST_CODE_CONTACT = 101;
         String[] permissions = {
                 Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
@@ -116,7 +110,8 @@ public class NotificationsFragment extends Fragment {
                 return;
             }
         }
-        if (needDownload ) {
+        setUserPhoto();
+        /*if (needDownload) {
             setUserPhoto();
         } else {
             String uri_path = uridata.getString("uripath", "");
@@ -125,9 +120,7 @@ public class NotificationsFragment extends Fragment {
                 if(!fileIsExists(uri_path)){
                     setUserPhoto();
                 }else{
-
                     Log.i(TAG, "uri_path =================>" + uri_path);
-
                     RoundedBitmapDrawable roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), uri_path);
                     //RoundedBitmapDrawable roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
                     roundedBitmapDrawable.setCornerRadius(25);
@@ -137,15 +130,13 @@ public class NotificationsFragment extends Fragment {
                 }
 
             }
-        }
+        }*/
 
 
     }
 
-    private final String TAG = "PhotoMessage";
-
     private void setUserPhoto() {
-        Call<ResponseBody> responseBodyCall = api.downPhoto(bundle_user_email);
+        /*Call<ResponseBody> responseBodyCall = api.downPhoto(bundle_user_email);
         responseBodyCall.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call,@NonNull Response<ResponseBody> response) {
@@ -163,12 +154,33 @@ public class NotificationsFragment extends Fragment {
 
             @Override
             public void onFailure(@NonNull Call<ResponseBody> call, Throwable t) {
+                Toast.makeText(getContext(),"头像获取失败...",Toast.LENGTH_SHORT).show();
+            }
+        });*/
+        Call<UploadSuccessfulMessage> uploadSuccessfulMessageCall = api.getPhotoUrl(bundle_user_email);
+        uploadSuccessfulMessageCall.enqueue(new Callback<UploadSuccessfulMessage>() {
+            @Override
+            public void onResponse(@NonNull Call<UploadSuccessfulMessage> call,@NonNull Response<UploadSuccessfulMessage> response) {
+                if (response.code() == HttpURLConnection.HTTP_OK) {
+                    if(Objects.requireNonNull(response.body()).getUrl() != null){
+                        RoundedCorners roundedCorners = new RoundedCorners(20);
+                        //通过RequestOptions扩展功能,override:采样率,因为ImageView就这么大,可以压缩图片,降低内存消耗
+                        // RequestOptions options = RequestOptions.bitmapTransform(roundedCorners).override(20, 20);
+                        RequestOptions options = RequestOptions.bitmapTransform(roundedCorners);
+                        Glide.with(Objects.requireNonNull(getContext())).load(response.body().getUrl()).apply(options).into(user_icon);
+                    }
 
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<UploadSuccessfulMessage> call,@NonNull Throwable t) {
+                Toast.makeText(getContext(),"头像获取失败...",Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void writString2Disk(Response<ResponseBody> response, String fileName) {
+    /*private void writString2Disk(Response<ResponseBody> response, String fileName) {
         new Thread(() -> {
 
             assert response.body() != null;
@@ -199,8 +211,8 @@ public class NotificationsFragment extends Fragment {
                 roundedBitmapDrawable.setCornerRadius(25);
                 user_icon.post(() -> user_icon.setImageDrawable(roundedBitmapDrawable));
                 //Uri filepath = Uri.fromFile(outFile);
-               /* RoundedBitmapDrawable roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), uri);
-                roundedBitmapDrawable.setCornerRadius(25);*/
+               *//* RoundedBitmapDrawable roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), uri);
+                roundedBitmapDrawable.setCornerRadius(25);*//*
                 //Uri filepath = Uri.fromFile(outFile);
                 //user_icon.post(() -> user_icon.setImageURI(filepath));
                 //user_icon.post(() -> user_icon.setImageDrawable(roundedBitmapDrawable));
@@ -223,7 +235,7 @@ public class NotificationsFragment extends Fragment {
                 }
             }
         }).start();
-    }
+    }*/
 
     @Override
     public void onStart() {
@@ -231,9 +243,9 @@ public class NotificationsFragment extends Fragment {
     }
 
     @SuppressLint("Range")
-    private String getImagePath(Uri uri, String selection) {
+    private String getImagePath(Uri uri) {
         String path = null;
-        Cursor cursor = getActivity().getContentResolver().query(uri, null, selection, null, null);
+        Cursor cursor = Objects.requireNonNull(getActivity()).getContentResolver().query(uri, null, null, null, null);
         if (cursor != null) {
             if (cursor.moveToFirst()) {
                 path = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
@@ -255,11 +267,10 @@ public class NotificationsFragment extends Fragment {
         if (result.getData() != null && result.getResultCode() == Activity.RESULT_OK) {
             Intent resultData = result.getData();
             Uri uri = resultData.getData();
-            SharedPreferences uridata = getActivity().getSharedPreferences("uri", MODE_PRIVATE);
+            //SharedPreferences uridata = getActivity().getSharedPreferences("uri", MODE_PRIVATE);
             try {
-                String mpath = getImagePath(uri, null);
-                SharedPreferences.Editor uri_editor = uridata.edit();
-
+                String mpath = getImagePath(uri);
+                /*SharedPreferences.Editor uri_editor = uridata.edit();*/
                 Log.i("mpath ===>", mpath);
                 File file = new File(mpath);
                 RequestBody body = RequestBody.create(file, MediaType.parse("image/jpeg"));
@@ -268,17 +279,18 @@ public class NotificationsFragment extends Fragment {
                 Call<UploadSuccessfulMessage> stringCall = api.UploadPhoto(part, bundle_user_email);
                 stringCall.enqueue(new Callback<UploadSuccessfulMessage>() {
                     @Override
-                    public void onResponse(Call<UploadSuccessfulMessage> call, Response<UploadSuccessfulMessage> response) {
+                    public void onResponse(@NonNull Call<UploadSuccessfulMessage> call,@NonNull Response<UploadSuccessfulMessage> response) {
                         if (response.code() == HttpURLConnection.HTTP_OK) {
-                            Log.i("uploadSuccessful", "============>" + response.body().getUrl());
-                            uri_editor.putString("uripath", "");
+                            Log.i("uploadSuccessful", "============>" + (response.body() != null ? response.body().getUrl() : null));
+                           /* uri_editor.putString("uripath", "");
                             uri_editor.putBoolean("needDownload", true);
-                            uri_editor.apply();
+                            uri_editor.apply();*/
+                            setUserPhoto();
                         }
                     }
 
                     @Override
-                    public void onFailure(Call<UploadSuccessfulMessage> call, Throwable t) {
+                    public void onFailure(@NonNull Call<UploadSuccessfulMessage> call,@NonNull Throwable t) {
                         Log.i("uploadUnSuccessful", "============>" + t.getMessage());
                         //Toast.makeText(getContext(), "头像上传服务器失败:" + t.getMessage(), Toast.LENGTH_LONG).show();
                     }
@@ -288,9 +300,9 @@ public class NotificationsFragment extends Fragment {
                  *//* 将Bitmap设定到ImageView *//*
                 Bitmap bitmap = BitmapFactory.decodeStream(cr.openInputStream(uri));
                 user_icon.setImageBitmap(bitmap);*/
-                RoundedBitmapDrawable roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), mpath);
+                /*RoundedBitmapDrawable roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), mpath);
                 roundedBitmapDrawable.setCornerRadius(25);
-                user_icon.setImageDrawable(roundedBitmapDrawable);
+                user_icon.setImageDrawable(roundedBitmapDrawable);*/
             } catch (IllegalStateException e) {
                 Toast.makeText(getContext(), "错误" + e.getMessage(), Toast.LENGTH_LONG).show();
             }
@@ -330,7 +342,7 @@ public class NotificationsFragment extends Fragment {
     }
 
     private void Logout() {
-        SharedPreferences controllerdata = getActivity().getSharedPreferences("user", MODE_PRIVATE);
+        SharedPreferences controllerdata = Objects.requireNonNull(getActivity()).getSharedPreferences("user", MODE_PRIVATE);
         SharedPreferences.Editor controller_editor = controllerdata.edit();
         controller_editor.putString(USER_EMAIL, "");
         controller_editor.putString(USER_PASSWORD, "");
@@ -347,15 +359,16 @@ public class NotificationsFragment extends Fragment {
     }
 
     private void FindId() {
-        but_update_password = getView().findViewById(R.id.but_update_password);
-        user_icon = getView().findViewById(R.id.user_icon);
-        but_log_out = getView().findViewById(R.id.but_log_out);
-        user_name = getView().findViewById(R.id.user_name);
-        user_account_input = getView().findViewById(R.id.user_account_input);
+        but_update_password = binding.butUpdatePassword;/*getView().findViewById(R.id.but_update_password)*/
+        user_icon = binding.userIcon;/*getView().findViewById(R.id.user_icon)*/
+        but_log_out = binding.butLogOut;/*getView().findViewById(R.id.but_log_out)*/
+        user_name =binding.userName ;/*getView().findViewById(R.id.user_name)*/
+        user_account_input = binding.userAccountInput;/*getView().findViewById(R.id.user_account_input)*/
     }
 
     //fileName 为文件名称 返回true为存在
-    public boolean fileIsExists(String fileName) {
+    /*public boolean fileIsExists(String fileName) {
+        String TAG = "PhotoMessage";
         try {
             File f = new File(fileName);
             if (f.exists()) {
@@ -369,7 +382,7 @@ public class NotificationsFragment extends Fragment {
             Log.i(TAG, "fileIsExists =============> " + "崩溃");
             return false;
         }
-    }
+    }*/
 
 
     @Override

@@ -18,4 +18,7 @@ public interface UserPhotoAPI {
     @Streaming
     @GET("/photo/getPhoto")
     Call<ResponseBody> downPhoto(@Query("account") String account);
+
+    @GET("/photo/getUserPhotoUrl")
+    Call<UploadSuccessfulMessage> getPhotoUrl(@Query("account") String account);
 }
