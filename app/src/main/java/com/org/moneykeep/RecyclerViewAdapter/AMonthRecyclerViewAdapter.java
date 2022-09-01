@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,7 +39,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-public class AMonthRecyclerViewAdapter extends RecyclerView.Adapter<AMonthRecyclerViewAdapter.LinearViewHolder> {
+public class AMonthRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context context;
     private List<PayEventListBean> monthData;
@@ -47,6 +48,17 @@ public class AMonthRecyclerViewAdapter extends RecyclerView.Adapter<AMonthRecycl
     private List<DayPayOrIncomeList> dayPayOrIncomeDate = new ArrayList<>();
     private LinearLayoutManager linearLayoutManager;
     //private Map<String, List<PayEventListBean.AllPayListDTO>> map;
+    private final int TYPE_ITEM = 0;//正常的Item
+    private final int TYPE_FOOT = 1;//尾部刷新
+    private boolean hasMore = true;
+
+    public boolean isHasMore() {
+        return hasMore;
+    }
+
+    public void setHasMore(boolean hasMore) {
+        this.hasMore = hasMore;
+    }
 
     public AMonthRecyclerViewAdapter(Context context, List<PayEventListBean> monthData) {
         this.context = context;
@@ -72,113 +84,99 @@ public class AMonthRecyclerViewAdapter extends RecyclerView.Adapter<AMonthRecycl
     }
     @NonNull
     @Override
-    public LinearViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        return new AMonthRecyclerViewAdapter.LinearViewHolder(LayoutInflater.from(context).inflate(R.layout.recycler_view_item_month_payorincome, parent, false));
+        if (viewType == TYPE_ITEM) {
+            return new LinearViewHolder(LayoutInflater.from(context).inflate(R.layout.recycler_view_item_month_payorincome, parent, false));
+        } else {
+            return new PayEventFootHolder(LayoutInflater.from(context).inflate(R.layout.item_foot, parent, false));
+        }
+        //return new AMonthRecyclerViewAdapter.LinearViewHolder(LayoutInflater.from(context).inflate(R.layout.recycler_view_item_month_payorincome, parent, false));
     }
+
+
 
     @SuppressLint("NotifyDataSetChanged")
     @Override
-    public void onBindViewHolder(@NonNull LinearViewHolder holder, @SuppressLint("RecyclerView") int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
+        if (holder instanceof LinearViewHolder) {
+            //String Title_Date = monthData.get(position).getPayOrIncomeList().getDate();
+            ((LinearViewHolder)holder).DayAndMoth.setText(monthData.get(position).getPayOrIncomeList().getDate());
 
-        //String Title_Date = monthData.get(position).getPayOrIncomeList().getDate();
-        holder.DayAndMoth.setText(monthData.get(position).getPayOrIncomeList().getDate());
+            List<DayPayOrIncomeList> newDayPayOrIncomeDate = new ArrayList<>();
 
-        List<DayPayOrIncomeList> newDayPayOrIncomeDate = new ArrayList<>();
+            for (PayEventListBean.AllPayListDTO date : monthData.get(position).getAllPayList()) {
+                String[] getLocations = date.getLocation().split(" ");
 
-        /*for (Map.Entry<String, List<PayEventListBean.AllPayListDTO>> entry : map.entrySet()) {
-            if (entry.getKey().equals(Title_Date)) {
-                for (PayEventListBean.AllPayListDTO date : entry.getValue()) {
-                    String[] getLocations = date.getLocation().split(" ");
+                String getLocation = getLocations[getLocations.length - 1];
+                int objectId = date.getId();
 
-                    String getLocation = getLocations[getLocations.length - 1];
-                    int objectId = date.getId();
+                double get_cost = date.getCost();
 
-                    double get_cost = date.getCost();
-
-                    String set_cost;
-                    if (get_cost > 0) {
-                        set_cost = "+" + get_cost;
-                    } else if (get_cost < 0) {
-                        set_cost = "" + get_cost;
-                    } else {
-                        set_cost = "" + 0;
-                    }
-                    String getTime = date.getTime();
-                    String[] getTimes = getTime.split(":");
-                    String int_time = getTimes[0] + getTimes[1];
-                    DayPayOrIncomeList dayPayOrIncomeList = new DayPayOrIncomeList();
-                    dayPayOrIncomeList.setDate(date.getDate());
-                    dayPayOrIncomeList.setId(objectId);
-                    dayPayOrIncomeList.setInt_time(Integer.valueOf(int_time));
-                    dayPayOrIncomeList.setCategory(date.getCategory());
-                    dayPayOrIncomeList.setPayTime(date.getTime());
-                    dayPayOrIncomeList.setLocation(getLocation);
-                    dayPayOrIncomeList.setCost(set_cost);
-                    dayPayOrIncomeList.setRemark(date.getRemark());
-                    newDayPayOrIncomeDate.add(dayPayOrIncomeList);
+                String set_cost;
+                if (get_cost > 0) {
+                    set_cost = "+" + get_cost;
+                } else if (get_cost < 0) {
+                    set_cost = "" + get_cost;
+                } else {
+                    set_cost = "" + 0;
                 }
+                String getTime = date.getTime();
+                String[] getTimes = getTime.split(":");
+                String int_time = getTimes[0] + getTimes[1];
+                DayPayOrIncomeList dayPayOrIncomeList = new DayPayOrIncomeList();
+                dayPayOrIncomeList.setDate(date.getDate());
+                dayPayOrIncomeList.setId(objectId);
+                dayPayOrIncomeList.setInt_time(Integer.parseInt(int_time));
+                dayPayOrIncomeList.setCategory(date.getCategory());
+                dayPayOrIncomeList.setPayTime(date.getTime());
+                dayPayOrIncomeList.setLocation(getLocation);
+                dayPayOrIncomeList.setCost(set_cost);
+                dayPayOrIncomeList.setRemark(date.getRemark());
+                newDayPayOrIncomeDate.add(dayPayOrIncomeList);
             }
-        }*/
-        for (PayEventListBean.AllPayListDTO date : monthData.get(position).getAllPayList()) {
-            String[] getLocations = date.getLocation().split(" ");
 
-            String getLocation = getLocations[getLocations.length - 1];
-            int objectId = date.getId();
-
-            double get_cost = date.getCost();
-
-            String set_cost;
-            if (get_cost > 0) {
-                set_cost = "+" + get_cost;
-            } else if (get_cost < 0) {
-                set_cost = "" + get_cost;
+            double cost = monthData.get(position).getPayOrIncomeList().getAllPay();
+            if (cost == 0) {
+                ((LinearViewHolder)holder).pay_money.setText("0");
             } else {
-                set_cost = "" + 0;
+                ((LinearViewHolder)holder).pay_money.setText(String.valueOf(cost));
             }
-            String getTime = date.getTime();
-            String[] getTimes = getTime.split(":");
-            String int_time = getTimes[0] + getTimes[1];
-            DayPayOrIncomeList dayPayOrIncomeList = new DayPayOrIncomeList();
-            dayPayOrIncomeList.setDate(date.getDate());
-            dayPayOrIncomeList.setId(objectId);
-            dayPayOrIncomeList.setInt_time(Integer.parseInt(int_time));
-            dayPayOrIncomeList.setCategory(date.getCategory());
-            dayPayOrIncomeList.setPayTime(date.getTime());
-            dayPayOrIncomeList.setLocation(getLocation);
-            dayPayOrIncomeList.setCost(set_cost);
-            dayPayOrIncomeList.setRemark(date.getRemark());
-            newDayPayOrIncomeDate.add(dayPayOrIncomeList);
-        }
+            double income_money = monthData.get(position).getPayOrIncomeList().getAllIncome();
+            ((LinearViewHolder)holder).income_money.setText(String.valueOf(income_money));
 
-        double cost = monthData.get(position).getPayOrIncomeList().getAllPay();
-        if (cost == 0) {
-            holder.pay_money.setText("0");
+            double TotalAmount = ChangeDouble.subDouble(income_money, cost);
+            if (TotalAmount < 0) {
+                ((LinearViewHolder)holder).amount.setTextColor(ContextCompat.getColor(getContext(), R.color.envelopes));
+            } else if (TotalAmount > 0) {
+                ((LinearViewHolder)holder).amount.setTextColor(ContextCompat.getColor(getContext(), R.color.income_color));
+            }
+            ((LinearViewHolder)holder).amount.setText(String.valueOf(TotalAmount));
+
+            newDayPayOrIncomeDate.sort(new Comparator<DayPayOrIncomeList>() {
+                @Override
+                public int compare(DayPayOrIncomeList dayPayOrIncomeList, DayPayOrIncomeList t1) {
+                    return t1.getInt_time() - dayPayOrIncomeList.getInt_time();
+                }
+            });
+
+
+            dayPayOrIncomeDate = newDayPayOrIncomeDate;
+            dayRecyclerViewAdapter.setData(dayPayOrIncomeDate);
+            dayRecyclerViewAdapter.notifyDataSetChanged();
         } else {
-            holder.pay_money.setText(String.valueOf(cost));
-        }
-        double income_money = monthData.get(position).getPayOrIncomeList().getAllIncome();
-        holder.income_money.setText(String.valueOf(income_money));
-
-        double TotalAmount = ChangeDouble.subDouble(income_money, cost);
-        if (TotalAmount < 0) {
-            holder.amount.setTextColor(ContextCompat.getColor(getContext(), R.color.envelopes));
-        } else if (TotalAmount > 0) {
-            holder.amount.setTextColor(ContextCompat.getColor(getContext(), R.color.income_color));
-        }
-        holder.amount.setText(String.valueOf(TotalAmount));
-
-        newDayPayOrIncomeDate.sort(new Comparator<DayPayOrIncomeList>() {
-            @Override
-            public int compare(DayPayOrIncomeList dayPayOrIncomeList, DayPayOrIncomeList t1) {
-                return t1.getInt_time() - dayPayOrIncomeList.getInt_time();
+            if (position == 0) {
+                ((PayEventFootHolder) holder).linearLayout.setVisibility(View.INVISIBLE);
+            } else {
+                ((PayEventFootHolder) holder).linearLayout.setVisibility(View.VISIBLE);
             }
-        });
+            if (isHasMore()) {
+                ((PayEventFootHolder) holder).textView.setText("上拉加载更多");
+            } else {
+                ((PayEventFootHolder) holder).textView.setText("没有更多数据了");
+            }
+        }
 
-
-        dayPayOrIncomeDate = newDayPayOrIncomeDate;
-        dayRecyclerViewAdapter.setData(dayPayOrIncomeDate);
-        dayRecyclerViewAdapter.notifyDataSetChanged();
 
 
     }
@@ -195,13 +193,18 @@ public class AMonthRecyclerViewAdapter extends RecyclerView.Adapter<AMonthRecycl
 
     @Override
     public int getItemViewType(int position) {
-        return position;
+        Log.i("ItemCount", "position ====================> " + position);
+        Log.i("ItemCount", "getItemCount() - 1 ====================> " + (getItemCount() - 1));
+        if (position == getItemCount() - 1) {
+            return TYPE_FOOT;
+        }
+        return TYPE_ITEM;
     }
 
 
     @Override
     public int getItemCount() {
-        return monthData == null ? 0 : monthData.size();
+        return monthData == null ? 0 : monthData.size() + 1;
     }
 
     class LinearViewHolder extends RecyclerView.ViewHolder {
@@ -309,6 +312,16 @@ public class AMonthRecyclerViewAdapter extends RecyclerView.Adapter<AMonthRecycl
             month_recyclerView.setAdapter(dayRecyclerViewAdapter);
             //dayRecyclerViewAdapter = new DayRecyclerViewAdapter(getContext(), dayPayOrIncomeDate);
 
+        }
+    }
+    static class PayEventFootHolder extends RecyclerView.ViewHolder {
+        private final TextView textView;
+        private LinearLayout linearLayout;
+
+        public PayEventFootHolder(@NonNull View itemView) {
+            super(itemView);
+            textView = itemView.findViewById(R.id.text_view);
+            linearLayout = itemView.findViewById(R.id.linearLayout);
         }
     }
 }

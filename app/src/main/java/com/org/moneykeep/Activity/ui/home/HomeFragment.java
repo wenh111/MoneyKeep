@@ -313,48 +313,9 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
     }
 
-    /*@SuppressLint("NotifyDataSetChanged")
-    @Override
-    public void getMonthAndYearMessageSuccessful(String s, List<MonthPayOrIncomeList> newMonthPayOrIncomeDate, Map<String, List<PayEventListBean.AllPayListDTO>> map,
-                                                 List<PayEventListBean.AllPayListDTO> allSelect, double countIncome, double countPay) {
-        if (map != null) {
-            monthRecyclerViewAdapter = new MonthRecyclerViewAdapter(getContext(), monthPayOrIncomeDate, map);
-            monthPayOrIncomeDate = newMonthPayOrIncomeDate;
-            monthRecyclerViewAdapter.setMonthData(monthPayOrIncomeDate);
-            monthRecyclerViewAdapter.notifyDataSetChanged();
-            monthRecyclerViewAdapter.setSetOnRecyclerItemCostChangeListener(new MonthRecyclerViewAdapter.SetOnRecyclerItemCostChangeListener() {
-                @Override
-                public void OnRecyclerItemCostChangeListener(double cost, int position) {
-                    if (cost > 0) {
-                        count_income.setText(String.valueOf(ChangeDouble.subDouble(Double.parseDouble(count_income.getText().toString()), cost)));
-                    } else if (cost < 0) {
-                        count_pay.setText(String.valueOf(ChangeDouble.addDouble(Double.parseDouble(count_pay.getText().toString()), cost)));
-                    }
 
-                }
-            });
 
-            recyclerView.setAdapter(monthRecyclerViewAdapter);
-            RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
-            if (layoutManager instanceof LinearLayoutManager) {
-                LinearLayoutManager linearManager = (LinearLayoutManager) layoutManager;
-                int mFirstVisiblePosition = linearManager.findLastVisibleItemPosition();
-                Log.i("mFirstVisiblePosition", "yFirstVisiblePosition == " + mFirstVisiblePosition);
-            }
-            count_income.setText(String.valueOf(countIncome));
-            if (countPay == 0) {
-                count_pay.setText(String.valueOf(0.0));
-            } else {
-                count_pay.setText(String.valueOf(-countPay));
-            }
-
-        } else {
-            Toast.makeText(getContext(), s, Toast.LENGTH_SHORT).show();
-        }
-
-    }
-
-    @Override
+    /*@Override
     public void getMonthAndYearMessageUnSuccessful(String s) {
         Toast.makeText(getContext(), s, Toast.LENGTH_SHORT).show();
     }*/

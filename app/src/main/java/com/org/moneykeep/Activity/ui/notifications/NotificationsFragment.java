@@ -167,7 +167,7 @@ public class NotificationsFragment extends Fragment {
                         //通过RequestOptions扩展功能,override:采样率,因为ImageView就这么大,可以压缩图片,降低内存消耗
                         // RequestOptions options = RequestOptions.bitmapTransform(roundedCorners).override(20, 20);
                         RequestOptions options = RequestOptions.bitmapTransform(roundedCorners);
-                        Glide.with(Objects.requireNonNull(getContext())).load(response.body().getUrl()).apply(options).into(user_icon);
+                        Glide.with(Objects.requireNonNull(getActivity())).load(response.body().getUrl()).apply(options).into(user_icon);
                     }
 
                 }
