@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -91,7 +92,7 @@ public class AMonthRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         } else {
             return new LinearViewHolder(LayoutInflater.from(context).inflate(R.layout.recycler_view_item_month_payorincome, parent, false));
         }
-        //return new AMonthRecyclerViewAdapter.LinearViewHolder(LayoutInflater.from(context).inflate(R.layout.recycler_view_item_month_payorincome, parent, false));
+       // return new AMonthRecyclerViewAdapter.LinearViewHolder(LayoutInflater.from(context).inflate(R.layout.recycler_view_item_month_payorincome, parent, false));
     }
 
 
@@ -99,6 +100,7 @@ public class AMonthRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
     @SuppressLint("NotifyDataSetChanged")
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
+
         if (holder instanceof LinearViewHolder) {
             //String Title_Date = monthData.get(position).getPayOrIncomeList().getDate();
             ((LinearViewHolder)holder).DayAndMoth.setText(monthData.get(position).getPayOrIncomeList().getDate());
@@ -173,6 +175,7 @@ public class AMonthRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             } else {
                 ((PayEventFootHolder) holder).textView.setText("没有更多数据了");
             }
+
         }
 
 
@@ -312,12 +315,14 @@ public class AMonthRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         }
     }
     static class PayEventFootHolder extends RecyclerView.ViewHolder {
-        private final TextView textView;
+        private TextView textView,left,right;
         private LinearLayout linearLayout;
 
         public PayEventFootHolder(@NonNull View itemView) {
             super(itemView);
             textView = itemView.findViewById(R.id.text_view);
+            left = itemView.findViewById(R.id.left);
+            right = itemView.findViewById(R.id.right);
             linearLayout = itemView.findViewById(R.id.linearLayout);
         }
     }

@@ -65,7 +65,7 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
     private AMonthRecyclerViewAdapter amonthRecyclerViewAdapter;
     public HomeFragmentInterface.LoadInterface loadInterface;
     private boolean needRefresh;
-
+    SharedPreferences getBoolean;
     public void setLoadInterface(HomeFragmentInterface.LoadInterface loadInterface) {
         this.loadInterface = loadInterface;
     }
@@ -87,6 +87,13 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
             homeViewModel.dataLoadOver(false);
             homeViewModel.changDate(now_date);
             homeViewModel.changType("全部类型");
+            getBoolean = getActivity().getSharedPreferences("DeleteOrUpdate", MODE_PRIVATE);
+            isdelete = getBoolean.getBoolean("isdelete", false);
+            if (isdelete) {
+                SharedPreferences.Editor editor = getBoolean.edit();
+                editor.putBoolean("isdelete", false);
+                editor.apply();
+            }
         }
 
         Log.i("lifecycle", "onCreateView()");
@@ -97,7 +104,6 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         SharedPreferences userdata = requireActivity().getSharedPreferences("user", MODE_PRIVATE);
-
         user_account = userdata.getString("user_email", "");
 
         Findid();
@@ -243,7 +249,6 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
     public void onStart() {
         super.onStart();
         Log.i("lifecycle", "onStart()");
-        SharedPreferences getBoolean = null;
         getBoolean = getActivity().getSharedPreferences("DeleteOrUpdate", MODE_PRIVATE);
         isdelete = getBoolean.getBoolean("isdelete", false);
         if (isdelete) {

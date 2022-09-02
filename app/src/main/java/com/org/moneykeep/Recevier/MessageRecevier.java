@@ -239,13 +239,10 @@ public class MessageRecevier extends BroadcastReceiver {
                 integerCall.enqueue(new Callback<Integer>() {
                     @Override
                     public void onResponse(Call<Integer> call, Response<Integer> response) {
-                        SharedPreferences keep = null;
-                        if (keep == null) {
-                            keep = getApplicationContext().getSharedPreferences("DeleteOrUpdate", Context.MODE_PRIVATE);
-                        }
+                        SharedPreferences keep = getApplicationContext().getSharedPreferences("DeleteOrUpdate", Context.MODE_PRIVATE);;
                         SharedPreferences.Editor user_editor = keep.edit();
                         user_editor.putBoolean("isdelete", true);
-                        user_editor.commit();
+                        user_editor.apply();
                         Toast.makeText(getApplicationContext(), "收支数据上传成功", Toast.LENGTH_LONG).show();
 
                         Log.i("dimos", "创建成功...");
