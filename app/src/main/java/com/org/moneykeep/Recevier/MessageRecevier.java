@@ -10,6 +10,8 @@ import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
 import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
 import com.baidu.location.LocationClient;
@@ -28,23 +30,19 @@ import retrofit2.Response;
 public class MessageRecevier extends BroadcastReceiver {
     public static final String ACTION = "android.provider.Telephony.SMS_RECEIVED";
     private boolean isFirstLoc = true;
-    public String city,district,easy_Location, AmountOfMoney, type, IncomeOrPay, dString, address, user_account, remark;
+    public String city, district, easy_Location, AmountOfMoney, type, IncomeOrPay, dString, address, user_account, remark;
     public LocationClient mLocClient;
 
     public MessageRecevier() {
         super();
         Log.v("successfulTest", "SmsRecevier create");
-
     }
 
 
     @Override
     public void onReceive(Context context, Intent intent) {
-
-
         SharedPreferences userdata = context.getSharedPreferences("user", MODE_PRIVATE);
-
-        Boolean user_islogin = userdata.getBoolean("user_isused", false);
+        boolean user_islogin = userdata.getBoolean("user_isused", false);
         if (intent.getAction().equals(ACTION) && user_islogin) {
             dString = SmsHelper.getSmsBody(intent);
             address = SmsHelper.getSmsAddress(intent);
@@ -139,11 +137,6 @@ public class MessageRecevier extends BroadcastReceiver {
     }
 
     public void initLocation(Context context) {
-        /**
-         * 定位SDK是否同意隐私政策接口
-         * false不同意：不支持定位，SDK抛出异常
-         * true同意：支持定位功能
-         */
 
         LocationClient.setAgreePrivacy(true);
         // 定位初始化时捕获异常
@@ -238,8 +231,8 @@ public class MessageRecevier extends BroadcastReceiver {
                 Call<Integer> integerCall = api.InsertPayEvent(allPay);
                 integerCall.enqueue(new Callback<Integer>() {
                     @Override
-                    public void onResponse(Call<Integer> call, Response<Integer> response) {
-                        SharedPreferences keep = getApplicationContext().getSharedPreferences("DeleteOrUpdate", Context.MODE_PRIVATE);;
+                    public void onResponse(@NonNull Call<Integer> call,@NonNull Response<Integer> response) {
+                        SharedPreferences keep = getApplicationContext().getSharedPreferences("DeleteOrUpdate", Context.MODE_PRIVATE);
                         SharedPreferences.Editor user_editor = keep.edit();
                         user_editor.putBoolean("isdelete", true);
                         user_editor.apply();
@@ -249,7 +242,7 @@ public class MessageRecevier extends BroadcastReceiver {
                     }
 
                     @Override
-                    public void onFailure(Call<Integer> call, Throwable t) {
+                    public void onFailure(@NonNull Call<Integer> call,@NonNull Throwable t) {
                         Toast.makeText(getApplicationContext(), "收支数据上传失败：" + t.getMessage(), Toast.LENGTH_LONG).show();
                         Log.i("dimos", "创建失败...");
                     }
