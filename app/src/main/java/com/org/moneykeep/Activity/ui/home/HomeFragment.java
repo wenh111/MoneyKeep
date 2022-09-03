@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -76,7 +77,6 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
                 new ViewModelProvider(this).get(HomeViewModel.class);
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-
         if (savedInstanceState == null) {
             Calendar calendar = Calendar.getInstance();
             int now_year = calendar.get(Calendar.YEAR);
@@ -100,6 +100,8 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
         return root;
     }
 
+
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -115,6 +117,46 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
         binding.butSelectType.setText(homeViewModel.getType().getValue());
 
 
+        /*recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+            float y1,y2,x2,x1 ;
+            @Override
+            public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+                if (e.getAction() == MotionEvent.ACTION_DOWN) {
+                    x1 = e.getX();
+                    y1 = e.getY();
+                }
+                if (e.getAction() == MotionEvent.ACTION_MOVE) {
+                    x1 = e.getX();
+                    y1 = e.getY();
+                    Log.i("onInterceptTouchEvent", "ACTION_MOVE == " + Math.abs(x1 - x2));
+                    if(Math.abs(x1 - x2) < 6){
+                        return false;
+                    }
+                    if(Math.abs(x1 - x2) > 60){
+                        return true;
+                    }
+                }
+                if (e.getAction() == MotionEvent.ACTION_UP) {
+                    x2 = e.getX();
+                    y2 = e.getY();
+                    Log.i("onInterceptTouchEvent", "ACTION_UP == " + Math.abs(x1 - x2));
+
+                }
+                Log.i("onInterceptTouchEvent", "return == " + "false");
+                return false;
+            }
+
+
+            @Override
+            public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+
+            }
+
+            @Override
+            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
+            }
+        });*/
         binding.selectEdit.setInputType(InputType.TYPE_NULL);
         binding.selectEdit.setOnFocusChangeListener((view12, b) -> {
             if (b) {

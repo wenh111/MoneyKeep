@@ -1,10 +1,14 @@
 package com.org.moneykeep.RecyclerViewAdapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -12,13 +16,16 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.daimajia.swipe.SwipeLayout;
+import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 import com.org.moneykeep.R;
 import com.org.moneykeep.RecyclerViewAdapter.RecyclerViewList.DayPayOrIncomeList;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class DayRecyclerViewAdapter extends RecyclerView.Adapter<DayRecyclerViewAdapter.LinearViewHolder> {
+public class DayRecyclerViewAdapter extends RecyclerSwipeAdapter<DayRecyclerViewAdapter.LinearViewHolder> {
 
     private Context context;
     public List<DayPayOrIncomeList> Data;
@@ -99,7 +106,6 @@ public class DayRecyclerViewAdapter extends RecyclerView.Adapter<DayRecyclerView
     }
 
 
-
     @Override
     public void onBindViewHolder(@NonNull LinearViewHolder holder, int position) {
         GradientDrawable gradientDrawable = new GradientDrawable();
@@ -115,9 +121,9 @@ public class DayRecyclerViewAdapter extends RecyclerView.Adapter<DayRecyclerView
 
 
         if (Double.parseDouble(Data.get(position).getCost()) > 0) {
-            holder.tx_money.setTextColor(ContextCompat.getColor(getContext(),R.color.income_color));
+            holder.tx_money.setTextColor(ContextCompat.getColor(getContext(), R.color.income_color));
         } else {
-            holder.tx_money.setTextColor(ContextCompat.getColor(getContext(),R.color.envelopes));
+            holder.tx_money.setTextColor(ContextCompat.getColor(getContext(), R.color.envelopes));
         }
 
         holder.parent_ly.setBackground(gradientDrawable_parent);
@@ -135,12 +141,21 @@ public class DayRecyclerViewAdapter extends RecyclerView.Adapter<DayRecyclerView
         return Data == null ? 0 : Data.size();
     }
 
+    @Override
+    public int getSwipeLayoutResourceId(int position) {
+        return position;
+    }
+
+
 
     class LinearViewHolder extends RecyclerView.ViewHolder {
         public LinearLayout left_color, parent_ly;
         public TextView tx_type, tx_time, tx_location, tx_money, tx_remark;
+        public ImageButton image_delete;
+        public SwipeLayout swipeLayout;
         //public HashMap<String, Integer> map_color;
 
+        @SuppressLint("ClickableViewAccessibility")
         public LinearViewHolder(View itemView) {
             super(itemView);
             parent_ly = itemView.findViewById(R.id.parent_ly);
@@ -150,8 +165,65 @@ public class DayRecyclerViewAdapter extends RecyclerView.Adapter<DayRecyclerView
             tx_location = itemView.findViewById(R.id.tx_location);
             tx_money = itemView.findViewById(R.id.tx_money);
             tx_remark = itemView.findViewById(R.id.tx_remark);
+            image_delete = itemView.findViewById(R.id.image_delete);
+            swipeLayout = itemView.findViewById(R.id.swipeLayout);
+            itemView.setOnTouchListener(new View.OnTouchListener() {
+                float startY, curY, curX, startX;
+                long timeDown, timeUp;
+
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+                    if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                        timeDown = System.currentTimeMillis();
+                        startX = motionEvent.getX();
+                        startY = motionEvent.getY();
+                    } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                        curX = motionEvent.getX();
+                        curY = motionEvent.getY();
+                        timeUp = System.currentTimeMillis();
+                        long durationMs = timeUp - timeDown;
+                        float dx = curX - startX;
+                        if (Math.abs(dx) < 6) {
+                            Log.i("onInterceptTouchEvent", "durationMs == " + durationMs);
+                            if (durationMs < 500) {
+                                if (onRecyclerItemClickListener != null) {
+                                    onRecyclerItemClickListener.OnRecyclerOnItemClickListener(getData().get(getAdapterPosition()).getId());
+                                }
+                            }
+                        }
 
 
+                    }
+                    return false;
+                }
+
+            });
+
+            /*itemView.setOnTouchListener(new View.OnTouchListener() {
+                float y1,y2,x2,x1 ;
+                @Override
+                public boolean onTouch(View v, MotionEvent e) {
+
+                    if (e.getAction() == MotionEvent.ACTION_DOWN) {
+                        x1 = e.getX();
+                        y1 = e.getY();
+                    }
+
+                    if (e.getAction() == MotionEvent.ACTION_UP) {
+                        x2 = e.getX();
+                        y2 = e.getY();
+                        Log.i("onInterceptTouchEvent", "length == " + Math.abs(x1 - x2));
+                        if(Math.abs(x1 - x2) < 6){
+                            return false;
+                        }
+                        if(Math.abs(x1 - x2) > 60){
+                            return true;
+                        }
+                    }
+                    Log.i("onInterceptTouchEvent", "return == " + false);
+                    return false;
+                }
+            });*/
             itemView.setOnLongClickListener(view -> {
                 if (view == itemView) {
                     if (setOnRecyclerItemLongClickListener != null) {
@@ -160,13 +232,22 @@ public class DayRecyclerViewAdapter extends RecyclerView.Adapter<DayRecyclerView
                 }
                 return true;
             });
-            itemView.setOnClickListener(view -> {
+            image_delete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (setOnRecyclerItemLongClickListener != null) {
+                        setOnRecyclerItemLongClickListener.OnRecyclerOnItemClickListener(DayRecyclerViewAdapter.this, getAdapterPosition(), getData());
+                    }
+                }
+            });
+            /*itemView.setOnClickListener(view -> {
                 if (view == itemView) {
                     if (onRecyclerItemClickListener != null) {
                         onRecyclerItemClickListener.OnRecyclerOnItemClickListener(getData().get(getAdapterPosition()).getId());
                     }
                 }
-            });
+            });*/
+
 
         }
     }
