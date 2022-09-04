@@ -18,15 +18,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
-import com.daimajia.swipe.util.Attributes;
 import com.org.moneykeep.R;
 import com.org.moneykeep.RecyclerViewAdapter.RecyclerViewList.DayPayOrIncomeList;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class DayRecyclerViewAdapter extends RecyclerSwipeAdapter<DayRecyclerViewAdapter.LinearViewHolder> {
 
