@@ -29,6 +29,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.daimajia.swipe.util.Attributes;
 import com.org.moneykeep.Activity.AddPayEventView.AddPayEventActivity;
 import com.org.moneykeep.Activity.DetailsView.DetailsActivity;
 import com.org.moneykeep.Dialog.AllTypePickerDialog;
@@ -202,7 +203,9 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setAdapter(new DayRecyclerViewAdapter(getContext(), new ArrayList<>()));
+        DayRecyclerViewAdapter dayRecyclerViewAdapter = new DayRecyclerViewAdapter(getContext(), new ArrayList<>());
+        dayRecyclerViewAdapter.setMode(Attributes.Mode.Single);
+        recyclerView.setAdapter(dayRecyclerViewAdapter);
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override

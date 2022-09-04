@@ -18,12 +18,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
+import com.daimajia.swipe.util.Attributes;
 import com.org.moneykeep.R;
 import com.org.moneykeep.RecyclerViewAdapter.RecyclerViewList.DayPayOrIncomeList;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class DayRecyclerViewAdapter extends RecyclerSwipeAdapter<DayRecyclerViewAdapter.LinearViewHolder> {
 
@@ -79,6 +82,7 @@ public class DayRecyclerViewAdapter extends RecyclerSwipeAdapter<DayRecyclerView
 
     @Override
     public void onBindViewHolder(@NonNull LinearViewHolder holder, int position) {
+        holder.swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
         GradientDrawable gradientDrawable = new GradientDrawable();
         gradientDrawable.setShape(GradientDrawable.RECTANGLE);//形状
         gradientDrawable.setCornerRadius(5f);//设置圆角Radius
@@ -104,7 +108,7 @@ public class DayRecyclerViewAdapter extends RecyclerSwipeAdapter<DayRecyclerView
         holder.tx_time.setText(Data.get(position).getPayTime());
         holder.tx_money.setText(Data.get(position).getCost());
         holder.tx_remark.setText(Data.get(position).getRemark());
-
+        mItemManger.bindView(holder.itemView, position);//实现只展现一条列表项的侧滑区域
     }
 
     @Override
@@ -114,9 +118,8 @@ public class DayRecyclerViewAdapter extends RecyclerSwipeAdapter<DayRecyclerView
 
     @Override
     public int getSwipeLayoutResourceId(int position) {
-        return position;
+        return R.id.swipeLayout;
     }
-
 
 
     class LinearViewHolder extends RecyclerView.ViewHolder {
@@ -192,7 +195,6 @@ public class DayRecyclerViewAdapter extends RecyclerSwipeAdapter<DayRecyclerView
                                 }
                             }
                         }
-
 
                     }
                     return false;
