@@ -81,20 +81,20 @@ public class AMonthRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
 
     public void addData(PayEventListBean addData) {
         monthData.add(addData);
-        notifyItemRangeInserted(getItemCount() - 2,1);
+        notifyItemRangeInserted(getItemCount() - 2, 1);
     }
+
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        if (viewType == getItemCount() -1 ) {
+        if (viewType == getItemCount() - 1) {
             return new PayEventFootHolder(LayoutInflater.from(context).inflate(R.layout.item_foot, parent, false));
         } else {
             return new LinearViewHolder(LayoutInflater.from(context).inflate(R.layout.recycler_view_item_month_payorincome, parent, false));
         }
-       // return new AMonthRecyclerViewAdapter.LinearViewHolder(LayoutInflater.from(context).inflate(R.layout.recycler_view_item_month_payorincome, parent, false));
+        // return new AMonthRecyclerViewAdapter.LinearViewHolder(LayoutInflater.from(context).inflate(R.layout.recycler_view_item_month_payorincome, parent, false));
     }
-
 
 
     @SuppressLint("NotifyDataSetChanged")
@@ -103,7 +103,7 @@ public class AMonthRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
 
         if (holder instanceof LinearViewHolder) {
             //String Title_Date = monthData.get(position).getPayOrIncomeList().getDate();
-            ((LinearViewHolder)holder).DayAndMoth.setText(monthData.get(position).getPayOrIncomeList().getDate());
+            ((LinearViewHolder) holder).DayAndMoth.setText(monthData.get(position).getPayOrIncomeList().getDate());
 
             List<DayPayOrIncomeList> newDayPayOrIncomeDate = new ArrayList<>();
 
@@ -140,20 +140,20 @@ public class AMonthRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
 
             double cost = monthData.get(position).getPayOrIncomeList().getAllPay();
             if (cost == 0) {
-                ((LinearViewHolder)holder).pay_money.setText("0");
+                ((LinearViewHolder) holder).pay_money.setText("0");
             } else {
-                ((LinearViewHolder)holder).pay_money.setText(String.valueOf(cost));
+                ((LinearViewHolder) holder).pay_money.setText(String.valueOf(cost));
             }
             double income_money = monthData.get(position).getPayOrIncomeList().getAllIncome();
-            ((LinearViewHolder)holder).income_money.setText(String.valueOf(income_money));
+            ((LinearViewHolder) holder).income_money.setText(String.valueOf(income_money));
 
             double TotalAmount = ChangeDouble.subDouble(income_money, cost);
             if (TotalAmount < 0) {
-                ((LinearViewHolder)holder).amount.setTextColor(ContextCompat.getColor(getContext(), R.color.envelopes));
+                ((LinearViewHolder) holder).amount.setTextColor(ContextCompat.getColor(getContext(), R.color.envelopes));
             } else if (TotalAmount > 0) {
-                ((LinearViewHolder)holder).amount.setTextColor(ContextCompat.getColor(getContext(), R.color.income_color));
+                ((LinearViewHolder) holder).amount.setTextColor(ContextCompat.getColor(getContext(), R.color.income_color));
             }
-            ((LinearViewHolder)holder).amount.setText(String.valueOf(TotalAmount));
+            ((LinearViewHolder) holder).amount.setText(String.valueOf(TotalAmount));
 
             newDayPayOrIncomeDate.sort(new Comparator<DayPayOrIncomeList>() {
                 @Override
@@ -177,7 +177,6 @@ public class AMonthRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             }
 
         }
-
 
 
     }
@@ -272,11 +271,11 @@ public class AMonthRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
                                     Log.i("removeItem",
                                             "AdapterPosition:" + getAdapterPosition() + "\n" +
                                                     "dataPosition:" + position1 + "\n" +
-                                            "id:" + monthData.get(getAdapterPosition()).getAllPayList().get(position1).getId());
+                                                    "id:" + monthData.get(getAdapterPosition()).getAllPayList().get(position1).getId());
                                     monthData.get(getAdapterPosition()).getAllPayList().remove(position1);
                                     thisAdapter.removeData(position1);
                                     Toast.makeText(getContext(), "删除成功...", Toast.LENGTH_LONG).show();
-                                }else{
+                                } else {
                                     Toast.makeText(getContext(), "删除失败...", Toast.LENGTH_LONG).show();
                                 }
 
@@ -314,8 +313,9 @@ public class AMonthRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
 
         }
     }
+
     static class PayEventFootHolder extends RecyclerView.ViewHolder {
-        private TextView textView,left,right;
+        private TextView textView, left, right;
         private LinearLayout linearLayout;
 
         public PayEventFootHolder(@NonNull View itemView) {

@@ -68,6 +68,7 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
     public HomeFragmentInterface.LoadInterface loadInterface;
     private boolean needRefresh;
     SharedPreferences getBoolean;
+
     public void setLoadInterface(HomeFragmentInterface.LoadInterface loadInterface) {
         this.loadInterface = loadInterface;
     }
@@ -102,7 +103,6 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
     }
 
 
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -118,46 +118,6 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
         binding.butSelectType.setText(homeViewModel.getType().getValue());
 
 
-        /*recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
-            float y1,y2,x2,x1 ;
-            @Override
-            public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
-                if (e.getAction() == MotionEvent.ACTION_DOWN) {
-                    x1 = e.getX();
-                    y1 = e.getY();
-                }
-                if (e.getAction() == MotionEvent.ACTION_MOVE) {
-                    x1 = e.getX();
-                    y1 = e.getY();
-                    Log.i("onInterceptTouchEvent", "ACTION_MOVE == " + Math.abs(x1 - x2));
-                    if(Math.abs(x1 - x2) < 6){
-                        return false;
-                    }
-                    if(Math.abs(x1 - x2) > 60){
-                        return true;
-                    }
-                }
-                if (e.getAction() == MotionEvent.ACTION_UP) {
-                    x2 = e.getX();
-                    y2 = e.getY();
-                    Log.i("onInterceptTouchEvent", "ACTION_UP == " + Math.abs(x1 - x2));
-
-                }
-                Log.i("onInterceptTouchEvent", "return == " + "false");
-                return false;
-            }
-
-
-            @Override
-            public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
-
-            }
-
-            @Override
-            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
-            }
-        });*/
         binding.selectEdit.setInputType(InputType.TYPE_NULL);
         binding.selectEdit.setOnFocusChangeListener((view12, b) -> {
             if (b) {
@@ -242,7 +202,7 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
                     if (month.isChecked()) {
                         getNextDayMessage(0);
                         //getMonthMessage();
-                    }else if(year.isChecked()){
+                    } else if (year.isChecked()) {
                         getNextDayMessage(1);
                     }
                 }
@@ -269,7 +229,7 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
         String select_month = select_dates[1];
         String select_year = select_dates[0];
 
-        if(selectType == 1){
+        if (selectType == 1) {
             select_month = "";
         }
         String select_type = homeViewModel.getType().getValue();
@@ -277,7 +237,7 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
         int perPage = homeViewModel.getPerPage().getValue() == null ? -1 : homeViewModel.getPerPage().getValue();
 
         //iPresenter.getMonthMessage(user_account, select_type, select_month, select_year);
-        iPresenter.getAMonthOrYearMessage(user_account, select_type, select_month, select_year, since, perPage,selectType);
+        iPresenter.getAMonthOrYearMessage(user_account, select_type, select_month, select_year, since, perPage, selectType);
     }
 
 
@@ -376,7 +336,7 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
 
     @SuppressLint("NotifyDataSetChanged")
     @Override
-    public void getAMonthOrYearMessageSuccessful(String s, PayEventListBean body, double countIncome, double countPay,int selectType) {
+    public void getAMonthOrYearMessageSuccessful(String s, PayEventListBean body, double countIncome, double countPay, int selectType) {
         Log.i("getAMonthMessageSuccessful", "到达这个位置");
         if (body != null) {
             Log.i("getAMonthMessageSuccessful", "到(body != null)位置");
@@ -415,7 +375,7 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
             if (body.getPerPage() == 0) {
                 homeViewModel.dataLoadOver(true);
                 amonthRecyclerViewAdapter.setHasMore(false);
-            }else{
+            } else {
                 homeViewModel.dataLoadOver(false);
                 amonthRecyclerViewAdapter.setHasMore(true);
             }
@@ -549,7 +509,7 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
 
         String select_type = homeViewModel.getType().getValue();
         //iPresenter.getYearMessage(user_account, select_type, select_year);
-        iPresenter.getAMonthOrYearMessage(user_account, select_type, "", select_year, -1, -1,1);
+        iPresenter.getAMonthOrYearMessage(user_account, select_type, "", select_year, -1, -1, 1);
     }
 
     private void getDayMessage() {
@@ -575,7 +535,7 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
         int perPage = homeViewModel.getPerPage().getValue() == null ? -1 : homeViewModel.getPerPage().getValue();*/
 
         //iPresenter.getMonthMessage(user_account, select_type, select_month, select_year);
-        iPresenter.getAMonthOrYearMessage(user_account, select_type, select_month, select_year, -1, -1,0);
+        iPresenter.getAMonthOrYearMessage(user_account, select_type, select_month, select_year, -1, -1, 0);
     }
 
 

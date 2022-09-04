@@ -121,7 +121,7 @@ public class DayRecyclerViewAdapter extends RecyclerSwipeAdapter<DayRecyclerView
     class LinearViewHolder extends RecyclerView.ViewHolder {
         public LinearLayout left_color, parent_ly;
         public TextView tx_type, tx_time, tx_location, tx_money, tx_remark;
-        public ImageButton image_delete;
+        public ImageButton image_delete,image_detail;
         public SwipeLayout swipeLayout;
         public HashMap<String, Integer> IntegerColor;
 
@@ -167,6 +167,7 @@ public class DayRecyclerViewAdapter extends RecyclerSwipeAdapter<DayRecyclerView
             tx_remark = itemView.findViewById(R.id.tx_remark);
             image_delete = itemView.findViewById(R.id.image_delete);
             swipeLayout = itemView.findViewById(R.id.swipeLayout);
+            image_detail = itemView.findViewById(R.id.image_detail);
             itemView.setOnTouchListener(new View.OnTouchListener() {
                 float startY, curY, curX, startX;
                 long timeDown, timeUp;
@@ -186,8 +187,11 @@ public class DayRecyclerViewAdapter extends RecyclerSwipeAdapter<DayRecyclerView
                         if (Math.abs(dx) < 6) {
                             Log.i("onInterceptTouchEvent", "durationMs == " + durationMs);
                             if (durationMs < 500) {
-                                if (onRecyclerItemClickListener != null) {
-                                    onRecyclerItemClickListener.OnRecyclerOnItemClickListener(getData().get(getAdapterPosition()).getId());
+                                if((!isOpen(getAdapterPosition()))){
+                                    if (onRecyclerItemClickListener != null) {
+                                        closeAllItems();
+                                        onRecyclerItemClickListener.OnRecyclerOnItemClickListener(getData().get(getAdapterPosition()).getId());
+                                    }
                                 }
                             }
                         }
@@ -198,31 +202,6 @@ public class DayRecyclerViewAdapter extends RecyclerSwipeAdapter<DayRecyclerView
 
             });
 
-            /*itemView.setOnTouchListener(new View.OnTouchListener() {
-                float y1,y2,x2,x1 ;
-                @Override
-                public boolean onTouch(View v, MotionEvent e) {
-
-                    if (e.getAction() == MotionEvent.ACTION_DOWN) {
-                        x1 = e.getX();
-                        y1 = e.getY();
-                    }
-
-                    if (e.getAction() == MotionEvent.ACTION_UP) {
-                        x2 = e.getX();
-                        y2 = e.getY();
-                        Log.i("onInterceptTouchEvent", "length == " + Math.abs(x1 - x2));
-                        if(Math.abs(x1 - x2) < 6){
-                            return false;
-                        }
-                        if(Math.abs(x1 - x2) > 60){
-                            return true;
-                        }
-                    }
-                    Log.i("onInterceptTouchEvent", "return == " + false);
-                    return false;
-                }
-            });*/
             itemView.setOnLongClickListener(view -> {
                 if (view == itemView) {
                     if (setOnRecyclerItemLongClickListener != null) {
@@ -236,6 +215,14 @@ public class DayRecyclerViewAdapter extends RecyclerSwipeAdapter<DayRecyclerView
                 public void onClick(View v) {
                     if (setOnRecyclerItemLongClickListener != null) {
                         setOnRecyclerItemLongClickListener.OnRecyclerOnItemClickListener(DayRecyclerViewAdapter.this, getAdapterPosition(), getData());
+                    }
+                }
+            });
+            image_detail.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (onRecyclerItemClickListener != null) {
+                        onRecyclerItemClickListener.OnRecyclerOnItemClickListener(getData().get(getAdapterPosition()).getId());
                     }
                 }
             });

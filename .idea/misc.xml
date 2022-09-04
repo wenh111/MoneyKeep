@@ -3,12 +3,22 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/编程/MoneyKeepApp/app/src/main/res/drawable/details_button_left.xml" value="0.193" />
+        <entry key="..\:/编程/MoneyKeepApp/app/src/main/res/drawable/details_button_left_pressed.xml" value="0.193" />
         <entry key="..\:/编程/MoneyKeepApp/app/src/main/res/drawable/divider_background.xml" value="0.2015" />
         <entry key="..\:/编程/MoneyKeepApp/app/src/main/res/drawable/edittext_select_month_inner.xml" value="0.1885" />
+        <entry key="..\:/编程/MoneyKeepApp/app/src/main/res/drawable/save_item_background.xml" value="0.254" />
+        <entry key="..\:/编程/MoneyKeepApp/app/src/main/res/drawable/sign_button_up_background.xml" value="0.254" />
+        <entry key="..\:/编程/MoneyKeepApp/app/src/main/res/drawable/swiper_drawable.xml" value="0.254" />
+        <entry key="..\:/编程/MoneyKeepApp/app/src/main/res/layout/activity_add_pay_event.xml" value="0.3619791666666667" />
+        <entry key="..\:/编程/MoneyKeepApp/app/src/main/res/layout/activity_add_save_money_plan.xml" value="0.3619791666666667" />
+        <entry key="..\:/编程/MoneyKeepApp/app/src/main/res/layout/activity_details.xml" value="0.18489583333333334" />
+        <entry key="..\:/编程/MoneyKeepApp/app/src/main/res/layout/activity_setting_password.xml" value="0.3619791666666667" />
+        <entry key="..\:/编程/MoneyKeepApp/app/src/main/res/layout/activity_sign_in.xml" value="0.3619791666666667" />
         <entry key="..\:/编程/MoneyKeepApp/app/src/main/res/layout/fragment_home.xml" value="0.2608695652173913" />
         <entry key="..\:/编程/MoneyKeepApp/app/src/main/res/layout/fragment_notifications.xml" value="0.2749094202898551" />
         <entry key="..\:/编程/MoneyKeepApp/app/src/main/res/layout/item_foot.xml" value="0.3619791666666667" />
-        <entry key="..\:/编程/MoneyKeepApp/app/src/main/res/layout/recycler_view_item_day_payorincome.xml" value="0.22" />
+        <entry key="..\:/编程/MoneyKeepApp/app/src/main/res/layout/recycler_view_item_day_payorincome.xml" value="0.25" />
         <entry key="..\:/编程/MoneyKeepApp/app/src/main/res/layout/recycler_view_item_month_payorincome.xml" value="0.18020833333333333" />
         <entry key="..\:/编程/MoneyKeepApp/app/src/main/res/layout/recycler_view_item_savemoney.xml" value="0.3333333333333333" />
       </map>

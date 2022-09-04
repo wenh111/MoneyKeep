@@ -117,7 +117,7 @@ public class SignInActivity extends AppCompatActivity implements SignInInterface
         sign_up = findViewById(R.id.sign_up);
         sign_in = findViewById(R.id.sign_in);
         editText_email = findViewById(R.id.sign_in_account);
-        editText_password = findViewById(R.id.sign_in_passward);
+        editText_password = findViewById(R.id.sign_in_password);
         fp_tv = findViewById(R.id.fp_tv);
     }
 }
