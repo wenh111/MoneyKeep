@@ -29,7 +29,7 @@ public class DayRecyclerViewAdapter extends RecyclerSwipeAdapter<DayRecyclerView
 
     private Context context;
     public List<DayPayOrIncomeList> Data;
-    public HashMap<String, Integer> IntegerColor;
+    //public HashMap<String, Integer> IntegerColor;
 
     public DayRecyclerViewAdapter(Context context, List<DayPayOrIncomeList> data) {
         this.context = context;
@@ -72,36 +72,7 @@ public class DayRecyclerViewAdapter extends RecyclerSwipeAdapter<DayRecyclerView
     @NonNull
     @Override
     public LinearViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        IntegerColor = new HashMap<>();
-        {
-            IntegerColor.put("餐饮", ContextCompat.getColor(getContext(), R.color.restaurant));/*getContext().getResources().getColor()*/
-            IntegerColor.put("交通", ContextCompat.getColor(getContext(), R.color.traffic));
-            IntegerColor.put("服饰", ContextCompat.getColor(getContext(), R.color.clothes));
-            IntegerColor.put("购物", ContextCompat.getColor(getContext(), R.color.shopping));
-            IntegerColor.put("服务", ContextCompat.getColor(getContext(), R.color.service));
-            IntegerColor.put("教育", ContextCompat.getColor(getContext(), R.color.teach));
-            IntegerColor.put("娱乐", ContextCompat.getColor(getContext(), R.color.entertainment));
-            IntegerColor.put("运动", ContextCompat.getColor(getContext(), R.color.motion));
-            IntegerColor.put("生活缴费", ContextCompat.getColor(getContext(), R.color.living_payment));
-            IntegerColor.put("旅行", ContextCompat.getColor(getContext(), R.color.travel));
-            IntegerColor.put("宠物", ContextCompat.getColor(getContext(), R.color.pets));
-            IntegerColor.put("医疗", ContextCompat.getColor(getContext(), R.color.medical));
-            IntegerColor.put("保险", ContextCompat.getColor(getContext(), R.color.insurance));
-            IntegerColor.put("公益", ContextCompat.getColor(getContext(), R.color.welfare));
-            IntegerColor.put("发红包", ContextCompat.getColor(getContext(), R.color.envelopes));
-            IntegerColor.put("转账", ContextCompat.getColor(getContext(), R.color.collection_and_transfer));
-            IntegerColor.put("亲属卡", ContextCompat.getColor(getContext(), R.color.kinship_card));
-            IntegerColor.put("做人情", ContextCompat.getColor(getContext(), R.color.human));
-            IntegerColor.put("其它支出", ContextCompat.getColor(getContext(), R.color.other));
-            IntegerColor.put("生意", ContextCompat.getColor(getContext(), R.color.business));
-            IntegerColor.put("工资", ContextCompat.getColor(getContext(), R.color.wages));
-            IntegerColor.put("奖金", ContextCompat.getColor(getContext(), R.color.bonus));
-            IntegerColor.put("收红包", ContextCompat.getColor(getContext(), R.color.envelopes));
-            IntegerColor.put("收转账", ContextCompat.getColor(getContext(), R.color.collection_and_transfer));
-            IntegerColor.put("其它收入", ContextCompat.getColor(getContext(), R.color.other_income));
-            IntegerColor.put("建设银行", ContextCompat.getColor(getContext(), R.color.Construction_Bank));
-            IntegerColor.put("农业银行", ContextCompat.getColor(getContext(), R.color.Agricultural_Bank));
-        }
+
         return new LinearViewHolder(LayoutInflater.from(context).inflate(R.layout.recycler_view_item_day_payorincome, parent, false));
     }
 
@@ -111,7 +82,7 @@ public class DayRecyclerViewAdapter extends RecyclerSwipeAdapter<DayRecyclerView
         GradientDrawable gradientDrawable = new GradientDrawable();
         gradientDrawable.setShape(GradientDrawable.RECTANGLE);//形状
         gradientDrawable.setCornerRadius(5f);//设置圆角Radius
-        gradientDrawable.setColor(IntegerColor.getOrDefault(Data.get(position).getCategory(),
+        gradientDrawable.setColor(holder.IntegerColor.getOrDefault(Data.get(position).getCategory(),
                 ContextCompat.getColor(getContext(), R.color.travel)));//颜色
 
         GradientDrawable gradientDrawable_parent = new GradientDrawable();
@@ -153,11 +124,41 @@ public class DayRecyclerViewAdapter extends RecyclerSwipeAdapter<DayRecyclerView
         public TextView tx_type, tx_time, tx_location, tx_money, tx_remark;
         public ImageButton image_delete;
         public SwipeLayout swipeLayout;
-        //public HashMap<String, Integer> map_color;
+        public HashMap<String, Integer> IntegerColor;
 
         @SuppressLint("ClickableViewAccessibility")
         public LinearViewHolder(View itemView) {
             super(itemView);
+            IntegerColor = new HashMap<>();
+            {
+                IntegerColor.put("餐饮", ContextCompat.getColor(getContext(), R.color.restaurant));/*getContext().getResources().getColor()*/
+                IntegerColor.put("交通", ContextCompat.getColor(getContext(), R.color.traffic));
+                IntegerColor.put("服饰", ContextCompat.getColor(getContext(), R.color.clothes));
+                IntegerColor.put("购物", ContextCompat.getColor(getContext(), R.color.shopping));
+                IntegerColor.put("服务", ContextCompat.getColor(getContext(), R.color.service));
+                IntegerColor.put("教育", ContextCompat.getColor(getContext(), R.color.teach));
+                IntegerColor.put("娱乐", ContextCompat.getColor(getContext(), R.color.entertainment));
+                IntegerColor.put("运动", ContextCompat.getColor(getContext(), R.color.motion));
+                IntegerColor.put("生活缴费", ContextCompat.getColor(getContext(), R.color.living_payment));
+                IntegerColor.put("旅行", ContextCompat.getColor(getContext(), R.color.travel));
+                IntegerColor.put("宠物", ContextCompat.getColor(getContext(), R.color.pets));
+                IntegerColor.put("医疗", ContextCompat.getColor(getContext(), R.color.medical));
+                IntegerColor.put("保险", ContextCompat.getColor(getContext(), R.color.insurance));
+                IntegerColor.put("公益", ContextCompat.getColor(getContext(), R.color.welfare));
+                IntegerColor.put("发红包", ContextCompat.getColor(getContext(), R.color.envelopes));
+                IntegerColor.put("转账", ContextCompat.getColor(getContext(), R.color.collection_and_transfer));
+                IntegerColor.put("亲属卡", ContextCompat.getColor(getContext(), R.color.kinship_card));
+                IntegerColor.put("做人情", ContextCompat.getColor(getContext(), R.color.human));
+                IntegerColor.put("其它支出", ContextCompat.getColor(getContext(), R.color.other));
+                IntegerColor.put("生意", ContextCompat.getColor(getContext(), R.color.business));
+                IntegerColor.put("工资", ContextCompat.getColor(getContext(), R.color.wages));
+                IntegerColor.put("奖金", ContextCompat.getColor(getContext(), R.color.bonus));
+                IntegerColor.put("收红包", ContextCompat.getColor(getContext(), R.color.envelopes));
+                IntegerColor.put("收转账", ContextCompat.getColor(getContext(), R.color.collection_and_transfer));
+                IntegerColor.put("其它收入", ContextCompat.getColor(getContext(), R.color.other_income));
+                IntegerColor.put("建设银行", ContextCompat.getColor(getContext(), R.color.Construction_Bank));
+                IntegerColor.put("农业银行", ContextCompat.getColor(getContext(), R.color.Agricultural_Bank));
+            }
             parent_ly = itemView.findViewById(R.id.parent_ly);
             left_color = itemView.findViewById(R.id.left_color);
             tx_type = itemView.findViewById(R.id.tx_type);
