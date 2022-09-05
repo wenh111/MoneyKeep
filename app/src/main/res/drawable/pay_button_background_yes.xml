@@ -9,8 +9,8 @@
                 android:color="#FFEBEE"/>
             <corners
                 android:radius="10dp" />
-            <stroke
-                android:color="#1296db"/>
+            <!--<stroke
+                android:color="#1296db"/>-->
         </shape>
     </item>
 </layer-list>

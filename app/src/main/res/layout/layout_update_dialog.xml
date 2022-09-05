@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/edittext_select"
@@ -22,7 +23,8 @@
             android:button="@null"
             android:gravity="center"
             android:text="支出"
-            android:textColor="@color/pay_radiobutton" />
+            android:textColor="@color/pay_radiobutton"
+            tools:ignore="TouchTargetSizeCheck" />
 
         <RadioButton
             android:id="@+id/radio_income"
@@ -33,7 +35,8 @@
             android:button="@null"
             android:gravity="center"
             android:text="收入"
-            android:textColor="@color/income_radiobutton" />
+            android:textColor="@color/income_radiobutton"
+            tools:ignore="TouchTargetSizeCheck" />
     </RadioGroup>
 
     <LinearLayout

@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".Activity.ui.home.HomeFragment"
     android:focusable="true"
-    android:focusableInTouchMode="true">
+    android:focusableInTouchMode="true"
+    tools:context=".Activity.ui.home.HomeFragment">
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -26,6 +25,7 @@
             android:layout_marginEnd="20dp"
             android:background="@drawable/edittext_select"
             android:gravity="center"
+            android:textStyle="bold"
             android:hint="点这里查询特定时间的收支情况" />
 
         <LinearLayout
@@ -67,7 +67,8 @@
                     android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:text="0"
-                    android:textColor="@color/income_color" />
+                    android:textColor="@color/income_color"
+                    tools:ignore="NestedWeights" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -83,8 +84,8 @@
                     android:layout_marginEnd="10dp"
                     android:layout_weight="1"
                     android:gravity="center_vertical"
-                    android:textColor="@color/envelopes"
-                    android:text="0"/>
+                    android:text="0"
+                    android:textColor="@color/envelopes" />
 
 
             </LinearLayout>
@@ -98,7 +99,7 @@
             android:gravity="center"
             android:orientation="horizontal">
 
-            <LinearLayout
+            <!--<LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1.5"
@@ -123,7 +124,7 @@
                     android:textColor="@color/black" />
 
 
-            </LinearLayout>
+            </LinearLayout>-->
 
             <RadioButton
                 android:id="@+id/day"
@@ -131,25 +132,40 @@
                 android:layout_height="50dp"
                 android:layout_gravity="center"
                 android:layout_weight="1"
+                android:background="@drawable/day_selector"
+                android:button="@null"
                 android:buttonTint="#1296db"
-                android:text="当日" />
+                android:gravity="center"
+                android:text="本日"
+                android:textColor="@color/day_radiobutton"
+                android:textStyle="bold" />
 
             <RadioButton
                 android:id="@+id/month"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
                 android:layout_weight="1"
+                android:background="@drawable/day_selector"
+                android:button="@null"
                 android:buttonTint="#1296db"
                 android:checked="true"
-                android:text="当月" />
+                android:gravity="center"
+                android:text="本月"
+                android:textColor="@color/day_radiobutton"
+                android:textStyle="bold" />
 
             <RadioButton
                 android:id="@+id/year"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
                 android:layout_weight="1"
+                android:background="@drawable/day_selector"
+                android:button="@null"
                 android:buttonTint="#1296db"
-                android:text="当年" />
+                android:gravity="center"
+                android:text="本年"
+                android:textColor="@color/day_radiobutton"
+                android:textStyle="bold" />
 
 
         </RadioGroup>
@@ -167,23 +183,23 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding= "5dp"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginBottom="40dp"
+        android:layout_alignParentBottom="true"
         android:layout_marginEnd="20dp"
-        android:gravity="center">
+        android:layout_marginBottom="40dp"
+        android:gravity="center"
+        android:padding="5dp">
+
         <Button
             android:id="@+id/but_add"
-            android:paddingVertical="5dp"
-            android:paddingHorizontal="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/add_pay_background"
-            android:text="记一笔"
+            android:drawableStart="@mipmap/record_48"
             android:outlineProvider="none"
-            android:drawableLeft="@mipmap/record_48"
-             />
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="5dp"
+            android:text="记一笔" />
     </LinearLayout>
 
 

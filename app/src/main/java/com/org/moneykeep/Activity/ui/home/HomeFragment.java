@@ -65,9 +65,9 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
     private HomeFragmentInterface.IPresenter iPresenter;
     private HomeViewModel homeViewModel;
     private AMonthRecyclerViewAdapter amonthRecyclerViewAdapter;
-    public HomeFragmentInterface.LoadInterface loadInterface;
+    private HomeFragmentInterface.LoadInterface loadInterface;
     private boolean needRefresh;
-    SharedPreferences getBoolean;
+    private SharedPreferences getBoolean;
 
     public void setLoadInterface(HomeFragmentInterface.LoadInterface loadInterface) {
         this.loadInterface = loadInterface;
@@ -114,9 +114,17 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
 
         iPresenter = new HomeFragmentPresenterImplements(this, getContext());
 
-        binding.nowTime.setText(homeViewModel.getDate().getValue());
+        String date = homeViewModel.getDate().getValue();
+        String[] dates = date.split("-");
+        for (int i = 0; i < dates.length; i++) {
+            if (Integer.parseInt(dates[i]) < 10) {
+                dates[i] = "0" + dates[i];
+            }
+        }
+        String e_date = String.format("%s-%s-%s", dates[0], dates[1], dates[2]);
+        //binding.nowTime.setText(homeViewModel.getDate().getValue());
+        binding.selectEdit.setText(e_date);
         binding.butSelectType.setText(homeViewModel.getType().getValue());
-
 
         binding.selectEdit.setInputType(InputType.TYPE_NULL);
         binding.selectEdit.setOnFocusChangeListener((view12, b) -> {
@@ -126,14 +134,22 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
                     @Override
                     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
                         String select_time = String.format("%s-%s-%s", i, i1 + 1, i2);
-                        binding.selectEdit.setText(select_time);
-                        binding.nowTime.setText(select_time);
+                        //binding.nowTime.setText(select_time);
                         homeViewModel.changDate(select_time);
-                        if (day.isChecked()) {
+                        String month = String.valueOf(i1 + 1);
+                        String day = String.valueOf(i2);
+                        if (i1 + 1 < 10) {
+                            month = "0" + month;
+                        }
+                        if (i2 < 10) {
+                            day = "0" + day;
+                        }
+                        binding.selectEdit.setText(String.format("%s-%s-%s", i, month, day));
+                        if (binding.day.isChecked()) {
                             getDayMessage();
-                        } else if (month.isChecked()) {
+                        } else if (binding.month.isChecked()) {
                             getMonthMessage();
-                        } else if (year.isChecked()) {
+                        } else if (binding.year.isChecked()) {
                             getYearMessage();
                         }
                         binding.selectEdit.clearFocus();
@@ -146,15 +162,23 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
             new DatePickerDialog(getActivity(), AlertDialog.THEME_HOLO_LIGHT, new DatePickerDialog.OnDateSetListener() {
                 @Override
                 public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-                    String select_time = String.format("%s-%s-%s", i, i1 + 1, i2);
-                    binding.selectEdit.setText(select_time);
-                    binding.nowTime.setText(select_time);
+                    String select_time = String.format("%s-%s-%s", i, month, day);
+                    //binding.nowTime.setText(select_time);
                     homeViewModel.changDate(select_time);
-                    if (day.isChecked()) {
+                    String month = String.valueOf(i1 + 1);
+                    String day = String.valueOf(i2);
+                    if (i1 + 1 < 10) {
+                        month = "0" + month;
+                    }
+                    if (i2 < 10) {
+                        day = "0" + day;
+                    }
+                    binding.selectEdit.setText(String.format("%s-%s-%s", i + month + day));
+                    if (binding.day.isChecked()) {
                         getDayMessage();
-                    } else if (month.isChecked()) {
+                    } else if (binding.month.isChecked()) {
                         getMonthMessage();
-                    } else if (year.isChecked()) {
+                    } else if (binding.year.isChecked()) {
                         getYearMessage();
                     }
                 }
