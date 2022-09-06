@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
+    android:background="#FFFFFF"
     tools:context=".Activity.ui.dashboard.DashboardFragment">
 
     <LinearLayout

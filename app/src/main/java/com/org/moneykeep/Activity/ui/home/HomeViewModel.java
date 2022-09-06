@@ -50,34 +50,34 @@ public class HomeViewModel extends ViewModel {
         mText.setValue("This is home fragment");
 
         {
-            img.put("餐饮",R.drawable.restaurant_64);
-            img.put("交通", R.drawable.traffic_64);
-            img.put("服饰", R.drawable.clothes_64);
-            img.put("购物", R.drawable.shopping_64);
-            img.put("服务", R.drawable.service_64);
-            img.put("教育", R.drawable.teach_64);
-            img.put("娱乐", R.drawable.entertainment_64);
-            img.put("运动", R.drawable.motion_64);
-            img.put("生活缴费", R.drawable.living_payment_64);
-            img.put("旅行", R.drawable.travel_64);
-            img.put("宠物", R.drawable.pets_64);
-            img.put("医疗", R.drawable.medical_64);
-            img.put("保险", R.drawable.insurance_64);
-            img.put("公益", R.drawable.welfare_64);
-            img.put("发红包", R.drawable.envelopes_64);
-            img.put("转账", R.drawable.transfer_accounts_64);
-            img.put("亲属卡", R.drawable.kinship_card_64);
-            img.put("做人情", R.drawable.human_64);
-            img.put("其它支出", R.drawable.others_64);
-            img.put("生意", R.drawable.business_64);
-            img.put("工资", R.drawable.wages_64);
-            img.put("奖金", R.drawable.bonus_64);
-            img.put("收红包", R.drawable.envelopes_64);
-            img.put("收转账", R.drawable.transfer_accounts_64);
-            img.put("其它收入", R.drawable.others_64);
-            img.put("建设银行", R.drawable.construction_bank_64);
-            img.put("农业银行", R.drawable.agricultural_bank_64);
-            img.put("全部类型",R.mipmap.all_64);
+            img.put("餐饮",R.mipmap.restaurant_128);
+            img.put("交通", R.mipmap.traffic_128);
+            img.put("服饰", R.mipmap.clothes_128);
+            img.put("购物", R.mipmap.shopping_128);
+            img.put("服务", R.mipmap.service_128);
+            img.put("教育", R.mipmap.teacher_128);
+            img.put("娱乐", R.mipmap.entertainment_128);
+            img.put("运动", R.mipmap.motion_128);
+            img.put("生活缴费", R.mipmap.living_payment_128);
+            img.put("旅行", R.mipmap.travel_128);
+            img.put("宠物", R.mipmap.pets_128);
+            img.put("医疗", R.mipmap.medical__128);
+            img.put("保险", R.mipmap.insurance_128);
+            img.put("公益", R.mipmap.welfare_128);
+            img.put("发红包", R.mipmap.envelopes_128);
+            img.put("转账", R.mipmap.transfer_accounts_128);
+            img.put("亲属卡", R.mipmap.kinship_card_128);
+            img.put("做人情", R.mipmap.human_128);
+            img.put("其它支出", R.mipmap.others_128);
+            img.put("生意", R.mipmap.business_128);
+            img.put("工资", R.mipmap.wages_128);
+            img.put("奖金", R.mipmap.bonus_128);
+            img.put("收红包", R.mipmap.get_envelopes_128);
+            img.put("收转账", R.mipmap.get_transfer_accounts_128);
+            img.put("其它收入",R.mipmap.others_128);
+            img.put("建设银行", R.mipmap.construction_bank_128);
+            img.put("农业银行", R.mipmap.agricultural_bank_128);
+            img.put("全部类型",R.mipmap.all_128);
         }
 
 
@@ -109,6 +109,6 @@ public class HomeViewModel extends ViewModel {
     }
 
     public int getSrc(String type){
-        return img.getOrDefault(type, R.drawable.others_64);
+        return img.getOrDefault(type, R.mipmap.others_128);
     }
 }

@@ -11,7 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="5dp"
-
         android:layout_marginTop="5dp">
 
         <TextView
@@ -92,10 +91,8 @@
     </RelativeLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-
         android:id="@+id/month_recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp" />
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>

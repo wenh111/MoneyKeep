@@ -81,13 +81,13 @@ public class DayRecyclerViewAdapter extends RecyclerSwipeAdapter<DayRecyclerView
         holder.swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
         GradientDrawable gradientDrawable = new GradientDrawable();
         gradientDrawable.setShape(GradientDrawable.RECTANGLE);//形状
-        gradientDrawable.setCornerRadius(5f);//设置圆角Radius
+        gradientDrawable.setCornerRadius(6f);//设置圆角Radius
         gradientDrawable.setColor(holder.IntegerColor.getOrDefault(Data.get(position).getCategory(),
                 ContextCompat.getColor(getContext(), R.color.travel)));//颜色
 
         GradientDrawable gradientDrawable_parent = new GradientDrawable();
         gradientDrawable_parent.setShape(GradientDrawable.RECTANGLE);//形状
-        gradientDrawable_parent.setCornerRadius(5f);//设置圆角Radius
+        gradientDrawable_parent.setCornerRadius(6f);//设置圆角Radius
         gradientDrawable_parent.setColor(ContextCompat.getColor(getContext(), R.color.newbackgound));
 
 

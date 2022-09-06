@@ -120,42 +120,11 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
                 dates[i] = "0" + dates[i];
             }
         }
+
         String e_date = String.format("%s-%s-%s", dates[0], dates[1], dates[2]);
         //binding.nowTime.setText(homeViewModel.getDate().getValue());
         binding.selectDate.setText(e_date);
         binding.selectType.setText(homeViewModel.getType().getValue());
-
-        //binding.selectEdit.setInputType(InputType.TYPE_NULL);
-        /*binding.selectEdit.setOnFocusChangeListener((view12, b) -> {
-            if (b) {
-                Calendar c = Calendar.getInstance();
-                new DatePickerDialog(getActivity(), AlertDialog.THEME_HOLO_LIGHT, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-                        String select_time = String.format("%s-%s-%s", i, i1 + 1, i2);
-                        //binding.nowTime.setText(select_time);
-                        homeViewModel.changDate(select_time);
-                        String month = String.valueOf(i1 + 1);
-                        String day = String.valueOf(i2);
-                        if (i1 + 1 < 10) {
-                            month = "0" + month;
-                        }
-                        if (i2 < 10) {
-                            day = "0" + day;
-                        }
-                        binding.selectDate.setText(String.format("%s-%s-%s", i, month, day));
-                        if (binding.day.isChecked()) {
-                            getDayMessage();
-                        } else if (binding.month.isChecked()) {
-                            getMonthMessage();
-                        } else if (binding.year.isChecked()) {
-                            getYearMessage();
-                        }
-                        binding.selectEdit.clearFocus();
-                    }
-                }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
-            }
-        });*/
         binding.selectDate.setOnClickListener(view1 -> {
             Calendar c = Calendar.getInstance();
             new DatePickerDialog(getActivity(), AlertDialog.THEME_HOLO_LIGHT, new DatePickerDialog.OnDateSetListener() {

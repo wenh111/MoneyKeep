@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="55dp"
     android:layout_marginVertical="2.5dp"
+    android:layout_marginHorizontal="5dp"
     app:clickToClose="true">
     <!-- Bottom View Start-->
     <LinearLayout
@@ -40,6 +41,7 @@
         android:background="#FAFAFA"
         android:fitsSystemWindows="true"
         android:gravity="center_vertical"
+
         android:orientation="horizontal">
 
         <LinearLayout
