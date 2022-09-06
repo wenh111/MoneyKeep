@@ -4,8 +4,10 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/编程/MoneyKeepApp/app/src/main/res/drawable/but_ripple.xml" value="0.193" />
+        <entry key="..\:/编程/MoneyKeepApp/app/src/main/res/drawable/colorgradient.xml" value="0.2365" />
         <entry key="..\:/编程/MoneyKeepApp/app/src/main/res/drawable/day_button_background_yes.xml" value="0.254" />
         <entry key="..\:/编程/MoneyKeepApp/app/src/main/res/drawable/day_selecter.xml" value="0.254" />
+        <entry key="..\:/编程/MoneyKeepApp/app/src/main/res/drawable/day_selector.xml" value="0.2365" />
         <entry key="..\:/编程/MoneyKeepApp/app/src/main/res/drawable/details_button_left.xml" value="0.193" />
         <entry key="..\:/编程/MoneyKeepApp/app/src/main/res/drawable/details_button_left_pressed.xml" value="0.193" />
         <entry key="..\:/编程/MoneyKeepApp/app/src/main/res/drawable/divider_background.xml" value="0.2015" />
