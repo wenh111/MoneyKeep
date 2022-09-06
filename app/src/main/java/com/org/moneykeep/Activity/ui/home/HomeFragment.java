@@ -9,10 +9,8 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -29,6 +27,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.daimajia.swipe.util.Attributes;
 import com.org.moneykeep.Activity.AddPayEventView.AddPayEventActivity;
 import com.org.moneykeep.Activity.DetailsView.DetailsActivity;
@@ -89,7 +88,7 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
             homeViewModel.dataLoadOver(false);
             homeViewModel.changDate(now_date);
             homeViewModel.changType("全部类型");
-            getBoolean = getActivity().getSharedPreferences("DeleteOrUpdate", MODE_PRIVATE);
+            getBoolean = requireActivity().getSharedPreferences("DeleteOrUpdate", MODE_PRIVATE);
             isdelete = getBoolean.getBoolean("isdelete", false);
             if (isdelete) {
                 SharedPreferences.Editor editor = getBoolean.edit();
@@ -115,7 +114,7 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
         iPresenter = new HomeFragmentPresenterImplements(this, getContext());
 
         String date = homeViewModel.getDate().getValue();
-        String[] dates = date.split("-");
+        String[] dates = date != null ? date.split("-") : new String[0];
         for (int i = 0; i < dates.length; i++) {
             if (Integer.parseInt(dates[i]) < 10) {
                 dates[i] = "0" + dates[i];
@@ -123,11 +122,11 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
         }
         String e_date = String.format("%s-%s-%s", dates[0], dates[1], dates[2]);
         //binding.nowTime.setText(homeViewModel.getDate().getValue());
-        binding.selectEdit.setText(e_date);
-        binding.butSelectType.setText(homeViewModel.getType().getValue());
+        binding.selectDate.setText(e_date);
+        binding.selectType.setText(homeViewModel.getType().getValue());
 
-        binding.selectEdit.setInputType(InputType.TYPE_NULL);
-        binding.selectEdit.setOnFocusChangeListener((view12, b) -> {
+        //binding.selectEdit.setInputType(InputType.TYPE_NULL);
+        /*binding.selectEdit.setOnFocusChangeListener((view12, b) -> {
             if (b) {
                 Calendar c = Calendar.getInstance();
                 new DatePickerDialog(getActivity(), AlertDialog.THEME_HOLO_LIGHT, new DatePickerDialog.OnDateSetListener() {
@@ -144,7 +143,7 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
                         if (i2 < 10) {
                             day = "0" + day;
                         }
-                        binding.selectEdit.setText(String.format("%s-%s-%s", i, month, day));
+                        binding.selectDate.setText(String.format("%s-%s-%s", i, month, day));
                         if (binding.day.isChecked()) {
                             getDayMessage();
                         } else if (binding.month.isChecked()) {
@@ -156,13 +155,13 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
                     }
                 }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
             }
-        });
-        binding.selectEdit.setOnClickListener(view1 -> {
+        });*/
+        binding.selectDate.setOnClickListener(view1 -> {
             Calendar c = Calendar.getInstance();
             new DatePickerDialog(getActivity(), AlertDialog.THEME_HOLO_LIGHT, new DatePickerDialog.OnDateSetListener() {
                 @Override
                 public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-                    String select_time = String.format("%s-%s-%s", i, month, day);
+                    String select_time = String.format("%s-%s-%s", i, i1 + 1, i2);
                     //binding.nowTime.setText(select_time);
                     homeViewModel.changDate(select_time);
                     String month = String.valueOf(i1 + 1);
@@ -173,7 +172,7 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
                     if (i2 < 10) {
                         day = "0" + day;
                     }
-                    binding.selectEdit.setText(String.format("%s-%s-%s", i + month + day));
+                    binding.selectDate.setText(String.format("%s-%s-%s", i, month, day));
                     if (binding.day.isChecked()) {
                         getDayMessage();
                     } else if (binding.month.isChecked()) {
@@ -248,7 +247,7 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
     private void getNextDayMessage(int selectType) {
         needRefresh = false;
         String select_date = homeViewModel.getDate().getValue();
-        String[] select_dates = select_date.split("-");
+        String[] select_dates = select_date != null ? select_date.split("-") : new String[0];
 
         String select_month = select_dates[1];
         String select_year = select_dates[0];
@@ -278,7 +277,7 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
     public void onStart() {
         super.onStart();
         Log.i("lifecycle", "onStart()");
-        getBoolean = getActivity().getSharedPreferences("DeleteOrUpdate", MODE_PRIVATE);
+        getBoolean = requireActivity().getSharedPreferences("DeleteOrUpdate", MODE_PRIVATE);
         isdelete = getBoolean.getBoolean("isdelete", false);
         if (isdelete) {
             if (day.isChecked()) {
@@ -309,7 +308,7 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
             dayRecyclerViewAdapter.notifyDataSetChanged();
             dayRecyclerViewAdapter.setSetOnRecyclerItemLongClickListener((thisAdapter, position, DayDate) -> {
                 int Id = DayDate.get(position).getId();
-                DeleteDialog dialog = new DeleteDialog(getContext());
+                DeleteDialog dialog = new DeleteDialog(requireContext());
                 dialog.setiOconfirmListener(new DeleteDialog.IOconfirmListener() {
                     @Override
                     public void oncofirm(DeleteDialog dialog) {
@@ -456,27 +455,28 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
                     Intent intent = new Intent(getActivity(), AddPayEventActivity.class);
                     startActivity(intent);
                     break;
-                case R.id.but_select_type:
-                    AllTypePickerDialog allTypePickerDialog = new AllTypePickerDialog(getContext());
+                case R.id.ly_select_type:
+                    AllTypePickerDialog allTypePickerDialog = new AllTypePickerDialog(requireContext());
                     allTypePickerDialog.but_summit((dialog, firstValue, secondValue) -> {
                         String[] stringArray;
                         String type = null;
                         if (firstValue == 0) {
-                            stringArray = getContext().getResources().getStringArray(R.array.pay);
+                            stringArray = requireContext().getResources().getStringArray(R.array.pay);
                             type = stringArray[secondValue];
                             //but_select_type.setText();
                         } else if (firstValue == 1) {
-                            stringArray = getContext().getResources().getStringArray(R.array.income);
+                            stringArray = requireContext().getResources().getStringArray(R.array.income);
                             type = stringArray[secondValue];
                         } else if (firstValue == 2) {
                             type = "全部类型";
                             //but_select_type.setText("全部类型");
                         } else if (firstValue == 3) {
-                            stringArray = getContext().getResources().getStringArray(R.array.BankCard);
+                            stringArray = requireContext().getResources().getStringArray(R.array.BankCard);
                             type = stringArray[secondValue];
                         }
-                        binding.butSelectType.setText(type);
+                        binding.selectType.setText(type);
                         homeViewModel.changType(type);
+                        Glide.with(requireView()).load(homeViewModel.getSrc(type)).into(binding.homeImage);
                         if (day.isChecked()) {
                             getDayMessage();
                         } else if (month.isChecked()) {
@@ -493,10 +493,10 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
     private void SetListen() {
         Onclick onclick = new Onclick();
         CheckOnclick checkOnclick = new CheckOnclick();
-        binding.selectEdit.setOnClickListener(onclick);
+        binding.selectDate.setOnClickListener(onclick);
         but_add.setOnClickListener(onclick);
         radio_group.setOnCheckedChangeListener(checkOnclick);
-        binding.butSelectType.setOnClickListener(onclick);
+        binding.lySelectType.setOnClickListener(onclick);
 
     }
 
@@ -528,7 +528,7 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
     private void getYearMessage() {
         needRefresh = true;
         String select_date = homeViewModel.getDate().getValue();
-        String[] select_dates = select_date.split("-");
+        String[] select_dates = select_date != null ? select_date.split("-") : new String[0];
         String select_year = select_dates[0];
 
         String select_type = homeViewModel.getType().getValue();
@@ -548,7 +548,7 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
     private void getMonthMessage() {
         needRefresh = true;
         String select_date = homeViewModel.getDate().getValue();
-        String[] select_dates = select_date.split("-");
+        String[] select_dates = select_date != null ? select_date.split("-") : new String[0];
 
         String select_month = select_dates[1];
         String select_year = select_dates[0];
@@ -566,15 +566,15 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
     private void Findid() {
         //now_time = getView().findViewById(R.id.now_time);
         //select_edit = getView().findViewById(R.id.select_edit);
-        but_add = getView().findViewById(R.id.but_add);
-        radio_group = getView().findViewById(R.id.radio_group);
-        day = getView().findViewById(R.id.day);
-        month = getView().findViewById(R.id.month);
-        year = getView().findViewById(R.id.year);
-        recyclerView = getView().findViewById(R.id.recyclerView);
+        but_add = requireView().findViewById(R.id.but_add);
+        radio_group = requireView().findViewById(R.id.radio_group);
+        day = requireView().findViewById(R.id.day);
+        month = requireView().findViewById(R.id.month);
+        year = requireView().findViewById(R.id.year);
+        recyclerView = requireView().findViewById(R.id.recyclerView);
         //but_select_type = getView().findViewById(R.id.but_select_type);
-        count_income = getView().findViewById(R.id.count_income);
-        count_pay = getView().findViewById(R.id.count_pay);
+        count_income = requireView().findViewById(R.id.count_income);
+        count_pay = requireView().findViewById(R.id.count_pay);
 
     }
 

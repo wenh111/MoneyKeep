@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@drawable/edittext_select">
+    android:background="@drawable/type_selector">
 
     <LinearLayout
         android:id="@+id/LY"
@@ -32,10 +32,13 @@
 
     <LinearLayout
         android:id="@+id/LY_1"
-        android:layout_margin="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/LY"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
         android:gravity="center_horizontal"
         android:padding="10dp">
 

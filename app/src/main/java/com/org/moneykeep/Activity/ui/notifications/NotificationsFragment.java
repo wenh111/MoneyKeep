@@ -78,7 +78,7 @@ public class NotificationsFragment extends Fragment {
         api = RetrofitUntil.getRetrofit().create(UserPhotoAPI.class);
         View root = binding.getRoot();
 
-        Bundle receive = Objects.requireNonNull(getActivity()).getIntent().getExtras();
+        Bundle receive = requireActivity().getIntent().getExtras();
         bundle_user_name = receive.getString("user_name");
         bundle_user_email = receive.getString("user_email");
 
@@ -167,7 +167,7 @@ public class NotificationsFragment extends Fragment {
                         //通过RequestOptions扩展功能,override:采样率,因为ImageView就这么大,可以压缩图片,降低内存消耗
                         // RequestOptions options = RequestOptions.bitmapTransform(roundedCorners).override(20, 20);
                         RequestOptions options = RequestOptions.bitmapTransform(roundedCorners);
-                        Glide.with(Objects.requireNonNull(getActivity())).load(response.body().getUrl()).apply(options).into(user_icon);
+                        Glide.with(requireActivity()).load(response.body().getUrl()).apply(options).into(user_icon);
                     }
 
                 }
@@ -245,7 +245,7 @@ public class NotificationsFragment extends Fragment {
     @SuppressLint("Range")
     private String getImagePath(Uri uri) {
         String path = null;
-        Cursor cursor = Objects.requireNonNull(getActivity()).getContentResolver().query(uri, null, null, null, null);
+        Cursor cursor = requireActivity().getContentResolver().query(uri, null, null, null, null);
         if (cursor != null) {
             if (cursor.moveToFirst()) {
                 path = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
@@ -342,7 +342,7 @@ public class NotificationsFragment extends Fragment {
     }
 
     private void Logout() {
-        SharedPreferences controllerdata = Objects.requireNonNull(getActivity()).getSharedPreferences("user", MODE_PRIVATE);
+        SharedPreferences controllerdata = requireActivity().getSharedPreferences("user", MODE_PRIVATE);
         SharedPreferences.Editor controller_editor = controllerdata.edit();
         controller_editor.putString(USER_EMAIL, "");
         controller_editor.putString(USER_PASSWORD, "");

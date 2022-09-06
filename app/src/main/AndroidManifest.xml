@@ -20,7 +20,6 @@
     <application
         android:name=".Until.DemoApplication"
         android:allowBackup="true"
-        android:excludeFromRecents="true"
         android:icon="@mipmap/app_icon_foreground"
         android:label="@string/app_name"
         android:requestLegacyExternalStorage="true"
@@ -41,20 +40,25 @@
         <receiver
             android:name=".Recevier.MessageRecevier"
             android:enabled="true"
+            android:excludeFromRecents="true"
             android:exported="true"
             android:foregroundServiceType="location">
+
             <intent-filter android:priority="2147483647">
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".Recevier.StartJobServiceReceiver"
+        <receiver
+            android:name=".Recevier.StartJobServiceReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-        <service android:name=".Recevier.JobSchedulerService"
+
+        <service
+            android:name=".Recevier.JobSchedulerService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <activity

@@ -12,7 +12,6 @@ import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -46,11 +45,7 @@ public class DashboardFragment extends Fragment implements PayEventStatisticsInt
                              ViewGroup container, Bundle savedInstanceState) {
 
         binding = FragmentDashboardBinding.inflate(inflater, container, false);
-
-        SharedPreferences userdata = null;
-        if (userdata == null) {
-            userdata = getActivity().getSharedPreferences("user", MODE_PRIVATE);
-        }
+        SharedPreferences userdata = requireActivity().getSharedPreferences("user", MODE_PRIVATE);
         user_account = userdata.getString("user_email", "");
 
         return binding.getRoot();
@@ -59,7 +54,6 @@ public class DashboardFragment extends Fragment implements PayEventStatisticsInt
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
 
         FindId();
         SetListen();
@@ -124,7 +118,6 @@ public class DashboardFragment extends Fragment implements PayEventStatisticsInt
     }
 
 
-
     @Override
     public void GetYearPayColumnsSuccessful(String message, AAChartModel columnModelPay) {
         AAChartViewColumnPay.aa_drawChartWithChartModel(columnModelPay);
@@ -135,16 +128,13 @@ public class DashboardFragment extends Fragment implements PayEventStatisticsInt
     }
 
 
-
     private class CheckOnFocusChange implements View.OnFocusChangeListener {
         @Override
         public void onFocusChange(View view, boolean b) {
-            switch (view.getId()) {
-                case R.id.select_edit:
-                    if (b) {
-                        SelectTime();
-                    }
-                    break;
+            if (view.getId() == R.id.select_date) {
+                if (b) {
+                    SelectTime();
+                }
             }
         }
     }
@@ -152,10 +142,8 @@ public class DashboardFragment extends Fragment implements PayEventStatisticsInt
     private class Onclick implements View.OnClickListener {
         @Override
         public void onClick(View view) {
-            switch (view.getId()) {
-                case R.id.select_edit:
-                    SelectTime();
-                    break;
+            if (view.getId() == R.id.select_date) {
+                SelectTime();
             }
         }
     }
@@ -181,20 +169,17 @@ public class DashboardFragment extends Fragment implements PayEventStatisticsInt
 
     private void SelectTime() {
         Calendar c = Calendar.getInstance();
-        new DatePickerDialog(getActivity(), AlertDialog.THEME_HOLO_LIGHT, new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-                String select_time = String.format("%s-%s-%s", i, i1 + 1, i2);
-                select_edit.setText(select_time);
-                now_time.setText(select_time);
-                select_edit.clearFocus();
-                if (day.isChecked()) {
-                    getDayStatistics();
-                } else if (month.isChecked()) {
-                    getMonthStatistics();
-                } else if (year.isChecked()) {
-                    getYearStatistics();
-                }
+        new DatePickerDialog(getActivity(), AlertDialog.THEME_HOLO_LIGHT, (datePicker, i, i1, i2) -> {
+            String select_time = String.format("%s-%s-%s", i, i1 + 1, i2);
+            select_edit.setText(select_time);
+            now_time.setText(select_time);
+            select_edit.clearFocus();
+            if (day.isChecked()) {
+                getDayStatistics();
+            } else if (month.isChecked()) {
+                getMonthStatistics();
+            } else if (year.isChecked()) {
+                getYearStatistics();
             }
         }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
     }
@@ -218,7 +203,6 @@ public class DashboardFragment extends Fragment implements PayEventStatisticsInt
 
     private void getDayStatistics() {
         String day_date = now_time.getText().toString();
-
         iPresenter.GetDayPayStatistics(user_account, day_date);
 
     }
@@ -235,7 +219,7 @@ public class DashboardFragment extends Fragment implements PayEventStatisticsInt
         month = getView().findViewById(R.id.month);
         year = getView().findViewById(R.id.year);
 
-        select_edit = getView().findViewById(R.id.select_edit);
+        select_edit = getView().findViewById(R.id.select_date);
         now_time = getView().findViewById(R.id.now_time);
 
     }
