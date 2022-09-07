@@ -1,8 +1,6 @@
 package com.org.moneykeep.Recevier;
 
 import static android.content.Context.MODE_PRIVATE;
-import static cn.bmob.v3.Bmob.getApplicationContext;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -142,7 +140,7 @@ public class MessageRecevier extends BroadcastReceiver {
         // 定位初始化时捕获异常
         try {
             mLocClient = new LocationClient(context);
-            MyLocationListenner myListener = new MyLocationListenner();
+            MyLocationListenner myListener = new MyLocationListenner(context);
             mLocClient.registerLocationListener(myListener);
 
             LocationClientOption option = new LocationClientOption();
@@ -165,6 +163,11 @@ public class MessageRecevier extends BroadcastReceiver {
 
 
     public class MyLocationListenner extends BDAbstractLocationListener {
+        private final Context context;
+        public MyLocationListenner(Context context) {
+            this.context = context;
+        }
+
         @Override
         public void onReceiveLocation(BDLocation bdLocation) {
             if (isFirstLoc) {
@@ -232,18 +235,17 @@ public class MessageRecevier extends BroadcastReceiver {
                 integerCall.enqueue(new Callback<Integer>() {
                     @Override
                     public void onResponse(@NonNull Call<Integer> call,@NonNull Response<Integer> response) {
-                        SharedPreferences keep = getApplicationContext().getSharedPreferences("DeleteOrUpdate", Context.MODE_PRIVATE);
+                        SharedPreferences keep = context.getSharedPreferences("DeleteOrUpdate", Context.MODE_PRIVATE);
                         SharedPreferences.Editor user_editor = keep.edit();
                         user_editor.putBoolean("isdelete", true);
                         user_editor.apply();
-                        Toast.makeText(getApplicationContext(), "收支数据上传成功", Toast.LENGTH_LONG).show();
-
+                        Toast.makeText(context, "收支数据上传成功", Toast.LENGTH_LONG).show();
                         Log.i("dimos", "创建成功...");
                     }
 
                     @Override
                     public void onFailure(@NonNull Call<Integer> call,@NonNull Throwable t) {
-                        Toast.makeText(getApplicationContext(), "收支数据上传失败：" + t.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, "收支数据上传失败：" + t.getMessage(), Toast.LENGTH_LONG).show();
                         Log.i("dimos", "创建失败...");
                     }
                 });
