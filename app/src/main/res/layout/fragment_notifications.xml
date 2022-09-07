@@ -16,6 +16,7 @@
         android:orientation="horizontal"
         android:paddingTop="?attr/actionBarSize"
         tools:ignore="Suspicious0dp">
+
         <ImageView
             android:id="@+id/user_icon"
             android:layout_width="70dp"
@@ -24,20 +25,41 @@
             android:scaleType="fitXY"
             android:src="@drawable/head_path"
             android:tooltipText="点击设置头像" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:orientation="vertical">
-            <TextView
-                android:id="@+id/user_name"
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:gravity="top"
-                android:text="Wenh"
-                android:paddingLeft="10dp"
-                android:textColor="#000000"
-                android:textSize="25sp"/>
+
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/user_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="top"
+                    android:paddingStart="10dp"
+                    android:text="Wenh"
+                    android:textColor="#000000"
+                    android:textSize="25sp"
+                    android:textStyle="bold"
+                    tools:ignore="HardcodedText,RtlSymmetry" />
+
+                <ImageView
+                    android:id="@+id/update_name"
+                    android:layout_width="16dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top"
+                    android:layout_marginStart="5dp"
+                    android:src="@mipmap/bianji_32" />
+
+            </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -61,77 +83,12 @@
                     android:layout_height="match_parent"
                     android:layout_weight="4"
                     android:gravity="bottom"
-                    android:textColor="#000000"
                     android:text="850838293@qq.com"
-                    android:textSize="15sp" />
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <!--<LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/user_icon"
-                android:layout_width="90dp"
-                android:layout_height="90dp"
-
-                android:gravity="center"
-                android:scaleType="fitXY"
-                android:src="@drawable/head_path"
-                android:tooltipText="点击设置头像" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="3"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/user_name"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1.2"
-                android:gravity="bottom"
-                android:paddingLeft="10dp"
-                android:paddingBottom="5dp"
-                android:text="Wenh"
-                android:textColor="#000000"
-                android:textSize="30sp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/user_account"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="10dp"
-                    android:text="账号:"
-                    android:textColor="#000000"
-                    android:textSize="15sp" />
-
-                <TextView
-                    android:id="@+id/user_account_input"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="4"
-                    android:gravity="center_vertical"
                     android:textColor="#000000"
                     android:textSize="15sp" />
             </LinearLayout>
 
-        </LinearLayout>-->
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
@@ -159,11 +116,12 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:background="@drawable/user_fragment_setting_background"
-            android:gravity="center"
             android:divider="@drawable/divider_background"
-            android:showDividers="middle"
             android:dividerPadding="10dp"
-            android:orientation="vertical">
+            android:gravity="center"
+            android:orientation="vertical"
+            android:showDividers="middle">
+
             <Button
                 android:id="@+id/but_update_password"
                 android:layout_width="match_parent"

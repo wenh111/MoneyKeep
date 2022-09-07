@@ -21,4 +21,7 @@ public interface UserPhotoAPI {
 
     @GET("/photo/getUserPhotoUrl")
     Call<UploadSuccessfulMessage> getPhotoUrl(@Query("account") String account);
+
+    @POST("/user/userMessageUpdate")
+    Call<Integer> updateName(@Query("id") int id ,@Query("name") String name);
 }

@@ -30,10 +30,12 @@ public class SignInPresenterImplements implements SignInInterface.IPresenter, Si
         //String objectId = "";
         String userAccount;
         String userPassword;
+        int id;
         String USER_EMAIL = "user_email";
         String USER_PASSWORD = "user_password";
         String USER_NAME = "user_name";
         String USER_ISUSED = "user_isused";
+        String OBJECT_ID = "user_objectId";
 
 
         SharedPreferences userdata = context.getSharedPreferences("user", Context.MODE_PRIVATE);
@@ -44,7 +46,7 @@ public class SignInPresenterImplements implements SignInInterface.IPresenter, Si
         //objectId = user.getId();
         userAccount = user.getAccount();
         userPassword = user.getPassword();
-
+        id = user.getId();
         user_editor.putString(USER_NAME, userName);
         //user_editor.putString(USER_OBJECTID, objectId);
 
@@ -53,9 +55,11 @@ public class SignInPresenterImplements implements SignInInterface.IPresenter, Si
         user_editor.putString(USER_EMAIL, userAccount);
         user_editor.putString(USER_PASSWORD, userPassword);
         user_editor.putBoolean(USER_ISUSED, true);
+        user_editor.putInt(OBJECT_ID,id);
         user_editor.apply();
 
         bundle.putString("user_email", userAccount);
+        bundle.putInt("user_objectId",id);
 
         mView.Successful("登陆成功", bundle);
     }

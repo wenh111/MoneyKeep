@@ -28,7 +28,7 @@ public class WelcomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
-        Bmob.initialize(this, "3b1d2e279e692c9f417fd752066fb91b");
+        /*Bmob.initialize(this, "3b1d2e279e692c9f417fd752066fb91b");*/
 
         WindowManager.LayoutParams localLayoutParams = getWindow().getAttributes();
         this.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
@@ -40,7 +40,7 @@ public class WelcomeActivity extends AppCompatActivity {
         boolean user_islogin = userdata.getBoolean("user_isused", false);
         String user_account = userdata.getString("user_email", "");
         String user_name = userdata.getString("user_name", "");
-        String user_objectId = userdata.getString("user_objectId", "");
+        int user_id = userdata.getInt("user_objectId", 0);
 
         JobSchedulerUntil.scheduleJob(getApplicationContext(),1000);
         /*Intent service = new Intent(getApplicationContext(), MessageService.class);
@@ -51,7 +51,7 @@ public class WelcomeActivity extends AppCompatActivity {
             Bundle bundle = new Bundle();
             bundle.putString("user_email", user_account);
             bundle.putString("user_name", user_name);
-            bundle.putString("user_objectId", user_objectId);
+            bundle.putInt("user_objectId", user_id);
             intent = new Intent(WelcomeActivity.this, UserMainActivity.class);
             intent.putExtras(bundle);
         } else {

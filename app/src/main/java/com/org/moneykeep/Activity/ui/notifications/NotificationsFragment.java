@@ -34,6 +34,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.org.moneykeep.Activity.ForgetPasswordView.AuthenticationView.ForgetPasswordActivity;
 import com.org.moneykeep.Activity.SignInView.SignInActivity;
+import com.org.moneykeep.Dialog.UpdateRemarkDialog;
 import com.org.moneykeep.R;
 import com.org.moneykeep.Until.RetrofitUntil;
 import com.org.moneykeep.databinding.FragmentNotificationsBinding;
@@ -57,9 +58,12 @@ public class NotificationsFragment extends Fragment {
     public String USER_EMAIL = "user_email";
     public String USER_PASSWORD = "user_password";
     public String USER_ISUSED = "user_isused";
+    public String USER_ID = "user_objectId";
+    public String USER_NAME = "user_name";
     private TextView user_name, user_account_input;
     private String bundle_user_name;
     private String bundle_user_email;
+    private int bundle_user_id;
     private ImageView user_icon;
     private UserPhotoAPI api;
 
@@ -77,11 +81,11 @@ public class NotificationsFragment extends Fragment {
         binding = FragmentNotificationsBinding.inflate(inflater, container, false);
         api = RetrofitUntil.getRetrofit().create(UserPhotoAPI.class);
         View root = binding.getRoot();
-
-        Bundle receive = requireActivity().getIntent().getExtras();
-        bundle_user_name = receive.getString("user_name");
-        bundle_user_email = receive.getString("user_email");
-
+        SharedPreferences controllerdata = requireActivity().getSharedPreferences("user", MODE_PRIVATE);
+        /*Bundle receive = requireActivity().getIntent().getExtras();*/
+        bundle_user_name = controllerdata.getString("user_name","");
+        bundle_user_email = controllerdata.getString("user_email","");
+        bundle_user_id = controllerdata.getInt("user_objectId",0);
 
         return root;
     }
@@ -97,7 +101,6 @@ public class NotificationsFragment extends Fragment {
         user_account_input.setText(bundle_user_email);
 
        /* SharedPreferences uridata = requireActivity().getSharedPreferences("uri", Context.MODE_PRIVATE);
-
         needDownload = uridata.getBoolean("needDownload", true);*/
         int REQUEST_CODE_CONTACT = 101;
         String[] permissions = {
@@ -160,9 +163,9 @@ public class NotificationsFragment extends Fragment {
         Call<UploadSuccessfulMessage> uploadSuccessfulMessageCall = api.getPhotoUrl(bundle_user_email);
         uploadSuccessfulMessageCall.enqueue(new Callback<UploadSuccessfulMessage>() {
             @Override
-            public void onResponse(@NonNull Call<UploadSuccessfulMessage> call,@NonNull Response<UploadSuccessfulMessage> response) {
+            public void onResponse(@NonNull Call<UploadSuccessfulMessage> call, @NonNull Response<UploadSuccessfulMessage> response) {
                 if (response.code() == HttpURLConnection.HTTP_OK) {
-                    if(Objects.requireNonNull(response.body()).getUrl() != null){
+                    if (Objects.requireNonNull(response.body()).getUrl() != null) {
                         RoundedCorners roundedCorners = new RoundedCorners(20);
                         //通过RequestOptions扩展功能,override:采样率,因为ImageView就这么大,可以压缩图片,降低内存消耗
                         // RequestOptions options = RequestOptions.bitmapTransform(roundedCorners).override(20, 20);
@@ -174,8 +177,8 @@ public class NotificationsFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(@NonNull Call<UploadSuccessfulMessage> call,@NonNull Throwable t) {
-                Toast.makeText(getContext(),"头像获取失败...",Toast.LENGTH_SHORT).show();
+            public void onFailure(@NonNull Call<UploadSuccessfulMessage> call, @NonNull Throwable t) {
+                Toast.makeText(getContext(), "头像获取失败...", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -261,6 +264,7 @@ public class NotificationsFragment extends Fragment {
         but_log_out.setOnClickListener(onclick);
         user_icon.setOnClickListener(onclick);
         but_update_password.setOnClickListener(onclick);
+        binding.updateName.setOnClickListener(onclick);
     }
 
     private void onActivityResult(ActivityResult result) {
@@ -279,7 +283,7 @@ public class NotificationsFragment extends Fragment {
                 Call<UploadSuccessfulMessage> stringCall = api.UploadPhoto(part, bundle_user_email);
                 stringCall.enqueue(new Callback<UploadSuccessfulMessage>() {
                     @Override
-                    public void onResponse(@NonNull Call<UploadSuccessfulMessage> call,@NonNull Response<UploadSuccessfulMessage> response) {
+                    public void onResponse(@NonNull Call<UploadSuccessfulMessage> call, @NonNull Response<UploadSuccessfulMessage> response) {
                         if (response.code() == HttpURLConnection.HTTP_OK) {
                             Log.i("uploadSuccessful", "============>" + (response.body() != null ? response.body().getUrl() : null));
                            /* uri_editor.putString("uripath", "");
@@ -290,9 +294,9 @@ public class NotificationsFragment extends Fragment {
                     }
 
                     @Override
-                    public void onFailure(@NonNull Call<UploadSuccessfulMessage> call,@NonNull Throwable t) {
+                    public void onFailure(@NonNull Call<UploadSuccessfulMessage> call, @NonNull Throwable t) {
                         Log.i("uploadUnSuccessful", "============>" + t.getMessage());
-                        //Toast.makeText(getContext(), "头像上传服务器失败:" + t.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), "头像上传服务器失败:" + t.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
 
@@ -328,6 +332,34 @@ public class NotificationsFragment extends Fragment {
                     Intent intent = new Intent(getContext(), ForgetPasswordActivity.class);
                     startActivity(intent);
                     break;
+                case R.id.update_name:
+                    UpdateRemarkDialog updateNameDialog = new UpdateRemarkDialog(requireContext());
+                    updateNameDialog.setOldRemark(user_name.getText().toString());
+                    updateNameDialog.setiOconfirmListener((dialog, newName) -> {
+                        if (newName == null || newName.equals(user_name.getText().toString())) {
+                            Toast.makeText(requireContext(), "请填入新名字...", Toast.LENGTH_LONG).show();
+                        } else {
+                            Call<Integer> integerCall = api.updateName(bundle_user_id, newName);
+                            integerCall.enqueue(new Callback<Integer>() {
+                                @Override
+                                public void onResponse(@NonNull Call<Integer> call,@NonNull Response<Integer> response) {
+                                    SharedPreferences controllerdata = requireActivity().getSharedPreferences("user", MODE_PRIVATE);
+                                    SharedPreferences.Editor controller_editor = controllerdata.edit();
+                                    controller_editor.putString("user_name", newName);
+                                    controller_editor.apply();
+                                    user_name.setText(newName);
+                                    Toast.makeText(requireContext(), "名字更改成功...", Toast.LENGTH_LONG).show();
+                                }
+
+                                @Override
+                                public void onFailure(@NonNull Call<Integer> call,@NonNull Throwable t) {
+                                    Toast.makeText(requireContext(), "名字更改失败：" + t.getMessage(), Toast.LENGTH_LONG).show();
+                                }
+                            });
+
+                        }
+                    }).show();
+                    break;
             }
         }
     }
@@ -344,25 +376,27 @@ public class NotificationsFragment extends Fragment {
     private void Logout() {
         SharedPreferences controllerdata = requireActivity().getSharedPreferences("user", MODE_PRIVATE);
         SharedPreferences.Editor controller_editor = controllerdata.edit();
+        controller_editor.putString(USER_NAME, "");
         controller_editor.putString(USER_EMAIL, "");
         controller_editor.putString(USER_PASSWORD, "");
         controller_editor.putBoolean(USER_ISUSED, false);
+        controller_editor.putInt(USER_ID, 0);
         controller_editor.apply();
-        SharedPreferences uridata = getActivity().getSharedPreferences("uri", Context.MODE_PRIVATE);
+        SharedPreferences uridata = requireActivity().getSharedPreferences("uri", Context.MODE_PRIVATE);
         SharedPreferences.Editor uri_editor = uridata.edit();
         uri_editor.putString("uripath", "");
         uri_editor.putBoolean("needDownload", true);
         uri_editor.apply();
         Intent intent = new Intent(getActivity(), SignInActivity.class);
         startActivity(intent);
-        getActivity().finish();
+        requireActivity().finish();
     }
 
     private void FindId() {
         but_update_password = binding.butUpdatePassword;/*getView().findViewById(R.id.but_update_password)*/
         user_icon = binding.userIcon;/*getView().findViewById(R.id.user_icon)*/
         but_log_out = binding.butLogOut;/*getView().findViewById(R.id.but_log_out)*/
-        user_name =binding.userName ;/*getView().findViewById(R.id.user_name)*/
+        user_name = binding.userName;/*getView().findViewById(R.id.user_name)*/
         user_account_input = binding.userAccountInput;/*getView().findViewById(R.id.user_account_input)*/
     }
 
