@@ -94,7 +94,7 @@ public class HomeFragmentModelImplements implements HomeFragmentInterface.IModel
     @Override
     public void SelectAMonthMessage(PayEventBean payEventBean, int since, int perPage,int selectType) {
         Call<PayEventListBean> payEventListBeanCall = api.getPayEvent(payEventBean.getAccount(),
-                payEventBean.getCategory(), payEventBean.getMonth(), payEventBean.getYear(),since,perPage, selectType);
+                payEventBean.getCategory(), payEventBean.getMonth(), payEventBean.getYear(),since,perPage, selectType, payEventBean.getDate());
         payEventListBeanCall.enqueue(new Callback<PayEventListBean>() {
             @Override
             public void onResponse(Call<PayEventListBean> call, Response<PayEventListBean> response) {

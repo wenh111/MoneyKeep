@@ -1,19 +1,13 @@
 package com.org.moneykeep.Activity.ui.home;
 
 import android.content.Context;
-import android.util.Log;
 
-import com.org.moneykeep.RecyclerViewAdapter.RecyclerViewList.DayPayOrIncomeList;
 import com.org.moneykeep.RecyclerViewAdapter.RecyclerViewList.MonthPayOrIncomeList;
 import com.org.moneykeep.Until.ChangeDouble;
-import com.org.moneykeep.Until.ListGroupUntil;
 import com.org.moneykeep.retrofitBean.PayEventBean;
 import com.org.moneykeep.retrofitBean.PayEventListBean;
 
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 
 public class HomeFragmentPresenterImplements implements HomeFragmentInterface.IPresenter {
     private final HomeFragmentInterface.IView iView;
@@ -78,9 +72,9 @@ public class HomeFragmentPresenterImplements implements HomeFragmentInterface.IP
     @Override
     public void SelectDayMessageSuccessfulCallBack(PayEventListBean body) {
         if (body.getCount() == 0) {
-            iView.getDayMessageSuccessful("查询成功但当前时间没数据...", null, 0.0, 0.0);
+            iView.getDayMessageSuccessful("查询成功但当前时间没数据...", null);
         } else {
-            List<DayPayOrIncomeList> newDayPayOrIncomeDate = new ArrayList<>();
+            /*List<DayPayOrIncomeList> newDayPayOrIncomeDate = new ArrayList<>();
             double CountIncome = 0;
             double CountPay = 0;
             List<PayEventListBean.AllPayListDTO> payEventBeans = body.getAllPayList();
@@ -115,11 +109,12 @@ public class HomeFragmentPresenterImplements implements HomeFragmentInterface.IP
                 newDayPayOrIncomeDate.add(dayPayOrIncomeList);
             }
 
-            newDayPayOrIncomeDate.sort((dayPayOrIncomeList, t1) -> t1.getInt_time() - dayPayOrIncomeList.getInt_time());
+            newDayPayOrIncomeDate.sort((dayPayOrIncomeList, t1) -> t1.getInt_time() - dayPayOrIncomeList.getInt_time());*/
             /*for (DayPayOrIncomeList i_time : newDayPayOrIncomeDate) {
                 Log.i("allPay", "时间:" + i_time.getInt_time());
             }*/
-            iView.getDayMessageSuccessful("查询成功...", newDayPayOrIncomeDate, CountIncome, CountPay);
+            //iView.getDayMessageSuccessful("查询成功...", newDayPayOrIncomeDate, CountIncome, CountPay);
+            iView.getDayMessageSuccessful("查询成功...", body);
         }
 
 
@@ -292,11 +287,12 @@ public class HomeFragmentPresenterImplements implements HomeFragmentInterface.IP
     }
 
     @Override
-    public void getAMonthOrYearMessage(String user_account, String select_type, String select_month, String select_year, int since, int perPage, int selectType) {
+    public void getAMonthOrYearMessage(String user_account, String select_type, String select_month, String select_year, int since, int perPage, int selectType, String select_date) {
         PayEventBean payEventBean = new PayEventBean();
         payEventBean.setAccount(user_account);
         payEventBean.setMonth(select_month);
         payEventBean.setYear(select_year);
+        payEventBean.setDate(select_date);
         if (!select_type.equals("全部类型")) {
             payEventBean.setCategory(select_type);
         } else {

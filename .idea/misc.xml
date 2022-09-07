@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/编程/MoneyKeepApp/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1955" />
+        <entry key="..\:/编程/MoneyKeepApp/app/src/main/res/drawable/add_pay_background.xml" value="0.1955" />
         <entry key="..\:/编程/MoneyKeepApp/app/src/main/res/drawable/but_ripple.xml" value="0.193" />
         <entry key="..\:/编程/MoneyKeepApp/app/src/main/res/drawable/colorgradient.xml" value="0.2365" />
         <entry key="..\:/编程/MoneyKeepApp/app/src/main/res/drawable/day_button_background_yes.xml" value="0.254" />

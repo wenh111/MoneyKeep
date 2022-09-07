@@ -1,13 +1,8 @@
 package com.org.moneykeep.Activity.ui.home;
 
 
-import com.org.moneykeep.RecyclerViewAdapter.RecyclerViewList.DayPayOrIncomeList;
-import com.org.moneykeep.RecyclerViewAdapter.RecyclerViewList.MonthPayOrIncomeList;
 import com.org.moneykeep.retrofitBean.PayEventBean;
 import com.org.moneykeep.retrofitBean.PayEventListBean;
-
-import java.util.List;
-import java.util.Map;
 
 public interface HomeFragmentInterface {
     interface IModel {
@@ -43,7 +38,7 @@ public interface HomeFragmentInterface {
 
         void SelectAMonthOrYearMessageUnSuccessfulCallBack(String errorMessage);
 
-        void getAMonthOrYearMessage(String user_account, String select_type, String select_month, String select_year, int since, int perPage, int selectType);
+        void getAMonthOrYearMessage(String user_account, String select_type, String select_month, String select_year, int since, int perPage, int selectType, String select_date);
 
         void deletePayEventSuccessfulCallBack(String s);
 
@@ -51,7 +46,7 @@ public interface HomeFragmentInterface {
     }
 
     interface IView {
-        void getDayMessageSuccessful(String s, List<DayPayOrIncomeList> newDayPayOrIncomeDate, double countIncome, double countPay);
+        void getDayMessageSuccessful(String s, PayEventListBean body);
 
         void getDayMessageUnSuccessful(String message);
 

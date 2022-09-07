@@ -5,7 +5,6 @@ import static android.content.Context.MODE_PRIVATE;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -13,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.RadioButton;
@@ -30,9 +30,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.daimajia.swipe.util.Attributes;
 import com.org.moneykeep.Activity.AddPayEventView.AddPayEventActivity;
-import com.org.moneykeep.Activity.DetailsView.DetailsActivity;
 import com.org.moneykeep.Dialog.AllTypePickerDialog;
-import com.org.moneykeep.Dialog.DeleteDialog;
 import com.org.moneykeep.R;
 import com.org.moneykeep.RecyclerViewAdapter.AMonthRecyclerViewAdapter;
 import com.org.moneykeep.RecyclerViewAdapter.DayRecyclerViewAdapter;
@@ -67,6 +65,7 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
     private HomeFragmentInterface.LoadInterface loadInterface;
     private boolean needRefresh;
     private SharedPreferences getBoolean;
+    private boolean isMore;
 
     public void setLoadInterface(HomeFragmentInterface.LoadInterface loadInterface) {
         this.loadInterface = loadInterface;
@@ -78,6 +77,8 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
                 new ViewModelProvider(this).get(HomeViewModel.class);
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
+        //scaleAnimation();
         if (savedInstanceState == null) {
             Calendar calendar = Calendar.getInstance();
             int now_year = calendar.get(Calendar.YEAR);
@@ -184,6 +185,22 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
                     }
                 }
             }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                Log.i("ScrollStateChanged", "------------------->" + "在滑动");
+                if (dy > 0) { // 当前处于上滑状态
+                    Log.i("ScrollStateChanged", "------------------->" + "向上滑");
+                    Log.i("ScrollStateChanged", "------------------->" + isMore);
+                    if(isMore){
+                        isMore = false;
+                        //binding.radioGroup.startAnimation(AnimationUtils.loadAnimation(requireActivity(), R.anim.scale_small));
+                        binding.radioGroup.setVisibility(View.GONE);
+
+                    }
+                }
+            }
         });
         setLoadInterface(new HomeFragmentInterface.LoadInterface() {
             @Override
@@ -229,7 +246,7 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
         int perPage = homeViewModel.getPerPage().getValue() == null ? -1 : homeViewModel.getPerPage().getValue();
 
         //iPresenter.getMonthMessage(user_account, select_type, select_month, select_year);
-        iPresenter.getAMonthOrYearMessage(user_account, select_type, select_month, select_year, since, perPage, selectType);
+        iPresenter.getAMonthOrYearMessage(user_account, select_type, select_month, select_year, since, perPage, selectType, select_date);
     }
 
 
@@ -269,9 +286,32 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
 
     @SuppressLint("NotifyDataSetChanged")
     @Override
-    public void getDayMessageSuccessful(String s, List<DayPayOrIncomeList> newDayPayOrIncomeDate, double countIncome, double countPay) {
-        if (newDayPayOrIncomeDate != null) {
-            dayRecyclerViewAdapter = new DayRecyclerViewAdapter(getContext(), dayPayOrIncomeDate);
+    public void getDayMessageSuccessful(String s, PayEventListBean body) {
+        /*if (body != null) {
+            amonthRecyclerViewAdapter = new AMonthRecyclerViewAdapter(getContext(), new ArrayList<>());
+            List<PayEventListBean> payEventListBeans = new ArrayList<>();
+            payEventListBeans.add(body);
+            amonthRecyclerViewAdapter.setMonthData(payEventListBeans);
+            amonthRecyclerViewAdapter.notifyDataSetChanged();
+            amonthRecyclerViewAdapter.setSetOnRecyclerItemCostChangeListener(new AMonthRecyclerViewAdapter.SetOnRecyclerItemCostChangeListener() {
+                @Override
+                public void OnRecyclerItemCostChangeListener(double cost, int position) {
+                    if (cost > 0) {
+                        count_income.setText(String.valueOf(ChangeDouble.subDouble(Double.parseDouble(count_income.getText().toString()), cost)));
+                    } else if (cost < 0) {
+                        count_pay.setText(String.valueOf(ChangeDouble.addDouble(Double.parseDouble(count_pay.getText().toString()), cost)));
+                    }
+
+                }
+            });
+            recyclerView.setAdapter(amonthRecyclerViewAdapter);
+            count_income.setText(String.valueOf(countIncome));
+            if (countPay == 0) {
+                count_pay.setText(String.valueOf(0.0));
+            } else {
+                count_pay.setText(String.valueOf(-countPay));
+            }
+            *//*dayRecyclerViewAdapter = new DayRecyclerViewAdapter(getContext(), dayPayOrIncomeDate);
             dayPayOrIncomeDate = newDayPayOrIncomeDate;
             dayRecyclerViewAdapter.setData(dayPayOrIncomeDate);
             dayRecyclerViewAdapter.notifyDataSetChanged();
@@ -307,11 +347,11 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
                 count_pay.setText(String.valueOf(0.0));
             } else {
                 count_pay.setText(String.valueOf(-countPay));
-            }
+            }*//*
 
         } else {
             Toast.makeText(getContext(), s, Toast.LENGTH_SHORT).show();
-        }
+        }*/
     }
 
     @Override
@@ -374,7 +414,7 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
             homeViewModel.dataChange(body.getSince(), body.getPerPage());
             boolean state = isRecyclerScrollable(recyclerView);
             Log.i("linearManager", "state = " + state);
-            if (!state) {
+            if (!state && selectType != 2) {
                 /*if (loadInterface != null) {
                     int since = homeViewModel.getSince().getValue() == null ? -1 : homeViewModel.getSince().getValue();
                     int perPage = homeViewModel.getPerPage().getValue() == null ? -1 : homeViewModel.getPerPage().getValue();
@@ -416,6 +456,7 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
     }
 
     private class Onclick implements View.OnClickListener {
+
         @SuppressLint("NonConstantResourceId")
         @Override
         public void onClick(View view) {
@@ -455,6 +496,16 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
                         }
                     }).show();
                     break;
+                case R.id.image_radio:
+                    if(isMore){
+                        isMore = false;
+                        binding.radioGroup.setVisibility(View.GONE);
+                    }else{
+                        isMore = true;
+                        binding.radioGroup.setVisibility(View.VISIBLE);
+                    }
+
+                    break;
             }
         }
     }
@@ -466,6 +517,7 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
         but_add.setOnClickListener(onclick);
         radio_group.setOnCheckedChangeListener(checkOnclick);
         binding.lySelectType.setOnClickListener(onclick);
+        binding.imageRadio.setOnClickListener(onclick);
 
     }
 
@@ -502,14 +554,14 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
 
         String select_type = homeViewModel.getType().getValue();
         //iPresenter.getYearMessage(user_account, select_type, select_year);
-        iPresenter.getAMonthOrYearMessage(user_account, select_type, "", select_year, -1, -1, 1);
+        iPresenter.getAMonthOrYearMessage(user_account, select_type, "", select_year, -1, -1, 1, select_date);
     }
 
     private void getDayMessage() {
-
+        needRefresh = true;
         String select_type = homeViewModel.getType().getValue();
         String select_date = homeViewModel.getDate().getValue();
-        iPresenter.getDayMessage(user_account, select_type, select_date);
+        iPresenter.getAMonthOrYearMessage(user_account, select_type, "", "", -1, -1, 2, select_date);
 
 
     }
@@ -528,8 +580,17 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
         int perPage = homeViewModel.getPerPage().getValue() == null ? -1 : homeViewModel.getPerPage().getValue();*/
 
         //iPresenter.getMonthMessage(user_account, select_type, select_month, select_year);
-        iPresenter.getAMonthOrYearMessage(user_account, select_type, select_month, select_year, -1, -1, 0);
+        iPresenter.getAMonthOrYearMessage(user_account, select_type, select_month, select_year, -1, -1, 0,select_date);
     }
+    private Animation bigAnimation, smallAnimation;
+
+    /*private void scaleAnimation() {
+        //放大
+        bigAnimation = AnimationUtils.loadAnimation(requireActivity(), R.anim.scale_big);
+        //缩小
+        smallAnimation = AnimationUtils.loadAnimation(requireActivity(), R.anim.scale_small);
+
+    }*/
 
 
     private void Findid() {

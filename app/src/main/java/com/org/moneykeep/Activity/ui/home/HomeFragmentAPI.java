@@ -26,5 +26,6 @@ public interface HomeFragmentAPI {
                                        @Query("year") String year,
                                        @Query("since") int since,
                                        @Query("perPages") int perPages,
-                                       @Query("selectType") int selectType);
+                                       @Query("selectType") int selectType,
+                                       @Query("day") String date);
 }
