@@ -6,7 +6,16 @@
     android:layout_height="match_parent"
     android:focusable="true"
     android:focusableInTouchMode="true"><!--tools:context=".Activity.ui.home.HomeFragment"-->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_marginHorizontal="5dp"
+        android:layout_marginTop="218dp" />
+
     <View
+        android:id="@+id/view"
         android:layout_width="wrap_content"
         android:layout_height="150dp"
         android:background="@drawable/colorgradient" />
@@ -25,7 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
-            android:layout_marginBottom="5dp"
+            android:layout_marginBottom="2.5dp"
             android:animateLayoutChanges="true"
             android:background="@drawable/edittext_select_month_inner"
             android:elevation="4dp"
@@ -147,35 +156,27 @@
 
             </LinearLayout>
 
-            <ImageView
-                android:id="@+id/image_radio"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="5dp"
-                android:adjustViewBounds="true"
-                android:scaleType="center"
-                android:src="@mipmap/more_radiogroup_32" />
 
             <RadioGroup
                 android:id="@+id/radio_group"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:animateLayoutChanges="true"
                 android:animationCache="true"
                 android:background="@drawable/edittext_select_month_inner"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:visibility="gone">
-
+                android:visibility="gone"
+                android:weightSum="3">
+                <!--android:background="@drawable/day_selector"-->
                 <RadioButton
                     android:id="@+id/day"
-
                     android:layout_width="0dp"
-                    android:layout_height="50dp"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_weight="1"
-                    android:background="@drawable/day_selector"
+
                     android:button="@null"
                     android:buttonTint="#1296db"
                     android:gravity="center"
@@ -186,9 +187,8 @@
                 <RadioButton
                     android:id="@+id/month"
                     android:layout_width="0dp"
-                    android:layout_height="50dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="@drawable/day_selector"
                     android:button="@null"
                     android:buttonTint="#1296db"
                     android:checked="true"
@@ -200,9 +200,8 @@
                 <RadioButton
                     android:id="@+id/year"
                     android:layout_width="0dp"
-                    android:layout_height="50dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="@drawable/day_selector"
                     android:button="@null"
                     android:buttonTint="#1296db"
                     android:gravity="center"
@@ -210,6 +209,16 @@
                     android:textColor="@color/day_radiobutton"
                     android:textStyle="bold" />
             </RadioGroup>
+
+            <ImageView
+                android:id="@+id/image_radio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:scaleType="center"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="3dp"
+                android:src="@mipmap/down_16" />
         </LinearLayout>
 
 
@@ -268,12 +277,7 @@
         </RadioGroup>-->
     </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/linearLayout"
-        android:layout_marginHorizontal="5dp" />
+
 
     <LinearLayout
         android:layout_width="wrap_content"

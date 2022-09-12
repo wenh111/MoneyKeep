@@ -77,7 +77,7 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
                 new ViewModelProvider(this).get(HomeViewModel.class);
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-
+       // binding.imageRadio.getBackground().setAlpha(0);
         //scaleAnimation();
         if (savedInstanceState == null) {
             Calendar calendar = Calendar.getInstance();
@@ -175,13 +175,19 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
                     if (!recyclerView.canScrollVertically(1)) {
                         int since = homeViewModel.getSince().getValue() == null ? -1 : homeViewModel.getSince().getValue();
                         int perPage = homeViewModel.getPerPage().getValue() == null ? -1 : homeViewModel.getPerPage().getValue();
-
                         if (loadInterface != null) {
                             Log.i("ScrollStateChanged", "------------------->" + "loadInterface != null");
                             loadInterface.OnLoadLister(since, perPage);
                         }
 
                         Log.i("ScrollStateChanged", "------------------->" + "到底了");
+                    }else if (!recyclerView.canScrollVertically(-1)){
+                        if(isMore){
+                            isMore = false;
+                            binding.imageRadio.setImageResource(R.mipmap.down_16);
+                            //Glide.with(requireView()).load(R.mipmap.down_16).into(binding.imageRadio);
+                            binding.radioGroup.setVisibility(View.GONE);
+                        }
                     }
                 }
             }
@@ -195,7 +201,9 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
                     Log.i("ScrollStateChanged", "------------------->" + isMore);
                     if(isMore){
                         isMore = false;
+                        binding.imageRadio.setImageResource(R.mipmap.down_16);
                         //binding.radioGroup.startAnimation(AnimationUtils.loadAnimation(requireActivity(), R.anim.scale_small));
+                        //Glide.with(requireView()).load(R.mipmap.down_16).into(binding.imageRadio);
                         binding.radioGroup.setVisibility(View.GONE);
 
                     }
@@ -499,9 +507,13 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
                 case R.id.image_radio:
                     if(isMore){
                         isMore = false;
+                        binding.imageRadio.setImageResource(R.mipmap.down_16);
+                        //Glide.with(requireView()).load(R.mipmap.down_16).into(binding.imageRadio);
                         binding.radioGroup.setVisibility(View.GONE);
                     }else{
                         isMore = true;
+                        //Glide.with(requireView()).load(R.mipmap.up_16).into(binding.imageRadio);
+                        binding.imageRadio.setImageResource(R.mipmap.up_16);
                         binding.radioGroup.setVisibility(View.VISIBLE);
                     }
 
@@ -526,6 +538,13 @@ public class HomeFragment extends Fragment implements HomeFragmentInterface.IVie
         @SuppressLint("NonConstantResourceId")
         @Override
         public void onCheckedChanged(RadioGroup radioGroup, int ButtonId) {
+            if(isMore){
+                isMore = false;
+                binding.imageRadio.setImageResource(R.mipmap.down_16);
+                //Glide.with(requireView()).load(R.mipmap.down_16).into(binding.imageRadio);
+                binding.radioGroup.setVisibility(View.GONE);
+
+            }
             amonthRecyclerViewAdapter = null;
             homeViewModel.dataLoadOver(false);
             homeViewModel.dataChange(-1, -1);
